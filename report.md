@@ -18,6 +18,8 @@ header-includes:
 
 \newpage
 
+`pandoc report.md --citeproc -o report.pdf`
+
 Text citation [@kavanaughHierarchicalDynamicSeascapes2014].
 
 ## Compilation Bash
