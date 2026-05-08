@@ -24,6 +24,8 @@ This is probably where your workflow diagram belongs.
 
 ## Data
 
+The analytical framework integrates environmental, fisheries, biological, and spatial reference datasets describing oceanographic conditions, fishing activity, species presence, and management boundaries across the Falkland Islands region. Aggregated datasets were harmonized within a common spatiotemporal framework, enabling the integration of heterogeneous data sources into a unified modeling framework.
+
 ### Environmental Data
 
 Environmental variables included sea surface temperature (SST), chlorophyll-a concentration (CHL), sea surface height (SSH), near-surface wind components, and bathymetry. Daily SST fields were obtained from the NASA Multi-scale Ultra-high Resolution (MUR) Level 4 product [@nasa/jplGHRSSTLevel42015], chlorophyll-a and SSH products were obtained from the Copernicus Marine Service [@europeanunion-copernicusmarineserviceGlobalOceanColour2022; @europeanunion-copernicusmarineserviceGLOBALOCEANGRIDDED2021], wind components were derived from ERA5 daily statistics distributed through the Copernicus Climate Data Store [@c3sERA5PostprocessedDaily2024], and bathymetric elevation data were obtained from GEBCO [@gebcobathymetriccompilationgroup2026GEBCO_2026GridContinuous2026].
@@ -56,13 +58,9 @@ Natural Earth coastline and land 1:10m physical vectors datasets [@ne_10m_coastl
 
 ## H3 Spatial Framework
 
-This is where you describe:
+Spatial integration was performed using the H3 hierarchical hexagonal indexing system developed by Uber [@HomeH3]. The study area was discretized using H3 resolution 6 cells, providing an average cell area of approximately 36 km². The fisheries grid extent plus an additional 50 km buffer was converted to an H3 grid containing 37,209 cells. The H3 framework provides globally unique hierarchical spatial indexes and was used as a common spatial reference for integrating environmental variables, fishing effort, and species presence observations across daily temporal intervals.
 
-* resolution,
-* indexing,
-* aggregation logic,
-* temporal structure,
-* spatial consistency.
+Environmental raster variables were aggregated to the H3 grid using area-weighted means. Raster pixels were converted to polygon footprints and intersected with H3 cell polygons. The geodesic area of each pixel-H3 overlap was used to compute normalized weights within each H3 cell. Daily raster values were aggregated by multiplying intersecting pixel values by their overlap weights and summing across pixels while excluding missing or invalid raster values. This produced daily H3-level environmental features aligned to the common H3/date modeling framework.
 
 ## Data Processing
 

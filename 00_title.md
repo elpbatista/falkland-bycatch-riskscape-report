@@ -8,8 +8,9 @@ numbersections: true
 geometry: margin=1in
 fontsize: 11pt
 
+csl: c_apa.csl
 bibliography: references.bib
-csl: apa.csl
+link-citations: true
 
 header-includes:
   - \usepackage{graphicx}

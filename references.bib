@@ -31,11 +31,11 @@
 
 @misc{fisheries_grid_squares,
   title = {Falkland {{Islands Fisheries Grid Squares}}},
-  author = {South Atlantic Environmental Research Institute},
+  author = {{South Atlantic Environmental Research Institute}},
   journal = {SAERI Dataportal},
   urldate = {2026-05-08},
   abstract = {The file shows the grid squares used as reference unit for the commercial catches around the Falkland Islands. The full grid covers an area from 47 to 57 latitude South and 64 to 52 longitude West. The squares are 15 min of lat (0.25), by 30 min longitude (0.50). They are labelled progressively using alphabetical letters, from AA to AZ going to west to east, WW to YM from North to South. There are not "I" and "O" as they can be mistaken as 1 and 0. Each grid square is associated to a fishing licence. The file is provided with the latest fisheries licences (fishing allowed or fishing restricted). Individual shape files for the different fisheries licences are available on request to the data owner.},
-  howpublished = {https://dataportal.saeri.org/dataset/falkland-islands-fisheries-grid-squares/}
+  howpublished = {https://dataportal.saeri.org/dataset/falkland-islands-fisheries-grid-squares}
 }
 
 @misc{gebcobathymetriccompilationgroup2026GEBCO_2026GridContinuous2026,
@@ -61,6 +61,15 @@
   abstract = {Overview This dataset contains version 3.0 (March 2025 release) of the Global Fishing Watch apparent fishing effort dataset. Data is available for 2012-2024 and based on positions of {$>$}190,000 unique automatic identification system (AIS) devices on fishing vessels, of which up to \textasciitilde 96,000 are active in a given year. Fishing vessels are identified via a machine learning model, vessel registry databases, and manual review by GFW and regional experts. Vessel time is measured in hours, calculated by assigning to each AIS position the amount of time elapsed since the previous AIS position of the vessel. The time is counted as apparent fishing hours if the GFW fishing detection model - a neural network machine learning model - determines the vessel is engaged in fishing behavior during that AIS position.~ Data are spatially binned into grid cells that measure 0.01 or 0.1 degrees on a side; the coordinates defining each cell are provided in decimal degrees (WGS84) and correspond to the lower-left corner. Data are available in the following formats:~ Daily apparent fishing hours by flag state and gear type at 100th degree resolution Monthly apparent fishing hours by flag state and gear type at 10th degree resolution Daily apparent fishing hours by MMSI at 10th degree resolution The fishing effort dataset is accompanied by a table of vessel information (e.g. gear type, flag state, dimensions). File structure Fishing effort and vessel presence data are available as .csv files in daily formats. Files for each year are stored in separate .zip files. A README.txt and schema.json file is provided for each dataset version and contains the table schema and additional information. There is also a README-known-issues-v3.txt file outlining some of the known issues with the version 3 release. Files are names according to the following convention: Daily file format:~ [fleet/mmsi]-daily-csvs-[100/10]-v3-[year].zip [fleet/mmsi]-daily-csvs-[100/10]-v3-[date].csv Monthly file format:~ fleet-monthly-csvs-10-v3-[year].zip fleet-monthly-csvs-10-v3-[date].csv Fishing vessel format: fishing-vessels-v3.csv README file format: README-[fleet/mmsi/fishing-vessels/known-issues]-v3.txt File identifiers: [fleet/mmsi]: Data by fleet (flag and geartype) or by MMSI [100/10]: 100th or 10th degree resolution [year]: Year of data included in .zip file [date]: Date of data included in .csv files. For monthly data, [date]corresponds to the first date of the month Examples: fleet-daily-csvs-100-v3-2020.zip; mmsi-daily-csvs-10-v3-2020-01-10.csv; fishing-vessels-v3.csv; README-fleet-v3.txt; fleet-monthly-csvs-10-v3-2024.zip; fleet-monthly-csvs-10-v3-2024-08-01.csv Key documentation For an overview of how GFW turns raw AIS positions into estimates of fishing hours, see this page. The models used to produce this dataset were developed as part of this publication: D.A. Kroodsma, J. Mayorga, T. Hochberg, N.A. Miller, K. Boerder, F. Ferretti, A. Wilson, B. Bergman, T.D. White, B.A. Block, P. Woods, B. Sullivan, C. Costello, and B. Worm. "Tracking the global footprint of fisheries." Science 361.6378 (2018). Model details are available in the Supplementary Materials. The README-known-issues-v3.txt file describing this dataset's specific caveats can be downloaded from this page. We highly recommend that users read this file in full. The README-mmsi-v3.txt file, the README-fleet-v3.txt file, and the README-fishing-vessels-v3.txt files are downloadable from this page and contain the data description for (respectively) the fishing hours by MMSI dataset, the fishing hours by fleet dataset, and the vessel information file. These readmes contain key explanations about the gear types and flag states assigned to vessels in the dataset. File name structure for the datafiles are available below on this page and file schema can be downloaded from this page.~ A FAQ describing the updates in this version and the differences between this dataset and the data available from the GFW Map and APIs is available here.~ Use Cases The apparent fishing hours dataset is intended to allow users to analyze patterns of fishing across the world's oceans at temporal scales as fine as daily and at spatial scales as fine as 0.1 or 0.01 degree cells. Fishing hours can be separated out by gear type, vessel flag and other characteristics of vessels such as tonnage.~ Potential applications for this dataset are broad. We offer suggested use cases to illustrate its utility. The dataset can be integrated as a static layer in multi-layered analyses, allowing researchers to investigate relationships between fishing effort and other variables, including biodiversity, tracking, and environmental data, as defined by their research objectives.~ A few example questions that these data could be used to answer: What flag states have fishing activity in my area of interest? Do hotspots of longline fishing overlap with known migration routes of sea turtles? How does fishing time by trawlers change by month in my area of interest? Which seasons see the most trawling hours and which see the least? Caveats This global dataset estimates apparent fishing hours effort. The dataset is based on publicly available information and statistical classifications which may not fully capture the nuances of local fishing practices. While we manually review the dataset at a global scale and in a select set of smaller test regions to check for issues, given the scale of the dataset we are unable to manually review every fleet in every region. We recognize the potential for inaccuracies and encourage users to approach regional analyses with caution, utilizing their own regional expertise to validate findings. We welcome your feedback on any regional analysis at research@globalfishingwatch.org to enhance the dataset's accuracy. Caveats relating to known sources of inaccuracy as well as interpretation pitfalls to avoid are described in the README-known-issues-v3.txt file available for download from this page. We highly recommend that users read this file in full. The issues described include:~ Data from 2024 should be considered provisional, as vessel classifications may change as more data from 2025 becomes available.~ MMSI is used in this dataset as the vessel identifier. While MMSI is intended to serve as the unique AIS identifier for an individual vessel, this does not always hold in practice. The Maritime Identification Digits (MID), the first 3 digits of MMSI, are the only source of information on vessel flag state when the vessel does not appear on a registry. The MID may be entered incorrectly, obscuring information about an MMSI's flag state. AIS reception is not consistent across all areas and changes over time. Alternative ways to access Query using SQL in the Global Fishing Watch public BigQuery dataset: global-fishing-watch.fishing\_effort\_v3 Download the entire dataset from the Global Fishing Watch Data Download Portal (https://globalfishingwatch.org/data-download/datasets/public-fishing-effort)},
   copyright = {Creative Commons Attribution Non Commercial 4.0 International},
   keywords = {Fisheries,Fisheries management,Fisheries/statistics &amp; numerical data,Sustainable fisheries}
+}
+
+@misc{HomeH3,
+  title = {Home \textbar{} {{H3}}},
+  urldate = {2026-05-08},
+  abstract = {H3},
+  howpublished = {https://h3geo.org/},
+  langid = {english},
+  file = {/Users/pb/Zotero/storage/S5LRMFB7/h3geo.org.html}
 }
 
 @article{kavanaughHierarchicalDynamicSeascapes2014,
@@ -91,25 +100,25 @@
 
 @misc{ne_10m_coastline,
   title = {Natural {{Earth}} 1:10m {{Physical Vectors}}: {{Coastline}}},
-  author = {Natural Earth},
+  author = {{Natural Earth}},
   journal = {naturalearthdata.com},
   urldate = {2026-05-08},
-  howpublished = {https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-coastline/}
+  howpublished = {https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-coastline}
 }
 
 @misc{ne_10m_land,
   title = {Natural {{Earth}} 1:10m {{Physical Vectors}}: {{Land}}},
-  author = {Natural Earth},
+  author = {{Natural Earth}},
   journal = {naturalearthdata.com},
   urldate = {2026-05-08},
-  howpublished = {https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land/}
+  howpublished = {https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land}
 }
 
 @misc{ukho_ficz_focz_limits,
   title = {Falkland {{Islands Conservation Zones}}},
-  author = {South Atlantic Environmental Research Institute},
+  author = {{South Atlantic Environmental Research Institute}},
   journal = {SAERI Dataportal},
   urldate = {2026-05-08},
   abstract = {Falkland Islands Conservation Zones defined for fisheries activities. Two zones were identified and classified as inner (FICZ) and outer (FOCZ) conservation zones. They are currently in use and officially recognised by the Falkland Islands Governement and international laws.},
-  howpublished = {https://dataportal.saeri.org/dataset/falkland-islands-conservation-zones/}
+  howpublished = {https://dataportal.saeri.org/dataset/falkland-islands-conservation-zones}
 }

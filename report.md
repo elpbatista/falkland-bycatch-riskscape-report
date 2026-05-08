@@ -42,6 +42,18 @@ pandoc \
   -o batistaj_capstone.pdfc
 ```
 
+## Compilation Bash (the one I actually used)
+
+```bash
+pandoc \
+  00_title.md \
+  04_methods.md \
+  08_references.md \
+  09_appendices.md \
+  --citeproc \
+  -o batistaj_capstone.pdf
+```
+
 The risk is defined as $R = P \times E$.
 
 ---
