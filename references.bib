@@ -1,3 +1,34 @@
+@misc{c3sERA5PostprocessedDaily2024,
+  title = {{{ERA5}} Post-Processed Daily Statistics on Single Levels from 1940 to Present},
+  author = {{C3S}},
+  year = 2024,
+  publisher = {ECMWF},
+  doi = {10.24381/CDS.4991CF48},
+  urldate = {2026-05-08}
+}
+
+@misc{europeanunion-copernicusmarineserviceGlobalOceanColour2022,
+  title = {Global {{Ocean Colour}} ({{Copernicus-GlobColour}}), {{Bio-Geo-Chemical}}, {{L4}} (Monthly and Interpolated) from {{Satellite Observations}} (1997-Ongoing)},
+  author = {{European Union-Copernicus Marine Service}},
+  year = 2022,
+  publisher = {Mercator Ocean International},
+  doi = {10.48670/MOI-00281},
+  urldate = {2026-05-08},
+  langid = {english},
+  keywords = {oceanography}
+}
+
+@misc{europeanunion-copernicusmarineserviceGLOBALOCEANGRIDDED2021,
+  title = {{{GLOBAL OCEAN GRIDDED L4 SEA SURFACE HEIGHTS AND DERIVED VARIABLES REPROCESSED}} (1993-{{ONGOING}})},
+  author = {{European Union-Copernicus Marine Service}},
+  year = 2021,
+  publisher = {Mercator Ocean International},
+  doi = {10.48670/MOI-00148},
+  urldate = {2026-05-08},
+  langid = {english},
+  keywords = {oceanography}
+}
+
 @misc{fisheries_grid_squares,
   title = {Falkland {{Islands Fisheries Grid Squares}}},
   author = {South Atlantic Environmental Research Institute},
@@ -19,6 +50,19 @@
   keywords = {elevation,oceans}
 }
 
+@misc{globalfishingwatchGlobalAISbasedApparent2025,
+  title = {Global {{AIS-based Apparent Fishing Effort Dataset}}},
+  author = {{Global Fishing Watch}},
+  year = 2025,
+  month = mar,
+  publisher = {Global Fishing Watch},
+  doi = {10.5281/ZENODO.14982712},
+  urldate = {2026-05-08},
+  abstract = {Overview This dataset contains version 3.0 (March 2025 release) of the Global Fishing Watch apparent fishing effort dataset. Data is available for 2012-2024 and based on positions of {$>$}190,000 unique automatic identification system (AIS) devices on fishing vessels, of which up to \textasciitilde 96,000 are active in a given year. Fishing vessels are identified via a machine learning model, vessel registry databases, and manual review by GFW and regional experts. Vessel time is measured in hours, calculated by assigning to each AIS position the amount of time elapsed since the previous AIS position of the vessel. The time is counted as apparent fishing hours if the GFW fishing detection model - a neural network machine learning model - determines the vessel is engaged in fishing behavior during that AIS position.~ Data are spatially binned into grid cells that measure 0.01 or 0.1 degrees on a side; the coordinates defining each cell are provided in decimal degrees (WGS84) and correspond to the lower-left corner. Data are available in the following formats:~ Daily apparent fishing hours by flag state and gear type at 100th degree resolution Monthly apparent fishing hours by flag state and gear type at 10th degree resolution Daily apparent fishing hours by MMSI at 10th degree resolution The fishing effort dataset is accompanied by a table of vessel information (e.g. gear type, flag state, dimensions). File structure Fishing effort and vessel presence data are available as .csv files in daily formats. Files for each year are stored in separate .zip files. A README.txt and schema.json file is provided for each dataset version and contains the table schema and additional information. There is also a README-known-issues-v3.txt file outlining some of the known issues with the version 3 release. Files are names according to the following convention: Daily file format:~ [fleet/mmsi]-daily-csvs-[100/10]-v3-[year].zip [fleet/mmsi]-daily-csvs-[100/10]-v3-[date].csv Monthly file format:~ fleet-monthly-csvs-10-v3-[year].zip fleet-monthly-csvs-10-v3-[date].csv Fishing vessel format: fishing-vessels-v3.csv README file format: README-[fleet/mmsi/fishing-vessels/known-issues]-v3.txt File identifiers: [fleet/mmsi]: Data by fleet (flag and geartype) or by MMSI [100/10]: 100th or 10th degree resolution [year]: Year of data included in .zip file [date]: Date of data included in .csv files. For monthly data, [date]corresponds to the first date of the month Examples: fleet-daily-csvs-100-v3-2020.zip; mmsi-daily-csvs-10-v3-2020-01-10.csv; fishing-vessels-v3.csv; README-fleet-v3.txt; fleet-monthly-csvs-10-v3-2024.zip; fleet-monthly-csvs-10-v3-2024-08-01.csv Key documentation For an overview of how GFW turns raw AIS positions into estimates of fishing hours, see this page. The models used to produce this dataset were developed as part of this publication: D.A. Kroodsma, J. Mayorga, T. Hochberg, N.A. Miller, K. Boerder, F. Ferretti, A. Wilson, B. Bergman, T.D. White, B.A. Block, P. Woods, B. Sullivan, C. Costello, and B. Worm. "Tracking the global footprint of fisheries." Science 361.6378 (2018). Model details are available in the Supplementary Materials. The README-known-issues-v3.txt file describing this dataset's specific caveats can be downloaded from this page. We highly recommend that users read this file in full. The README-mmsi-v3.txt file, the README-fleet-v3.txt file, and the README-fishing-vessels-v3.txt files are downloadable from this page and contain the data description for (respectively) the fishing hours by MMSI dataset, the fishing hours by fleet dataset, and the vessel information file. These readmes contain key explanations about the gear types and flag states assigned to vessels in the dataset. File name structure for the datafiles are available below on this page and file schema can be downloaded from this page.~ A FAQ describing the updates in this version and the differences between this dataset and the data available from the GFW Map and APIs is available here.~ Use Cases The apparent fishing hours dataset is intended to allow users to analyze patterns of fishing across the world's oceans at temporal scales as fine as daily and at spatial scales as fine as 0.1 or 0.01 degree cells. Fishing hours can be separated out by gear type, vessel flag and other characteristics of vessels such as tonnage.~ Potential applications for this dataset are broad. We offer suggested use cases to illustrate its utility. The dataset can be integrated as a static layer in multi-layered analyses, allowing researchers to investigate relationships between fishing effort and other variables, including biodiversity, tracking, and environmental data, as defined by their research objectives.~ A few example questions that these data could be used to answer: What flag states have fishing activity in my area of interest? Do hotspots of longline fishing overlap with known migration routes of sea turtles? How does fishing time by trawlers change by month in my area of interest? Which seasons see the most trawling hours and which see the least? Caveats This global dataset estimates apparent fishing hours effort. The dataset is based on publicly available information and statistical classifications which may not fully capture the nuances of local fishing practices. While we manually review the dataset at a global scale and in a select set of smaller test regions to check for issues, given the scale of the dataset we are unable to manually review every fleet in every region. We recognize the potential for inaccuracies and encourage users to approach regional analyses with caution, utilizing their own regional expertise to validate findings. We welcome your feedback on any regional analysis at research@globalfishingwatch.org to enhance the dataset's accuracy. Caveats relating to known sources of inaccuracy as well as interpretation pitfalls to avoid are described in the README-known-issues-v3.txt file available for download from this page. We highly recommend that users read this file in full. The issues described include:~ Data from 2024 should be considered provisional, as vessel classifications may change as more data from 2025 becomes available.~ MMSI is used in this dataset as the vessel identifier. While MMSI is intended to serve as the unique AIS identifier for an individual vessel, this does not always hold in practice. The Maritime Identification Digits (MID), the first 3 digits of MMSI, are the only source of information on vessel flag state when the vessel does not appear on a registry. The MID may be entered incorrectly, obscuring information about an MMSI's flag state. AIS reception is not consistent across all areas and changes over time. Alternative ways to access Query using SQL in the Global Fishing Watch public BigQuery dataset: global-fishing-watch.fishing\_effort\_v3 Download the entire dataset from the Global Fishing Watch Data Download Portal (https://globalfishingwatch.org/data-download/datasets/public-fishing-effort)},
+  copyright = {Creative Commons Attribution Non Commercial 4.0 International},
+  keywords = {Fisheries,Fisheries management,Fisheries/statistics &amp; numerical data,Sustainable fisheries}
+}
+
 @article{kavanaughHierarchicalDynamicSeascapes2014,
   title = {Hierarchical and Dynamic Seascapes: {{A}} Quantitative Framework for Scaling Pelagic Biogeochemistry and Ecology},
   shorttitle = {Hierarchical and Dynamic Seascapes},
@@ -34,6 +78,15 @@
   abstract = {Comparative analyses of oceanic ecosystems require an objective framework to define coherent study regions and scale the patterns and processes observed within them. We applied the hierarchical patch mosaic paradigm of landscape ecology to the study of the seasonal variability of the North Pacific to facilitate comparative analysis between pelagic ecosystems and provide spatiotemporal context for Eulerian time-series studies. Using 13-year climatologies of sea surface temperature (SST), photosynthetically active radiation (PAR), and chlorophyll a (chl-a), we classified seascapes in environmental space that were monthly-resolved, dynamic and nested in space and time. To test the assumption that seascapes represent coherent regions with unique biogeochemical function and to determine the hierarchical scale that best characterized variance in biogeochemical parameters, independent data sets were analyzed across seascapes using analysis of variance (ANOVA), nested-ANOVA and multiple linear regression (MLR) analyses. We also compared the classification efficiency (as defined by the ANOVA F-statistic) of resultant dynamic seascapes to a commonly-used static classification system. Variance of nutrients and net primary productivity (NPP) were well characterized in the first two levels of hierarchy of eight seascapes nested within three superseascapes (R2 = 0.5--0.7). Dynamic boundaries at this level resulted in a nearly 2-fold increase in classification efficiency over static boundaries. MLR analyses revealed differential forcing on pCO2 across seascapes and hierarchical levels and a 33\% reduction in mean model error with increased partitioning (from 18.5 latm to 12.0 latm pCO2). Importantly, the empirical influence of seasonality was minor across seascapes at all hierarchical levels, suggesting that seascape partitioning minimizes the effect of non-hydrographic variables. As part of the emerging field of pelagic seascape ecology, this effort provides an improved means of monitoring and comparing oceanographic biophysical dynamics and an objective, quantitative basis by which to scale data from local experiments and observations to regional and global biogeochemical cycles.},
   langid = {english},
   file = {/Users/pb/Zotero/storage/7UI6MTVU/Kavanaugh et al. - 2014 - Hierarchical and dynamic seascapes A quantitative framework for scaling pelagic biogeochemistry and.pdf}
+}
+
+@misc{nasa/jplGHRSSTLevel42015,
+  title = {{{GHRSST Level}} 4 {{MUR Global Foundation Sea Surface Temperature Analysis}} (v4.1)},
+  author = {{NASA/JPL}},
+  year = 2015,
+  publisher = {NASA Physical Oceanography Distributed Active Archive Center},
+  doi = {10.5067/GHGMR-4FJ04},
+  urldate = {2026-05-08}
 }
 
 @misc{ne_10m_coastline,
