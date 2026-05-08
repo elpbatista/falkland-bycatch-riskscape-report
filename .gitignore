@@ -1,0 +1,32 @@
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Pandoc / LaTeX temporary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Generated PDFs
+*.pdf
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Python cache
+__pycache__/
+*.pyc
