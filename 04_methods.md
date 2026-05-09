@@ -154,7 +154,9 @@ Final modeling tables were assembled by joining dynamic environmental variables,
 
 ## Species-Use Modeling
 
-Species-use models were trained to predict relative species use from environmental and static spatial predictors. The training dataset was constructed from the `H3`/`date`/`species` species-presence table joined to the environmental feature grid. The response variable was a `ResidenceIndex` defined as the product of telemetry record count and individual count for each observed `H3`/`date`/`species` group:
+Predictor variables represented environmental state, environmental variability, seasonality, and static spatial structure. Dynamic predictors described oceanographic conditions for each `h3`/`date` combination, while derived variables captured local gradients, seasonal anomalies, and cyclic temporal patterns. Static predictors represented persistent geographic structure, including bathymetry, slope, coastal proximity, and spatial position.
+
+Species-use models were trained to predict relative species use from environmental and static spatial predictors. The training dataset was constructed from the `h3`/`date`/`species` species-presence table joined to the environmental feature grid. The response variable was a `ResidenceIndex` defined as the product of telemetry record count and individual count for each observed `h3`/`date`/`species` group:
 
 $$
 \mathrm{ResidenceIndex}(h,t,s)
@@ -196,7 +198,7 @@ Risk estimation was implemented as a relative spatiotemporal overlap index, not 
 
 ### Environmental plausibility
 
-Environmental plausibility was estimated with the Bayesian/Gaussian mixture model. For each `H3`/`date`/`species` combination, the model calculated the log density of the environmental feature vector under the fitted Gaussian mixture model. Log densities were normalized to a bounded plausibility score using the fitted 1st and 99th percentile density limits:
+Environmental plausibility was estimated with the Bayesian/Gaussian mixture model. For each `h3`/`date`/`species` combination, the model calculated the log density of the environmental feature vector under the fitted Gaussian mixture model. Log densities were normalized to a bounded plausibility score using the fitted 1st and 99th percentile density limits:
 
 $$
 \mathrm{Plausibility}(h,t,s)
