@@ -48,11 +48,11 @@ Environmental raster datasets were spatially aligned to the H3 framework and tem
 
 ### Fisheries Data
 
-Fishing effort data were derived from Global Fishing Watch (GFW) AIS-based [@globalfishingwatchGlobalAISbasedApparent2025] fishing activity products covering the period 2014-2023. The dataset contains 2,297,069 records representing approximately 3.1 million fishing hours from 2,011 unique vessels.
+Fishing effort data were derived from Global Fishing Watch (GFW) AIS-based [@globalfishingwatchGlobalAISbasedApparent2025] fishing activity products covering the period 2014-2023. The dataset contains 2,297,069 records representing 3,094,974.5 fishing hours from 2,011 unique vessels.
 
 The dominant fishing gear types were trawlers with 1,497,210 fishing hours from 567 vessels, squid jiggers with 1,256,653 fishing hours from 1,207 vessels, and set longlines thet account for 202,871 fishing hours with only 41 vessels. The dataset includes vessels operating under multiple flag states, with the largest fishing effort contributions associated with Argentina (ARG), China (CHN), Taiwan (TWN), South Korea (KOR), Spain (ESP), and the Falkland Islands (FLK).
 
-Fishing effort observations were aggregated by H3 cell and date, producing daily spatial fishing effort features including total fishing hours and vessel counts for each H3/date combination.
+Fishing effort observations were aggregated by H3 cell and date, producing daily spatial fishing effort features including total fishing hours and vessel counts for each `h3`/`date` combination.
 
 ### Biological Data
 
@@ -60,7 +60,7 @@ Species presence data were derived from field telemetry records provided by the 
 
 The dataset includes observations of Black-browed albatrosses (*Thalassarche melanophris*; BBAL) and South American fur seals (*Arctocephalus australis*; SAFS). BBAL accounts for 33,425 records from 27 individuals and 58 trips covering 16 days between 2022-12-02 and 2022-12-17. SAFS accounts for 25,757 records from 15 individuals and 18 trips collected between 2022-10-22 and 2023-03-16, covering 146 observation days (71 in 2022 and 75 in 2023).
 
-Telemetry observations were aggregated by H3 cell, date, and species, resulting in 10,268 H3/date/species rows.
+Telemetry observations were aggregated by H3 cell, date, and species, resulting in 10,268 `h3`/`date`/`species` rows.
 
 ### Reference Data
 
@@ -243,7 +243,7 @@ The plausibility gate was used as an exploratory support filter rather than as a
 
 ### Fishing exposure and realized risk
 
-Observed fishing activity was used to estimate realized risk. For each H3/date combination, fishing activity was calculated as:
+Observed fishing activity was used to estimate realized risk. For each `h3`/`date` combination, fishing activity was calculated as:
 
 $$
 \mathrm{FishingActivity}(h,t)
@@ -285,7 +285,7 @@ Final prediction outputs included H3 cell, date, species, hybrid species-use pre
 
 ## Validation
 
-Validation included data-quality checks, model-performance evaluation, and environmental-support assessment. During preprocessing, feature tables were checked for required columns, consistent `h3` and `date` keys, duplicate records, missing values, and expected data types. Environmental features were inspected after aggregation and transformation to confirm that yearly partitions retained the expected H3/date structure and that derived variables, including gradients and anomalies, were generated without row inflation.
+Validation included data-quality checks, model-performance evaluation, and environmental-support assessment. During preprocessing, feature tables were checked for required columns, consistent `h3` and `date` keys, duplicate records, missing values, and expected data types. Environmental features were inspected after aggregation and transformation to confirm that yearly partitions retained the expected `h3`/`date` structure and that derived variables, including gradients and anomalies, were generated without row inflation.
 
 Species-use models were evaluated using a random train-test split with 25% of rows withheld for testing. Predictions were evaluated after back-transforming from log space to the original residence-index scale. Model comparison metrics included coefficient of determination ($R^2$), root mean squared error (RMSE), and mean absolute error (MAE). Additional diagnostics included predicted-versus-observed plots, residual inspection, and feature-importance analysis. These diagnostics supported interpretation of model behavior but were not treated as independent ecological validation.
 

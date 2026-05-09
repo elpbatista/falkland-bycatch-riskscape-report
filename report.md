@@ -49,7 +49,6 @@ pandoc \
   00_title.md \
   04_methods.md \
   08_references.md \
-  09_appendices.md \
   --citeproc \
   -o batistaj_capstone.pdf
 ```
