@@ -158,34 +158,134 @@ Final modeling tables were assembled by joining dynamic environmental variables,
 
 ## Species-Use Modeling
 
-Keep focused on:
+Species-use models were trained to predict relative species use from environmental and static spatial predictors. The training dataset was constructed from the `H3`/`date`/`species` species-presence table joined to the environmental feature grid. The response variable was a `ResidenceIndex` defined as the product of telemetry record count and individual count for each observed `H3`/`date`/`species` group:
 
-* predictors,
-* response variables,
-* training strategy,
-* model selection,
-* outputs.
+$$
+\mathrm{ResidenceIndex}(h,t,s)
+=
+\mathrm{PresenceCount}(h,t,s)
+\times
+\mathrm{IndividualCount}(h,t,s)
+$$
 
-should focus on:
+where $h$ is an H3 cell, $t$ is date, and $s$ is species. This formulation was used to increase the relative influence of locations with both repeated observations and multiple tracked individuals. The modeling target was transformed as:
 
-* which features were used,
-* model inputs/outputs,
-* training strategy,
-* model configuration.
+$$
+y=\log\left(1+\mathrm{ResidenceIndex}\right)
+$$
 
-Not the detailed construction of the features themselves.
+For each observed `species`/`date` combination, all H3 cells in the environmental feature grid were included. Cells without telemetry observations were retained and assigned zero target values, allowing the model to learn from both observed-use and unused cells within the same environmental domain.
 
-Avoid discussing results here.
+Predictor variables included dynamic environmental conditions, derived environmental features, seasonal terms, and static spatial variables. Dynamic predictors included `sst`, `ssh`, `wind_speed`, and log-transformed `chl`. Derived predictors included environmental anomalies and H3-neighbor gradients. Seasonal predictors were represented using cyclic day-of-year sine and cosine terms. Static predictors included bathymetric depth, bathymetric slope, distance to coast, and encoded H3 centroid coordinates.
+
+The implemented workflow used a joint-species modeling approach. Species identity was represented using one-hot encoded categorical variables appended to the numerical predictor matrix. This allowed a single model to learn shared environmental structure while preserving species-specific responses.
+
+Because zero-use rows greatly outnumbered positive-use rows, the training dataset was balanced before model fitting. All positive rows were retained, and an equal number of zero-use rows was randomly sampled. Sample weights were applied during fitting to increase the influence of higher-use observations:
+
+$$
+w
+=
+1+\mathrm{ResidenceIndex}^{0.75}
+$$
+
+Four model classes were evaluated during model comparison: histogram gradient boosting, random forest, extra trees, and a Bayesian/Gaussian mixture approach. Tree-based models were trained using ensemble learning methods with regularization and constrained tree depth to reduce overfitting.
+
+The Bayesian/Gaussian mixture implementation used a Gaussian mixture model fitted to positive-use observations in standardized feature space. The resulting environmental likelihood surface was normalized and combined with a histogram gradient boosting prior trained on the full dataset. Final predictions from this estimator were generated as an equal-weighted combination of the likelihood-based estimate and the prior model prediction.
+
+Model outputs were expressed as `species_use_log_pred`, representing predicted species use on the log-transformed scale. Model comparison metrics were computed after back-transforming predictions to the original target scale and included $R^2$, root mean squared error, and mean absolute error.
 
 ## Risk Estimation
 
-This is where:
+Risk estimation was implemented as a relative spatiotemporal overlap index, not as a direct prediction of observed bycatch probability. The workflow combined predicted species use, environmental plausibility, and fishing exposure for each H3 cell, date, and species.
 
-* interaction surfaces,
-* exposure combination,
-* probability integration,
-* or risk scoring
-    should be described.
+### Environmental plausibility
+
+Environmental plausibility was estimated with the Bayesian/Gaussian mixture model. For each `H3`/`date`/`species` combination, the model calculated the log density of the environmental feature vector under the fitted Gaussian mixture model. Log densities were normalized to a bounded plausibility score using the fitted 1st and 99th percentile density limits:
+
+$$
+\mathrm{Plausibility}(h,t,s)
+=
+\mathrm{clip}
+\left(
+\frac{
+\ell(h,t,s) - \ell_{\min}
+}{
+\ell_{\max} - \ell_{\min}
+},
+0,
+1
+\right)
+$$
+
+where $\ell(h,t,s)$ is the Gaussian mixture log density for H3 cell $h$, date $t$, and species $s$, and $\ell_{\min}$ and $\ell_{\max}$ are the lower and upper normalization limits estimated during model fitting. Plausibility values near 1 indicate environmental conditions similar to those associated with observed species use; values near 0 indicate weak environmental support relative to the fitted use-space distribution.
+
+The plausibility score was used as an exploratory support filter for the Extra Trees species-use predictions. Predictions were first converted from log space to the original target scale, multiplied by a species-specific gate, and then transformed back to log space:
+
+$$
+\mathrm{Gate}(h,t,s)
+=
+1 - c_s \left(1 - \mathrm{Plausibility}(h,t,s)\right)
+$$
+
+$$
+\mathrm{HybridUse}(h,t,s)
+=
+\mathrm{Use}_{ML}(h,t,s)
+\times
+\mathrm{Gate}(h,t,s)
+$$
+
+$$
+\mathrm{HybridUseLog}(h,t,s)
+=
+\log\left(1+\mathrm{HybridUse}(h,t,s)\right)
+$$
+
+where $c_s$ is the maximum proportional reduction allowed under the plausibility gate. In this implementation, a fixed demonstration value of $c_s = 0.10$ was applied to both species. Thus, even when environmental plausibility was low, predicted species use was only weakly reduced rather than forced to zero.
+
+The plausibility gate was used as an exploratory support filter rather than as a calibrated biological correction factor. Because the gate value was not estimated from independent validation data, plausibility-filtered outputs were interpreted alongside the ungated species-use and risk surfaces. This allowed areas of weak environmental support to be identified without treating low plausibility as confirmed species absence.
+
+### Fishing exposure and realized risk
+
+Observed fishing activity was used to estimate realized risk. For each H3/date combination, fishing activity was calculated as:
+
+$$
+\mathrm{FishingActivity}(h,t)
+=
+\mathrm{FishingHours}(h,t)
+\times
+\mathrm{VesselCount}(h,t)
+$$
+
+Fishing activity was transformed using:
+
+$$
+\mathrm{FishingActivityLog}(h,t)
+=
+\log\left(1 + \mathrm{FishingActivity}(h,t)\right)
+$$
+
+The realized risk index was then calculated additively in log space:
+
+$$
+\mathrm{RiskLogPred}(h,t,s)
+=
+\mathrm{SpeciesUseLogPred}(h,t,s)
++
+\mathrm{FishingActivityLog}(h,t)
+$$
+
+This is equivalent to estimating risk as a multiplicative overlap between species use and fishing exposure on the original scale. Cells with no observed fishing activity received no realized fishing-exposure contribution, even when predicted species use was high.
+
+### Latent risk
+
+Latent risk was estimated using a standardized minimum fishing exposure instead of observed fishing activity. A baseline exposure of 0.5 vessel-hours per H3 cell-day was used, representing approximately one vessel operating within or traversing an H3 resolution 6 cell for about 30 minutes at fishing speed.
+
+Latent risk identifies where predicted species use would imply potential interaction risk if fishing activity were present. In contrast, realized risk identifies where predicted species use overlapped with observed fishing activity.
+
+For plausibility-filtered latent risk, low-plausibility cell-days were treated as environmentally weakly supported rather than confirmed absences. Where plausibility fell below the selected support threshold, latent plausible risk was not reported for that cell-day.
+
+Final prediction outputs included H3 cell, date, species, hybrid species-use prediction, fishing exposure on the log scale, risk prediction on the log scale, plausibility, and gate value.
 
 ## Validation
 
