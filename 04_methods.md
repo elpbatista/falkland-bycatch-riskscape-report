@@ -10,17 +10,35 @@ Not detailed implementation.
 
 ## Framework
 
-Describe the overall framework and how the different components fit together. This is where you can introduce the risk equation and how it will be applied in this context.
+This project uses a spatially explicit riskscape framework to estimate potential bycatch risk as the overlap between species use, fishing activity, and environmental conditions. The framework integrates environmental and fisheries datasets covering the period 2014-2023 with species-use observations derived from telemetry records collected from tracked individuals during 2022-2023. Because telemetry observations represent limited sampling periods and only tracked individuals, the resulting riskscapes should be interpreted as relative indicators of species use and potential interaction risk rather than definitive representations of population-level species distributions or observed bycatch probability.
 
-This is where you define:
+The framework does not attempt to predict observed bycatch events directly. Instead, it represents bycatch risk as a relative spatiotemporal index describing where and when species use and fishing activity co-occur under environmental conditions associated with observed species use.
 
-* conceptual structure,
-* component relationships,
-* analytical flow,
-* assumptions,
-* and possibly the overall risk equation.
+All datasets were aligned to a common H3 grid and daily temporal resolution. Each record in the modeling framework represents one H3 cell on one date. Environmental variables describe the oceanographic state of each cell-day, species tracking data provide evidence of animal use, and fishing effort data represent operational exposure.
 
-This is probably where your workflow diagram belongs.
+The conceptual framework separates three components. First, species-use modeling estimates where each species is likely to occur or concentrate as a function of environmental conditions. Second, fishing exposure represents the intensity of fishing activity in each H3 cell and date. Third, the risk surface combines predicted species use and fishing exposure to compute a relative index of potential interaction risk for each H3 cell and date.
+
+The general risk relationship can be expressed as:
+
+$$
+\mathrm{Risk}(h,t,s)=\mathrm{SpeciesUse}(h,t,s)\times\mathrm{FishingExposure}(h,t)
+$$
+
+where $h$ is an H3 cell, $t$ is date, and $s$ is species. In the implemented workflow, species use and fishing exposure were represented on a transformed scale, so the risk index was computed as:
+
+$$
+\log\left(\mathrm{Risk}(h,t,s)\right)
+=
+\log\left(\mathrm{SpeciesUse}(h,t,s)\right)
++
+\log\left(\mathrm{FishingExposure}(h,t)\right)
+$$
+
+This formulation treats risk as a relative index rather than an absolute probability of bycatch. High-risk cells therefore represent locations and dates where predicted species use and fishing activity are both high.
+
+To represent minimum operational fishing exposure within the H3 framework, a baseline fishing effort unit of 0.5 vessel-hours per H3 cell was introduced. This value approximates the minimum time required for a fishing vessel operating at fishing speed to traverse an H3 resolution 6 cell. The baseline effort unit was used to estimate latent interaction risk through overlap with predicted species use surfaces, including locations and dates where observed fishing effort was absent or sparse.
+
+The framework assumes that bycatch risk increases with spatiotemporal overlap between species use and fishing activity, and that environmental conditions help explain variation in species use.
 
 ## Data
 
