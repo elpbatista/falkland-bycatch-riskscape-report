@@ -1,12 +1,8 @@
 # Methods
 
-The opening text without subtitle should probably be a short introductory paragraph that:
+This chapter describes the analytical workflow used to construct dynamic bycatch riskscapes for the Falkland Islands region. The workflow integrates environmental raster products, fishing effort observations, species telemetry records, and static spatial reference layers within a common H3-based spatial framework and daily temporal resolution. These harmonized datasets were used to train species-use models, estimate environmental plausibility, and combine predicted species use with fishing exposure to generate relative risk surfaces.
 
-* summarizes the workflow,
-* states the general analytical approach,
-* and briefly introduces the components.
-
-Not detailed implementation.
+The methods are organized into five components: the overall riskscape framework, input datasets, spatial and temporal data processing, species-use modeling, and risk estimation. Validation procedures are then summarized, including implemented model diagnostics and additional validation approaches identified for future development.
 
 ## Framework
 
@@ -289,10 +285,12 @@ Final prediction outputs included H3 cell, date, species, hybrid species-use pre
 
 ## Validation
 
-Include:
+Validation included data-quality checks, model-performance evaluation, and environmental-support assessment. During preprocessing, feature tables were checked for required columns, consistent `h3` and `date` keys, duplicate records, missing values, and expected data types. Environmental features were inspected after aggregation and transformation to confirm that yearly partitions retained the expected H3/date structure and that derived variables, including gradients and anomalies, were generated without row inflation.
 
-* train/test split,
-* metrics,
-* uncertainty,
-* plausibility checks,
-* feature importance if used.
+Species-use models were evaluated using a random train-test split with 25% of rows withheld for testing. Predictions were evaluated after back-transforming from log space to the original residence-index scale. Model comparison metrics included coefficient of determination ($R^2$), root mean squared error (RMSE), and mean absolute error (MAE). Additional diagnostics included predicted-versus-observed plots, residual inspection, and feature-importance analysis. These diagnostics supported interpretation of model behavior but were not treated as independent ecological validation.
+
+Environmental plausibility was evaluated separately from direct species-use prediction. The Bayesian/Gaussian mixture model was used to identify `h3`/`date`/`species` combinations whose environmental conditions were similar to those associated with observed telemetry locations. Plausibility values were therefore interpreted as environmental-support diagnostics rather than as direct validation of species presence or absence. Risk surfaces were interpreted alongside plausibility surfaces to distinguish well-supported predictions from environmental extrapolation.
+
+Several additional validation approaches were not implemented in the current workflow but would strengthen future analyses. These include spatial or spatiotemporal block cross-validation, validation across individuals or trips, sensitivity analysis of the plausibility-gate parameter, comparison with independent bycatch or observer records, and uncertainty assessment across model classes and aggregation strategies.
+
+\newpage
