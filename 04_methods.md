@@ -78,32 +78,83 @@ Natural Earth coastline and land 1:10m physical vectors datasets [@ne_10m_coastl
 
 Spatial integration was performed using the H3 hierarchical hexagonal indexing system developed by Uber [@HomeH3]. The study area was discretized using H3 resolution 6 cells, providing an average cell area of approximately 36 km². The fisheries grid extent plus an additional 50 km buffer was converted to an H3 grid containing 37,209 cells. The H3 framework provides globally unique hierarchical spatial indexes and was used as a common spatial reference for integrating environmental variables, fishing effort, and species presence observations across daily temporal intervals.
 
-Environmental raster variables were aggregated to the H3 grid using area-weighted means. Raster pixels were converted to polygon footprints and intersected with H3 cell polygons. The geodesic area of each pixel-H3 overlap was used to compute normalized weights within each H3 cell. Daily raster values were aggregated by multiplying intersecting pixel values by their overlap weights and summing across pixels while excluding missing or invalid raster values. This produced daily H3-level environmental features aligned to the common H3/date modeling framework.
+Environmental raster variables were aggregated to the H3 grid using area-weighted means. Raster pixels were converted to polygon footprints and intersected with H3 cell polygons. The geodesic area of each pixel-H3 overlap was used to compute normalized weights within each H3 cell. Daily raster values were aggregated by multiplying intersecting pixel values by their overlap weights and summing across pixels while excluding missing or invalid raster values. This produced daily H3-level environmental features aligned to the common `h3`/`date` modeling framework.
 
 ## Data Processing
 
-What goes here? This is where you can describe the data processing steps, including any cleaning, transformation, or integration of the different data sources. You can also describe how the H3 spatial framework was applied...
+Data processing followed a staged pipeline that transformed raw environmental rasters, fishing observations, species telemetry records, and static spatial layers into H3-indexed feature tables. The pipeline used `h3` and `date` as common keys, with H3 indexes stored as unsigned 64-bit integers and dates converted to UTC daily timestamps. Intermediate and final tables were written as yearly Parquet partitions using ZSTD compression.
 
-because the section is really:
+Environmental processing began with raster-to-H3 lookup tables computed separately for each raster product and reused during feature generation. Daily raster values were aggregated to H3 cells using the area-weighted procedure described above. Aggregated environmental tables were grouped by `h3` and `date`, duplicate contributions were averaged, and variables were stored as 32-bit floating point values.
 
-* harmonization,
-* transformation,
-* aggregation,
-* alignment,
-* cube generation.
-  
-would naturally include:
+Several derived environmental variables were generated after spatial aggregation. Near-surface wind speed was calculated from zonal and meridional wind components as:
 
-* temporal harmonization,
-* spatial aggregation,
-* interpolation,
-* derived variables,
-* gradients,
-* rolling statistics,
-* front metrics,
-* encoding,
-* normalization,
-* feature engineering.
+$$
+\mathrm{WindSpeed}
+=
+\sqrt{u_{10}^{2}+v_{10}^{2}}
+$$
+
+Chlorophyll-a concentration was log-transformed to reduce skew:
+
+$$
+\mathrm{CHL}_{\log}
+=
+\log\left(1+\mathrm{CHL}\right)
+$$
+
+Seasonality was represented with cyclic day-of-year predictors on a 365-day cycle. For non-leap years, the calendar day of year was used directly. For leap years, dates after February 28 were shifted back by one day so that February 29 was removed from the seasonal cycle. The adjusted day of year, $d^*$, was therefore defined as:
+
+$$
+d^* =
+\begin{cases}
+d - 1, & \text{if year is leap and } d > 59 \\
+d, & \text{otherwise}
+\end{cases}
+$$
+
+where $d$ is the calendar day of year and $d^*$ is the adjusted day of year. Seasonal predictors were then encoded as:
+
+$$
+\mathrm{doy\_sin}=\sin\left(\frac{2\pi d^*}{365}\right)
+$$
+
+$$
+\mathrm{doy\_cos}=\cos\left(\frac{2\pi d^*}{365}\right)
+$$
+
+Spatial gradients were computed on the H3 grid to represent local environmental contrast. To improve processing efficiency, H3 ring-1 neighbor relationships were precomputed as lookup and index tables and reused during feature generation. For each date, each H3 cell was compared with its valid neighboring cells. Gradients were calculated as the root mean square difference between the focal cell and its neighbors:
+
+$$
+\mathrm{gradient}(i)=\sqrt{\mathrm{mean}\left((X_i-X_j)^2\right)}
+$$
+
+where $i$ is the focal H3 cell and $j$ are valid neighboring cells. Gradients were calculated for SST, log-transformed chlorophyll-a, and SSH.
+
+Temporal anomalies were computed relative to local seasonal conditions. For each H3 cell and adjusted day-of-year, a climatological mean was calculated across the full environmental record. Daily anomalies were then calculated as:
+
+$$
+X_{\mathrm{anom}}(i,t)=X(i,t)-\mathrm{mean}\left(X(i,\mathrm{adjusted\_doy})\right)
+$$
+
+Anomalies were calculated for SST, log-transformed chlorophyll-a, SSH, and wind speed.
+
+Fishing effort records were converted to geographic points, spatially joined to the H3 grid, and aggregated by H3 cell and date. Daily fishing features included total fishing hours and unique vessel counts. Fishing activity was calculated as:
+
+$$
+\mathrm{FishingActivity}(h,t)
+=
+\mathrm{FishingHours}(h,t)
+\times
+\mathrm{VesselCount}(h,t)
+$$
+
+where $h$ is an H3 cell and $t$ is date. `h3`/`date` combinations without fishing observations were retained and assigned zero fishing effort values.
+
+Telemetry records were cleaned by parsing timestamps, removing invalid dates, and retaining records with valid coordinates. Observations were spatially joined to the H3 grid and aggregated by H3 cell, date, and species. Species-use support variables included telemetry record count, individual count, and trip count. For model training, observed species/date combinations were expanded across all H3 cells available in the environmental feature grid. Cells without telemetry observations for a given species/date combination were retained and assigned zero support values.
+
+Static spatial features were generated once per H3 cell. Bathymetric depth and slope were derived from the GEBCO raster using the same area-weighted H3 aggregation procedure. Distance to coast was calculated geodesically from each H3 centroid to the nearest coastline geometry. H3 centroid latitude and longitude were encoded using sine and cosine transformations to avoid discontinuities at coordinate boundaries.
+
+Final modeling tables were assembled by joining dynamic environmental variables, derived features, static spatial variables, species-use support variables, and fishing-effort features on common `h3`/`date` keys. Dynamic predictors included `sst`, `ssh`, `wind_speed`, log-transformed `chl`, environmental anomalies, H3-neighbor gradients, and seasonal sine/cosine terms. Static predictors included bathymetry, slope, distance to coast, and encoded H3 centroid coordinates. No temporal interpolation or rolling-window smoothing was applied; all features were derived directly from daily source observations and deterministic `h3`/`date` aggregation.
 
 ## Species-Use Modeling
 
