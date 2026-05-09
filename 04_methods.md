@@ -146,7 +146,7 @@ $$
 
 where $h$ is an H3 cell and $t$ is date. `h3`/`date` combinations without fishing observations were retained and assigned zero fishing effort values.
 
-Telemetry records were cleaned by parsing timestamps, removing invalid dates, and retaining records with valid coordinates. Observations were spatially joined to the H3 grid and aggregated by H3 cell, date, and species. Species-use support variables included telemetry record count, individual count, and trip count. For model training, observed species/date combinations were expanded across all H3 cells available in the environmental feature grid. Cells without telemetry observations for a given species/date combination were retained and assigned zero support values.
+Telemetry records were cleaned by parsing timestamps, removing invalid dates, and retaining records with valid coordinates. Observations were spatially joined to the H3 grid and aggregated by H3 cell, date, and species. Species-use support variables included telemetry record count, individual count, and trip count. For model training, observed `species`/`date` combinations were expanded across all H3 cells available in the environmental feature grid. Cells without telemetry observations for a given `species`/`date` combination were retained and assigned zero support values.
 
 Static spatial features were generated once per H3 cell. Bathymetric depth and slope were derived from the GEBCO raster using the same area-weighted H3 aggregation procedure. Distance to coast was calculated geodesically from each H3 centroid to the nearest coastline geometry. H3 centroid latitude and longitude were encoded using sine and cosine transformations to avoid discontinuities at coordinate boundaries.
 
