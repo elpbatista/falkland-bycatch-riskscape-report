@@ -151,6 +151,16 @@ $$
 \label{fig:environmental-anomaly-histograms}
 \end{figure}
 
+<!-- Figure fig:daily-anomaly-timeseries: daily mean SST and wind-speed anomaly time series. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/sst_anom_daily_mean_2014-2023.png}\\[0.5em]
+\includegraphics[width=0.85\textwidth]{figures/wind_speed_anom_daily_mean_2014-2023.png}
+\caption{Daily mean environmental anomalies across the study area for 2014--2023. The upper panel shows SST anomalies and the lower panel shows wind-speed anomalies.}
+\label{fig:daily-anomaly-timeseries}
+\end{figure}
+
+
 \newpage
 
 ## Appendix A: Datasets

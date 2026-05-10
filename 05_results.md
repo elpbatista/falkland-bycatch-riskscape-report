@@ -2,11 +2,9 @@
 
 ## Integrated Data Products
 
-### Data Summary
+The final study grid contains 37,209 H3 resolution 6 cells covering the Falkland Islands fisheries grid plus a 50 km buffer. Across the 2014-2023 analysis period, this produces 3,652 daily time steps and 135,887,268 H3 cell-day records in the environmental feature grid. Environmental tables contain no duplicate `h3`/`date` keys and provide daily environmental values across the full study grid.
 
-The final study grid contained 37,209 H3 resolution 6 cells covering the Falkland Islands fisheries grid plus a 50 km buffer. Across the 2014-2023 analysis period, this produced 3,652 daily time steps and 135,887,268 H3 cell-day records in the environmental feature grid. The environmental tables contained no duplicate `h3`/`date` keys and provided daily values for sea surface temperature, sea surface height, wind speed, log-transformed chlorophyll-a, seasonal terms, spatial gradients, and temporal anomalies.
-
-The raw Global Fishing Watch dataset included 2,297,069 manually curated AIS fishing-vessel presence records from 2,011 unique vessels, representing 3,094,974.5 fishing hours between 2014 and 2023. After spatial aggregation to the H3 grid, the processed fishing-effort table contained 849,818 active `h3`/`date` records spanning 17,218 H3 cells and all 3,652 dates in the analysis period. These records retained 3,086,036.2 fishing hours and were expanded with zero-valued fishing exposure across non-observed cell-days in the full 135,887,268-row modeling grid.
+The processed fishing-exposure table contains 849,818 active `h3`/`date` records spanning 17,218 H3 cells and retaining 3,086,036.2 fishing hours after spatial aggregation. Fishing exposure is expanded to the full H3/date framework by assigning zero-valued exposure to non-observed cell-days.
 
 <!-- Figure fig:species-presence-observations: telemetry presence count maps by species. -->
 \begin{figure}[htbp]
@@ -19,17 +17,15 @@ The raw Global Fishing Watch dataset included 2,297,069 manually curated AIS fis
 \label{fig:species-presence-observations}
 \end{figure}
 
-The cleaned SAERI telemetry dataset included 59,182 valid records from 42 tracked individuals and 76 trips during 2022-2023. Black-browed albatrosses (BBAL) accounted for 33,425 telemetry records from 27 individuals and 58 trips, while South American fur seals (SAFS) accounted for 25,757 records from 15 individuals and 18 trips. After aggregation to the H3 framework, the species-presence table contained 10,268 `h3`/`date`/`species` records spanning 6,763 H3 cells and 146 observed dates.
+The cleaned SAERI telemetry dataset contains 59,182 valid records from 42 tracked individuals and 76 trips during 2022-2023. After aggregation to the H3 framework, the species-presence table contains 10,268 `h3`/`date`/`species` records spanning 6,763 H3 cells and 146 observed dates.
 
-BBAL contributed 4,552 `h3`/`date`/`species` rows across 3,270 H3 cells and 16 dates, with 21,329 aggregated presence counts. SAFS contributed 5,716 rows across 4,024 H3 cells and 146 dates, with 19,495 aggregated presence counts.
+BBAL contributes 4,552 `h3`/`date`/`species` rows across 3,270 H3 cells and 16 dates, with 21,329 aggregated presence counts. SAFS contributes 5,716 rows across 4,024 H3 cells and 146 dates, with 19,495 aggregated presence counts.
 
-The resulting modeling products were substantially larger than the raw biological observations because the workflow evaluated species use and risk across the full study grid. The species-training table contained 6,027,858 rows for observed species-date combinations, while the final joint plausibility, prediction, and cube-component tables each contained 257,916,862 species-cell-day records spanning the 2014-2023 analysis period.
+The final modeling products are substantially larger than the raw biological observations because the workflow evaluates species use and risk across the full study grid. The species-training table contains 6,027,858 rows for observed species-date combinations, while the final joint plausibility, prediction, and cube-component tables each contain 257,916,862 species-cell-day records spanning the 2014-2023 analysis period.
 
-### Environmental Feature Generation
+## Environmental Feature Generation
 
-The environmental feature-generation workflow produced a continuous daily feature grid for all 37,209 H3 cells across the full 2014-2023 analysis period. The resulting environmental table contained 135,887,268 H3 cell-day records, with one record for each cell on each of 3,652 dates. No duplicate `h3`/`date` keys were present.
-
-Coverage was complete for SST and exceeded 96% for all other dynamic environmental variables. Static spatial predictors, including bathymetric depth, slope, distance to coast, and encoded spatial coordinates, were complete for all H3 cells. Summary statistics for the environmental feature space are provided in Table \ref{tab:environmental-predictors}.
+The environmental feature-generation workflow produces a continuous daily feature grid for all 37,209 H3 cells across the full 2014-2023 analysis period. Coverage is complete for SST and exceeds 96% for all other dynamic environmental variables. Static spatial predictors, including bathymetric depth, slope, distance to coast, and encoded spatial coordinates, are complete for all H3 cells. Summary statistics for the environmental feature space are provided in Table \ref{tab:environmental-predictors}.
 
 <!-- Figure fig:environmental-layers-20221210: example environmental feature layers for 10 December 2022. -->
 \begin{figure}[htbp]
@@ -76,18 +72,9 @@ Distance to coast (km) & 100.0\% & 308.61 & 296.25 & 598.69 & 0.01--789.50 \\
 \end{tabular}
 \end{table}
 
-The final feature grid included base oceanographic variables, static spatial predictors, seasonal encodings, local spatial gradients, and temporal anomaly fields. Correlations among the base environmental predictors were generally moderate: SST was positively correlated with log-transformed chlorophyll-a and SSH, while wind speed was only weakly correlated with the other base variables.
+The final feature grid includes base oceanographic variables, static spatial predictors, seasonal encodings, local spatial gradients, and temporal anomaly fields. Correlations among the base environmental predictors are generally moderate: SST is positively correlated with log-transformed chlorophyll-a and SSH, while wind speed is only weakly correlated with the other base variables.
 
-Spatial-gradient predictors captured local environmental heterogeneity across neighboring H3 cells, while anomaly predictors summarized departures from local seasonal climatologies. Daily mean SST and wind-speed anomalies showed interannual variability after seasonal adjustment, and anomaly distributions remained centered near zero as expected from their definition.
-
-<!-- Figure fig:daily-anomaly-timeseries: daily mean SST and wind-speed anomaly time series. -->
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{figures/sst_anom_daily_mean_2014-2023.png}\\[0.5em]
-\includegraphics[width=0.85\textwidth]{figures/wind_speed_anom_daily_mean_2014-2023.png}
-\caption{Daily mean environmental anomalies across the study area for 2014--2023. The upper panel shows SST anomalies and the lower panel shows wind-speed anomalies.}
-\label{fig:daily-anomaly-timeseries}
-\end{figure}
+Spatial-gradient predictors capture local environmental heterogeneity across neighboring H3 cells, while anomaly predictors summarize departures from local seasonal climatologies. Mean anomalies show interannual variability after seasonal adjustment, and anomaly distributions remain centered near zero as expected from their definition (Appendix X).
 
 ## Fishing Exposure Patterns
 
