@@ -8,23 +8,38 @@ Spearman rank correlations among dynamic environmental predictors across the ful
 
 $$
 \scriptsize
-\begin{array}{lrrrrrrrrrrr}
-\hline
- & \mathrm{SST} & \mathrm{SSH} & \mathrm{Wind} & \log(\mathrm{CHL}) & \mathrm{SST}_{anom} & \mathrm{SSH}_{anom} & \mathrm{Wind}_{anom} & \log(\mathrm{CHL})_{anom} & \mathrm{SST}_{grad} & \mathrm{SSH}_{grad} & \log(\mathrm{CHL})_{grad} \\
-\hline
-\mathrm{SST} & 1.00 & 0.49 & -0.15 & 0.57 & 0.25 & 0.13 & -0.02 & -0.02 & 0.08 & -0.28 & 0.47 \\
-\mathrm{SSH} & 0.49 & 1.00 & -0.10 & 0.56 & 0.14 & 0.27 & 0.00 & -0.04 & -0.26 & -0.57 & 0.40 \\
-\mathrm{Wind} & -0.15 & -0.10 & 1.00 & -0.12 & -0.06 & 0.02 & 0.92 & 0.01 & 0.02 & 0.09 & -0.14 \\
-\log(\mathrm{CHL}) & 0.57 & 0.56 & -0.12 & 1.00 & 0.12 & 0.06 & 0.00 & 0.35 & -0.02 & -0.38 & 0.79 \\
-\mathrm{SST}_{anom} & 0.25 & 0.14 & -0.06 & 0.12 & 1.00 & 0.47 & -0.06 & 0.20 & -0.01 & 0.01 & 0.09 \\
-\mathrm{SSH}_{anom} & 0.13 & 0.27 & 0.02 & 0.06 & 0.47 & 1.00 & 0.03 & 0.05 & -0.01 & 0.09 & 0.04 \\
-\mathrm{Wind}_{anom} & -0.02 & 0.00 & 0.92 & 0.00 & -0.06 & 0.03 & 1.00 & -0.01 & 0.02 & 0.01 & -0.01 \\
-\log(\mathrm{CHL})_{anom} & -0.02 & -0.04 & 0.01 & 0.35 & 0.20 & 0.05 & -0.01 & 1.00 & -0.01 & 0.04 & 0.28 \\
-\mathrm{SST}_{grad} & 0.08 & -0.26 & 0.02 & -0.02 & -0.01 & -0.01 & 0.02 & -0.01 & 1.00 & 0.28 & 0.03 \\
-\mathrm{SSH}_{grad} & -0.28 & -0.57 & 0.09 & -0.38 & 0.01 & 0.09 & 0.01 & 0.04 & 0.28 & 1.00 & -0.25 \\
-\log(\mathrm{CHL})_{grad} & 0.47 & 0.40 & -0.14 & 0.79 & 0.09 & 0.04 & -0.01 & 0.28 & 0.03 & -0.25 & 1.00 \\
-\hline
+\mathbf{R} =
+\left[
+\begin{array}{rrrrrrrrrrr}
+1.00 & 0.49 & -0.15 & 0.57 & 0.25 & 0.13 & -0.02 & -0.02 & 0.08 & -0.28 & 0.47 \\
+0.49 & 1.00 & -0.10 & 0.56 & 0.14 & 0.27 & 0.00 & -0.04 & -0.26 & -0.57 & 0.40 \\
+-0.15 & -0.10 & 1.00 & -0.12 & -0.06 & 0.02 & 0.92 & 0.01 & 0.02 & 0.09 & -0.14 \\
+0.57 & 0.56 & -0.12 & 1.00 & 0.12 & 0.06 & 0.00 & 0.35 & -0.02 & -0.38 & 0.79 \\
+0.25 & 0.14 & -0.06 & 0.12 & 1.00 & 0.47 & -0.06 & 0.20 & -0.01 & 0.01 & 0.09 \\
+0.13 & 0.27 & 0.02 & 0.06 & 0.47 & 1.00 & 0.03 & 0.05 & -0.01 & 0.09 & 0.04 \\
+-0.02 & 0.00 & 0.92 & 0.00 & -0.06 & 0.03 & 1.00 & -0.01 & 0.02 & 0.01 & -0.01 \\
+-0.02 & -0.04 & 0.01 & 0.35 & 0.20 & 0.05 & -0.01 & 1.00 & -0.01 & 0.04 & 0.28 \\
+0.08 & -0.26 & 0.02 & -0.02 & -0.01 & -0.01 & 0.02 & -0.01 & 1.00 & 0.28 & 0.03 \\
+-0.28 & -0.57 & 0.09 & -0.38 & 0.01 & 0.09 & 0.01 & 0.04 & 0.28 & 1.00 & -0.25 \\
+0.47 & 0.40 & -0.14 & 0.79 & 0.09 & 0.04 & -0.01 & 0.28 & 0.03 & -0.25 & 1.00
 \end{array}
+\right]
+$$
+
+$$
+\begin{aligned}
+1  &= \mathrm{SST} \\
+2  &= \mathrm{SSH} \\
+3  &= \mathrm{WindSpeed} \\
+4  &= \log(\mathrm{CHL}) \\
+5  &= \mathrm{SST}_{anom} \\
+6  &= \mathrm{SSH}_{anom} \\
+7  &= \mathrm{Wind}_{anom} \\
+8  &= \log(\mathrm{CHL})_{anom} \\
+9  &= \mathrm{SST}_{grad} \\
+10 &= \mathrm{SSH}_{grad} \\
+11 &= \log(\mathrm{CHL})_{grad}
+\end{aligned}
 $$
 
 The environmental predictor space showed moderate positive correlations among SST, SSH, and log-transformed chlorophyll-a ($\rho \approx 0.49$-$0.57$), indicating that warmer conditions were generally associated with elevated SSH and higher chlorophyll concentrations across the study region. Wind speed showed weak negative correlations with the other base environmental variables ($\rho \approx -0.10$ to $-0.15$).

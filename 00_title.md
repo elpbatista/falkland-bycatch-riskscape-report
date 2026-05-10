@@ -14,6 +14,7 @@ link-citations: true
 
 header-includes:
   - \usepackage{graphicx}
+  - \usepackage{float}
 ---
 
 \newpage

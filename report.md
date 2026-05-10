@@ -47,8 +47,15 @@ pandoc \
 ```bash
 pandoc \
   00_title.md \
+  01_abstract.md \
+  02_introduction.md \
+  03_background.md \
   04_methods.md \
+  05_results.md \
+  06_discussion.md \
+  07_conclusion.md \
   08_references.md \
+  09_appendices.md \
   --citeproc \
   -o batistaj_capstone.pdf
 ```
