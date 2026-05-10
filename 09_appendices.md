@@ -1,5 +1,62 @@
 # Appendices
 
+## Fishing Exposure Summary
+
+This appendix provides additional summaries and diagnostic visualizations for the Global Fishing Watch (GFW) fishing-effort dataset used in the riskscape framework. Raw AIS-derived vessel-presence records were aggregated to the H3 grid to generate daily fishing-exposure features used in the realized-risk workflow.
+
+### Raw Fishing-Effort Dataset
+
+The raw GFW dataset contained 2,297,069 manually curated AIS fishing-vessel presence records from 2,011 unique vessels between 2014 and 2023, representing 3,094,974.5 fishing hours.
+
+The dominant fishing gear types were trawlers, squid jiggers, and set longlines. Trawlers accounted for 1,497,210 fishing hours from 567 vessels, squid jiggers for 1,256,653 fishing hours from 1,207 vessels, and set longlines for 202,871 fishing hours from 41 vessels. The largest fishing-effort contributions were associated with Argentina (ARG), China (CHN), Taiwan (TWN), South Korea (KOR), Spain (ESP), and the Falkland Islands (FLK).
+
+### Spatial Aggregation to the H3 Framework
+
+Raw fishing-effort observations were converted to geographic points, spatially joined to the H3 study grid, and aggregated by `h3` and `date`. The processed fishing-effort table contained 849,818 active `h3`/`date` records spanning 17,218 H3 cells and all 3,652 dates in the 2014–2023 analysis period.
+
+The final fishing-exposure grid retained 3,086,036.2 fishing hours after spatial aggregation. Zero-valued fishing-exposure rows were then added for all H3/date combinations without observed fishing activity, producing a complete 135,887,268-row fishing-exposure framework aligned to the environmental feature grid.
+
+### Mean Fishing Exposure
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.48\textheight,keepaspectratio]{figures/fishing_activity_mean_2014-2023.png}
+\caption{Mean fishing activity during 2014--2023 summarized as vessel-hours by H3 cell.}
+\label{fig:appendix-fishing-activity-mean-2014-2023}
+\end{figure}
+
+### Seasonal Fishing Variability
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fishing_activity_monthly_totals_2014-2023.png}
+\caption{Monthly fishing activity during 2014--2023 summarized as total fishing hours and unique vessel counts across the study area.}
+\label{fig:appendix-fishing-activity-monthly-totals}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=0.76\textheight,keepaspectratio]{figures/fishing_activity_non_zero_median_monthly_matrix_2022.png}
+\caption{Monthly fishing activity during 2022 summarized as non-zero median vessel-hours by H3 cell. Each panel represents one month and shows the spatial distribution of fishing exposure among cells with observed fishing activity.}
+\label{fig:appendix-monthly-fishing-activity-2022}
+\end{figure}
+
+### Additional Temporal Diagnostics
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fishing_activity_daily_totals_2022.png}
+\caption{Daily fishing activity totals during 2022 summarized as total fishing hours and unique vessels across the study area.}
+\label{fig:appendix-fishing-activity-daily-2022}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fishing_activity_monthly_totals_2022.png}
+\caption{Monthly fishing activity totals during 2022 summarized as total fishing hours and unique vessel counts across the study area.}
+\label{fig:appendix-fishing-activity-monthly-2022}
+\end{figure}
+
 ## Appendix X. Environmental Predictor Correlations
 
 Spearman rank correlations among dynamic environmental predictors across the full 2014-2023 environmental feature grid are shown below.
@@ -45,6 +102,54 @@ The environmental predictor space showed moderate positive correlations among SS
 Anomaly variables were generally weakly correlated with the corresponding base environmental fields, indicating that the anomaly representation captured departures from expected seasonal conditions rather than simply reproducing the original environmental gradients. The strongest anomaly relationship occurred between SST and SSH anomalies ($\rho = 0.47$), suggesting partial coupling between thermal and sea-surface-height variability.
 
 Spatial-gradient predictors also showed largely distinct behavior relative to the base environmental variables. SST and SSH gradients had weak correlations with most base predictors, while SSH gradient exhibited moderate negative correlations with SSH ($\rho = -0.57$) and log-transformed chlorophyll-a ($\rho = -0.38$). Log-transformed chlorophyll-a and its gradient remained strongly correlated ($\rho = 0.79$), indicating that high-productivity regions were frequently associated with strong local chlorophyll contrasts.
+
+\newpage
+
+## Feature Correlations
+
+<!-- Figure fig:environmental-correlation: Spearman correlation matrix for environmental predictors. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/environmental_predictors_spearman_correlation_all.png}
+\caption{Spearman correlation matrix for environmental predictors across the 2014-2023 analysis period.}
+\label{fig:environmental-correlation}
+\end{figure}
+
+$$
+\mathbf{R} =
+\begin{bmatrix}
+1.00 & 0.57 & 0.49 & -0.15 \\
+0.57 & 1.00 & 0.56 & -0.12 \\
+0.49 & 0.56 & 1.00 & -0.10 \\
+-0.15 & -0.12 & -0.10 & 1.00
+\end{bmatrix}
+$$
+
+$$
+\begin{aligned}
+1 &= \mathrm{SST} \\
+2 &= \log(1 + \mathrm{CHL}) \\
+3 &= \mathrm{SSH} \\
+4 &= \mathrm{WindSpeed}
+\end{aligned}
+$$
+
+\newpage
+
+## Anomalies
+
+<!-- Figure fig:environmental-anomaly-histograms: distributions of anomaly predictors. -->
+\begin{figure}[htbp]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.48\textwidth]{figures/sst_anom_histogram_2014-2023.png} &
+\includegraphics[width=0.48\textwidth]{figures/wind_speed_anom_histogram_2014-2023.png} \\
+\includegraphics[width=0.48\textwidth]{figures/chl_log_anom_histogram_2014-2023.png} &
+\includegraphics[width=0.48\textwidth]{figures/ssh_anom_histogram_2014-2023.png}
+\end{tabular}
+\caption{Distributions of environmental anomaly predictors across the full 2014--2023 feature set. The upper row shows SST and wind-speed anomalies, and the lower row shows CHL and SSH anomalies.}
+\label{fig:environmental-anomaly-histograms}
+\end{figure}
 
 \newpage
 

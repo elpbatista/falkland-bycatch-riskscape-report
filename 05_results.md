@@ -1,16 +1,10 @@
 # Results
 
-## Data Summary
+## Integrated Data Products
+
+### Data Summary
 
 The final study grid contained 37,209 H3 resolution 6 cells covering the Falkland Islands fisheries grid plus a 50 km buffer. Across the 2014-2023 analysis period, this produced 3,652 daily time steps and 135,887,268 H3 cell-day records in the environmental feature grid. The environmental tables contained no duplicate `h3`/`date` keys and provided daily values for sea surface temperature, sea surface height, wind speed, log-transformed chlorophyll-a, seasonal terms, spatial gradients, and temporal anomalies.
-
-<!-- Figure fig:fishing-activity: mean fishing activity map for 2014-2023. -->
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.48\textwidth]{figures/fishing_activity_mean_2014-2023.png}
-\caption{Mean fishing activity (vessel-hours) across the 2014-2023 analysis period.}
-\label{fig:fishing-activity}
-\end{figure}
 
 The raw Global Fishing Watch dataset included 2,297,069 manually curated AIS fishing-vessel presence records from 2,011 unique vessels, representing 3,094,974.5 fishing hours between 2014 and 2023. After spatial aggregation to the H3 grid, the processed fishing-effort table contained 849,818 active `h3`/`date` records spanning 17,218 H3 cells and all 3,652 dates in the analysis period. These records retained 3,086,036.2 fishing hours and were expanded with zero-valued fishing exposure across non-observed cell-days in the full 135,887,268-row modeling grid.
 
@@ -21,7 +15,7 @@ The raw Global Fishing Watch dataset included 2,297,069 manually curated AIS fis
 \includegraphics[width=0.46\textwidth]{figures/bbal_presence_count_all_years.png} &
 \includegraphics[width=0.46\textwidth]{figures/safs_presence_count_all_years.png}
 \end{tabular}
-\caption{Spatial distribution of aggregated telemetry presence counts for black-browed albatrosses (left) and South American fur seals (right) across the 2014-2023 analysis period.}
+\caption{Spatial distribution of aggregated telemetry presence counts for black-browed albatrosses (left) and South American fur seals (right) during the telemetry observation years.}
 \label{fig:species-presence-observations}
 \end{figure}
 
@@ -31,16 +25,11 @@ BBAL contributed 4,552 `h3`/`date`/`species` rows across 3,270 H3 cells and 16 d
 
 The resulting modeling products were substantially larger than the raw biological observations because the workflow evaluated species use and risk across the full study grid. The species-training table contained 6,027,858 rows for observed species-date combinations, while the final joint plausibility, prediction, and cube-component tables each contained 257,916,862 species-cell-day records spanning the 2014-2023 analysis period.
 
-## Environmental Feature Generation
-
-### Environmental Coverage and Completeness
+### Environmental Feature Generation
 
 The environmental feature-generation workflow produced a continuous daily feature grid for all 37,209 H3 cells across the full 2014-2023 analysis period. The resulting environmental table contained 135,887,268 H3 cell-day records, with one record for each cell on each of 3,652 dates. No duplicate `h3`/`date` keys were present.
 
-Coverage was complete for SST and exceeded 96% for all other dynamic environmental variables. Static spatial predictors, including bathymetric depth, slope, distance to coast, and encoded spatial coordinates, were complete for all H3 cells. Summary statistics for the environmental feature space are provided in Table X.
-
-<!-- Suggested figure: Example environmental layers for a representative date showing SST, SSH, CHL, and 
-wind speed aggregated to the H3 grid. -->
+Coverage was complete for SST and exceeded 96% for all other dynamic environmental variables. Static spatial predictors, including bathymetric depth, slope, distance to coast, and encoded spatial coordinates, were complete for all H3 cells. Summary statistics for the environmental feature space are provided in Table \ref{tab:environmental-predictors}.
 
 <!-- Figure fig:environmental-layers-20221210: example environmental feature layers for 10 December 2022. -->
 \begin{figure}[htbp]
@@ -56,8 +45,6 @@ wind speed aggregated to the H3 grid. -->
 \caption{Example environmental feature layers aggregated to the H3 grid for 10 December 2022. The panels show base environmental conditions, anomaly fields, and local gradient structure used by the feature-generation workflow.}
 \label{fig:environmental-layers-20221210}
 \end{figure}
-
-<!-- Suggested figure ends here -->
 
 <!-- Table tab:environmental-predictors: summary statistics and completeness for environmental predictors. -->
 \begin{table}[htbp]
@@ -89,46 +76,9 @@ Distance to coast (km) & 100.0\% & 308.61 & 296.25 & 598.69 & 0.01--789.50 \\
 \end{tabular}
 \end{table}
 
-### Derived Environmental Features
+The final feature grid included base oceanographic variables, static spatial predictors, seasonal encodings, local spatial gradients, and temporal anomaly fields. Correlations among the base environmental predictors were generally moderate: SST was positively correlated with log-transformed chlorophyll-a and SSH, while wind speed was only weakly correlated with the other base variables.
 
-The final feature grid expanded the raw environmental inputs into a richer spatiotemporal representation including base oceanographic variables, seasonal encodings, static spatial predictors, local spatial gradients, and temporal anomaly fields. Together, these variables described not only environmental state, but also seasonal timing, coastal and bathymetric context, local spatial heterogeneity, and departures from expected seasonal conditions.
-
-Correlations among the base environmental predictors were generally moderate. SST showed positive correlations with chlorophyll-a and SSH, while wind speed was only weakly correlated with the other variables.
-
-<!-- Figure fig:environmental-correlation: Spearman correlation matrix for environmental predictors. -->
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{figures/environmental_predictors_spearman_correlation_all.png}
-\caption{Spearman correlation matrix for environmental predictors across the 2014-2023 analysis period.}
-\label{fig:environmental-correlation}
-\end{figure}
-
-$$
-\mathbf{R} =
-\begin{bmatrix}
-1.00 & 0.57 & 0.49 & -0.15 \\
-0.57 & 1.00 & 0.56 & -0.12 \\
-0.49 & 0.56 & 1.00 & -0.10 \\
--0.15 & -0.12 & -0.10 & 1.00
-\end{bmatrix}
-$$
-
-$$
-\begin{aligned}
-1 &= \mathrm{SST} \\
-2 &= \log(1 + \mathrm{CHL}) \\
-3 &= \mathrm{SSH} \\
-4 &= \mathrm{WindSpeed}
-\end{aligned}
-$$
-
-### Spatial Gradients and Front-Like Structure
-
-Spatial gradient features captured local environmental heterogeneity across neighboring H3 cells. Most cell-days showed relatively smooth local conditions, while a smaller subset contained stronger spatial transitions associated with front-like structure and shelf-boundary variability. These layers therefore added information distinct from the base environmental state variables.
-
-### Seasonal and Anomaly Features
-
-Seasonal predictors preserved continuous cyclic annual structure across the full 10-year record. Environmental anomalies remained centered near zero, consistent with their definition relative to local seasonal climatologies.
+Spatial-gradient predictors captured local environmental heterogeneity across neighboring H3 cells, while anomaly predictors summarized departures from local seasonal climatologies. Daily mean SST and wind-speed anomalies showed interannual variability after seasonal adjustment, and anomaly distributions remained centered near zero as expected from their definition.
 
 <!-- Figure fig:daily-anomaly-timeseries: daily mean SST and wind-speed anomaly time series. -->
 \begin{figure}[htbp]
@@ -139,20 +89,41 @@ Seasonal predictors preserved continuous cyclic annual structure across the full
 \label{fig:daily-anomaly-timeseries}
 \end{figure}
 
-Yearly mean anomaly patterns indicated that the environmental feature space retained interannual variability after seasonal adjustment. SST anomalies were generally negative during 2014-2016 and positive during 2017-2018 and 2020-2023, while wind-speed anomalies also varied substantially among years. These results indicate that the generated feature space preserved daily, seasonal, spatial, and interannual variability for downstream species-use and risk modeling.
+## Fishing Exposure Patterns
 
-<!-- Figure fig:environmental-anomaly-histograms: distributions of anomaly predictors. -->
+Fishing exposure across the study region is represented by 3,086,036.2 fishing hours from 2,011 unique vessels, aggregated from 2,297,069 Global Fishing Watch AIS fishing-vessel records between 2014 and 2023. After aggregation to the H3 framework, fishing activity spans 17,218 H3 cells and 849,818 active `h3`/`date` combinations and retaining 3,086,036.2 fishing hours.
+
+Fishing exposure is dominated by trawlers and squid jiggers, which together account for approximately 2.75 million fishing hours during 2014–2023. However, the current framework treats fishing exposure generically and does not yet differentiate species-specific interaction risk by fishing gear type.
+
+Fishing exposure is strongly structured across the Falkland Islands shelf and shelf-break regions. Mean fishing activity is concentrated west and north of the islands, with recurrent high-intensity fishing corridors visible throughout the 2014–2023 analysis period (Figure \ref{fig:fishing-activity-mean-2014-2023}).
+
+\begin{center}
+\refstepcounter{figure}
+\label{fig:fishing-activity-mean-2014-2023}
+\centering
+\includegraphics[height=0.48\textheight,keepaspectratio]{figures/fishing_activity_mean_2014-2023.png}
+
+\small Figure~\thefigure. Mean fishing activity during 2014--2023 summarized as vessel-hours by H3 cell.
+\end{center}
+
+The spatial footprint of fishing exposure follows the structure of the Falkland Islands Conservation Zones. Arc-shaped and circular fishing patterns correspond closely to the inner and outer conservation-zone boundaries (FICZ and FOCZ), indicating that the H3 aggregation preserves management-scale structure in the fishing-effort data.
+
+Fishing exposure also shows strong seasonal structure. Shelf and shelf-break fishing corridors persist across multiple months, while offshore fishing activity expands and contracts seasonally. These recurring redistribution patterns are visible throughout the analysis period and indicate that fishing exposure is not spatially uniform through time.
+
 \begin{figure}[htbp]
 \centering
-\begin{tabular}{cc}
-\includegraphics[width=0.48\textwidth]{figures/sst_anom_histogram_2014-2023.png} &
-\includegraphics[width=0.48\textwidth]{figures/wind_speed_anom_histogram_2014-2023.png} \\
-\includegraphics[width=0.48\textwidth]{figures/chl_log_anom_histogram_2014-2023.png} &
-\includegraphics[width=0.48\textwidth]{figures/ssh_anom_histogram_2014-2023.png}
-\end{tabular}
-\caption{Distributions of environmental anomaly predictors across the full 2014--2023 feature set. The upper row shows SST and wind-speed anomalies, and the lower row shows CHL and SSH anomalies.}
-\label{fig:environmental-anomaly-histograms}
+\includegraphics[height=0.76\textheight,keepaspectratio]{figures/fishing_activity_non_zero_median_monthly_matrix_2022.png}
+\caption{Monthly fishing activity during 2022 summarized as non-zero median vessel-hours by H3 cell. Each panel represents one month and shows the spatial distribution of fishing exposure among cells with observed fishing activity. The 2022 maps provide a representative example of the recurring seasonal redistribution patterns observed across the full 2014--2023 analysis period.}
+\label{fig:monthly-fishing-activity-2022}
 \end{figure}
+
+The monthly 2022 surfaces show persistent fishing activity west and north of the Falkland Islands throughout much of the year, while other shelf and offshore regions exhibit more episodic or seasonally concentrated exposure. These recurring seasonal shifts in the spatial footprint of fishing activity are important for the riskscape framework because realized risk depends directly on the timing and location of fishing exposure relative to predicted species use.
+
+Additional fishing-effort summaries and temporal diagnostics are provided in Appendix X.
+
+## Species-Use Modeling and Prediction
+
+### Model Performance
 
 Species-use models were evaluated using held-out test data after back-transformation to the original residence-index scale. Model comparison metrics included coefficient of determination ($R^2$), root mean squared error (RMSE), and mean absolute error (MAE). All candidate models were evaluated on the same joint-species train-test split, with 15,278 training rows and 5,092 held-out test rows.
 
@@ -192,8 +163,6 @@ These results indicate that tree-based ensemble methods were substantially more 
 \label{fig:tree-models-observed-predicted}
 \end{figure}
 
-<!-- Suggested figure: Observed-versus-predicted log-transformed residence-index values for candidate species-use models. -->
-
 Observed-versus-predicted comparisons on the log-transformed residence-index scale showed that the Extra Trees model most closely reproduced the 1:1 relationship across the full response range. Random forest also captured the dominant structure of the response distribution but showed greater compression toward intermediate prediction values and increased underprediction at higher residence-index values. Histogram gradient boosting produced the strongest prediction compression and the weakest representation of high-use observations.
 
 Prediction variance increased with residence-index magnitude for all models, reflecting the sparse and highly skewed distribution of high-intensity telemetry detections. The vertical banding at lower observed values resulted from the discrete count-based structure of the residence-index target after log transformation.
@@ -210,15 +179,13 @@ Prediction variance increased with residence-index magnitude for all models, ref
 \label{fig:tree-models-residual-distributions}
 \end{figure}
 
-<!-- Suggested figure: Residual distributions for candidate species-use models evaluated on the log-transformed residence-index scale. -->
-
 Residual distributions were centered near zero for all evaluated models, indicating that predictions were generally unbiased on the log-transformed response scale. However, all models showed asymmetric residual structure with broader positive tails, reflecting reduced accuracy and increased variance for higher residence-index observations.
 
 The Extra Trees model produced the narrowest residual distribution and the strongest concentration near zero, indicating the most stable predictive performance among the evaluated models. Random forest showed broader residual spread and heavier positive tails, while histogram gradient boosting produced the widest residual distribution and the strongest asymmetry.
 
 These residual patterns are consistent with the sparse and highly skewed structure of telemetry-derived residence-index values, where high-intensity species-use observations were relatively rare compared with low-use and zero-use cell-days.
 
----
+### Feature Importance and Predictor Response Patterns
 
 <!-- Figure fig:species-feature-importance: Extra Trees feature importance summary. -->
 \begin{figure}[H]
@@ -227,8 +194,6 @@ These residual patterns are consistent with the sparse and highly skewed structu
 \caption{Feature-importance summary for the selected species-use model. Bars show relative feature importance for the highest-ranked predictors in the Extra Trees joint species-use model.}
 \label{fig:species-feature-importance}
 \end{figure}
-
-<!-- Suggested figure: Relative feature importance for the selected Extra Trees species-use model. -->
 
 Feature-importance analysis indicated that static spatial structure and oceanographic variability contributed strongly to species-use predictions. Bathymetry and distance to coast were the two highest-ranked predictors, followed by SSH anomaly, SSH, seafloor slope, and SST. Environmental-gradient variables, including chlorophyll, SST, and SSH gradients, also contributed substantially to the fitted model.
 
@@ -244,17 +209,38 @@ Species-indicator variables contributed comparatively less importance than the e
 \label{fig:extra-trees-partial-dependence}
 \end{figure}
 
-<!-- Suggested figure: Partial dependence plots for selected predictors from the Extra Trees species-use model. -->
-
 Partial dependence analysis showed strong nonlinear relationships between predicted species use and several environmental and spatial predictors. Predicted species use was highest in shallow waters and declined progressively with increasing bathymetric depth and distance from the coast, indicating strong association with shelf and coastal environments.
 
 SST showed a pronounced nonlinear response, with predicted species use increasing rapidly between approximately 7 and 9 °C before declining at warmer temperatures. SSH also exhibited a nonlinear relationship, with highest predicted use occurring at intermediate positive SSH values and declining sharply at the upper end of the observed range.
 
 Environmental-gradient predictors contributed additional structure beyond the base environmental variables. In particular, predicted species use increased under stronger chlorophyll-gradient conditions, suggesting association with localized environmental transitions and front-like heterogeneity.
 
-These response patterns indicate that the selected model captured complex and non-monotonic relationships between species use and environmental conditions. However, because several predictors were moderately correlated, the partial dependence curves should be interpreted as model-response summaries rather than as independent causal ecological relationships.
+The selected model captured complex and non-monotonic relationships between species use and environmental conditions. However, because several predictors were moderately correlated, the partial dependence curves should be interpreted as model-response summaries rather than as independent causal ecological relationships.
 
-## Environmental Plausibility Surfaces
+### Predicted Species-Use Surfaces
+
+Predicted species-use surfaces showed strong spatial structure across the Falkland Islands shelf and adjacent offshore waters. The hybrid workflow combined Extra Trees species-use predictions with Bayesian/Gaussian mixture environmental plausibility filtering, producing spatially coherent surfaces constrained by the telemetry-informed environmental domain.
+
+<!-- Figure fig:monthly-species-use-predictions-2022: monthly predicted species-use matrices for BBAL and SAFS. -->
+\begin{figure}[htbp]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_bayesian_gmm_joint_species_use_log_pred_non_zero_median_BBAL_2022_all_months.png} &
+\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_bayesian_gmm_joint_species_use_log_pred_non_zero_median_SAFS_2022_all_months.png}
+\end{tabular}
+\caption{Monthly predicted species-use surfaces during 2022 for black-browed albatrosses (left) and South American fur seals (right). Values summarize non-zero median predicted log-transformed species use by H3 cell from the hybrid presence-gate Extra Trees and Bayesian/Gaussian mixture workflow.}
+\label{fig:monthly-species-use-predictions-2022}
+\end{figure}
+
+Predicted BBAL use extended broadly across shelf and shelf-break regions west and southwest of the Falkland Islands, with highest predicted values concentrated around shallow shelf-transition environments near the islands. Offshore predictions declined sharply toward environmentally unsupported regions identified by the plausibility framework.
+
+Predicted SAFS use was more spatially concentrated around nearshore and inner shelf environments surrounding the Falkland Islands. Compared with BBAL, the SAFS surface showed reduced offshore extent and stronger concentration within coastal shelf waters.
+
+Both species-use surfaces followed large-scale environmental gradients and shelf geometry rather than simple geographic proximity to telemetry observations.
+
+## Environmental Plausibility
+
+### Spatial Plausibility Surfaces
 
 Environmental plausibility surfaces were generated using the Bayesian/Gaussian mixture model to evaluate how closely environmental conditions across the H3 study grid resembled those associated with telemetry-informed species use. Plausibility values therefore represent relative environmental support within the modeled feature space rather than direct estimates of species presence probability.
 
@@ -269,17 +255,15 @@ Environmental plausibility surfaces were generated using the Bayesian/Gaussian m
 \label{fig:non-zero-median-environmental-plausibility}
 \end{figure}
 
-<!-- Suggested figure: Non-zero median environmental plausibility surfaces for BBAL and SAFS during 2022. -->
-
 Non-zero median environmental plausibility surfaces showed strong spatial structure across the Falkland Islands shelf and adjacent offshore waters. High-plausibility regions generally coincided with shelf and shelf-break environments whose environmental conditions were well represented within the telemetry-informed training domain.
 
 The BBAL plausibility surface showed concentrated environmental support west and northwest of the Falkland Islands, with sharp declines toward deep offshore waters and the northeastern portion of the study region. In contrast, the SAFS plausibility surface was broader and more spatially diffuse, with moderate environmental support extending across much of the continental shelf and surrounding coastal waters.
 
 Both species exhibited structured transitions between high- and low-plausibility regions that followed large-scale oceanographic gradients and shelf boundaries rather than simple geographic proximity patterns. The consistently low plausibility observed across portions of the southern offshore region suggests that these environmental conditions were weakly represented within the telemetry-derived feature space and therefore correspond to areas of increased extrapolation uncertainty.
 
-These results indicate that the Bayesian/Gaussian mixture framework captured coherent environmental-support structure across the study region and provided a useful diagnostic layer for identifying where species-use and risk predictions were environmentally well supported versus where predictions extended beyond the dominant telemetry-informed environmental domain.
+These results indicate that the Bayesian/Gaussian mixture framework captured coherent environmental-support structure across the study region and provided a diagnostic layer for distinguishing environmentally supported predictions from regions of greater extrapolation uncertainty.
 
-### Temporal Variability in Environmental Plausibility
+### Temporal Plausibility Patterns
 
 Environmental plausibility varied seasonally and interannually across the 2014-2023 analysis period. Seasonal changes in SST, SSH, chlorophyll-a, and wind structure produced corresponding shifts in the environmental-support surfaces, particularly along frontal and shelf-transition regions. Interannual variability in anomaly fields also altered the spatial extent of environmentally supported conditions through time.
 
@@ -295,7 +279,7 @@ Despite these temporal shifts, the highest plausibility values remained concentr
 
 Yearly non-zero median plausibility was used to summarize temporal variation in environmentally supported cell-days while reducing the influence of the large number of zero-plausibility grid cells. This metric does not represent average habitat suitability; instead, it describes the typical plausibility value among H3 cell-days with non-zero environmental support.
 
-Non-zero median plausibility varied through time for both species. SAFS showed a gradual increase from 2014 to 2023, with moderate declines in 2019 and 2022. BBAL showed stronger interannual variability, with higher values in 2018, 2021, and 2022 and a sharp decline in 2023. These patterns indicate that the environmental conditions represented by the telemetry-informed plausibility model were not equally expressed across years.
+Non-zero median plausibility varied through time for both species. SAFS showed a gradual increase from 2014 to 2023, with moderate declines in 2019 and 2022. BBAL showed stronger interannual variability, with higher values in 2018, 2021, and 2022 and a sharp decline in 2023. These patterns indicate that environmental conditions represented within the telemetry-informed feature space varied substantially among years.
 
 <!-- Figure fig:monthly-plausibility: monthly plausibility matrices by species. -->
 \begin{figure}[htbp]
@@ -308,8 +292,6 @@ Non-zero median plausibility varied through time for both species. SAFS showed a
 \label{fig:monthly-plausibility}
 \end{figure}
 
-<!-- Suggested figure: Monthly non-zero median environmental plausibility surfaces for BBAL and SAFS across 2014-2023. -->
-
 Monthly plausibility surfaces showed strong temporal dependence associated with the telemetry sampling windows used to construct the environmental-support models. For both species, high-plausibility regions were concentrated within months represented by telemetry-informed environmental conditions, while much of the remaining annual cycle showed weak or near-zero environmental support.
 
 BBAL plausibility was concentrated primarily during November-January, reflecting the relatively short telemetry observation period available for this species. SAFS showed broader temporal support extending from approximately October through March, consistent with the longer and more environmentally diverse telemetry sampling period.
@@ -318,17 +300,13 @@ These results indicate that the plausibility framework captured the temporal str
 
 The monthly plausibility surfaces therefore provide an explicit diagnostic representation of where and when species-use and risk predictions remain strongly supported by observed environmental conditions versus where predictions extend into regions of greater temporal extrapolation uncertainty.
 
-### Relationship Between Plausibility and Species-Use Predictions
+### Plausibility and Species-Use Relationships
 
-Observed telemetry-derived species-use locations were generally concentrated within regions of moderate-to-high environmental plausibility, indicating that the generated feature space successfully captured much of the environmental domain associated with tracked individuals. However, some machine-learning species-use predictions extended into regions of lower environmental plausibility, particularly in environmentally uncommon or weakly sampled portions of the study area.
+Observed telemetry-derived species-use locations were generally concentrated within regions of moderate-to-high environmental plausibility. Some species-use predictions extended into regions of lower plausibility, particularly in environmentally uncommon or weakly sampled portions of the study area.
 
-The plausibility surfaces therefore provided an additional diagnostic layer for interpreting species-use and risk predictions by distinguishing environmentally supported predictions from areas of potential extrapolation beyond the telemetry-informed environmental domain. This distinction was particularly important for the interpretation of latent-risk surfaces generated across the full 2014-2023 environmental record.
+The plausibility surfaces provided a diagnostic layer for distinguishing environmentally supported predictions from areas of potential extrapolation beyond the telemetry-informed environmental domain.
 
-<!-- Suggested figure: Comparison between observed telemetry locations and environmental plausibility surfaces. -->
-
-<!-- Suggested figure: Scatterplot of species-use prediction versus environmental plausibility. -->
-
-## Bayesian/GMM Environmental Components
+### Bayesian/GMM Environmental Components
 
 The Bayesian/Gaussian mixture model assigned each H3/date record to an environmental component based on the highest posterior component probability computed from the environmental feature vector. These component assignments summarize recurring combinations of environmental conditions within the telemetry-informed feature space. Components were used as diagnostic labels for interpreting environmental plausibility and risk surfaces, not as independently validated ecological habitat classes.
 
@@ -415,68 +393,50 @@ Cmp & Observed rows & Rows (\%) & Residence sum & Mean residence \\
 \end{tabular}
 \end{table}
 
-<!-- Suggested figure: Monthly distribution of component assignments. -->
+## Realized and Latent Risk Surfaces
 
-## Fishing Exposure Patterns
+Risk surfaces were generated as relative spatial-temporal overlap indices rather than direct estimates of observed bycatch probability. The workflow combined hybrid species-use predictions with fishing exposure on the H3/date grid. Because no observed bycatch records were used to calibrate the risk index, all risk products should be interpreted as relative indicators of potential encounter risk.
 
-Fishing-effort observations were aggregated to the H3 grid to characterize the spatial and temporal distribution of fishing exposure across the Falkland Islands region. These layers were used directly in the risk-estimation workflow and provided spatial context for interpreting species-use and riskscape patterns.
+### Realized Risk Surfaces
 
-<!-- Figure fig:fishing-activity-mean-2022: mean fishing activity map for 2022. -->
-\begin{center}
-\refstepcounter{figure}
-\label{fig:fishing-activity-mean-2022}
-\centering
-\includegraphics[height=0.48\textheight,keepaspectratio]{figures/fishing_activity_mean_2022.png}
+Realized risk was estimated by combining predicted species use with observed fishing activity. In log space, the realized risk index was calculated as the sum of predicted species use and observed fishing activity, with risk set to zero where no fishing activity was recorded. This formulation emphasizes locations where predicted species use and actual fishing exposure overlapped during the analysis period.
 
-\small Figure~\thefigure. Mean fishing activity during 2022 summarized as vessel-hours by H3 cell.
-\end{center}
+The 2022 realized-risk maps showed that the highest relative risk was constrained by the spatial footprint of fishing activity. Risk was therefore concentrated over shelf and shelf-break areas where fishing effort was present, rather than across the full area of predicted species use. This distinction is important because areas with high predicted species use but little or no fishing activity did not produce high realized risk under the historical exposure scenario.
 
-Fishing activity during 2022 showed strong spatial concentration along the Falkland Islands shelf and shelf-break regions, with recurrent high-intensity activity west and north of the islands. Activity patterns varied seasonally, with several months showing expanded offshore effort and stronger concentration along major fishing corridors.
+### Latent Risk Surfaces
 
-The fishing-exposure surfaces showed strong spatial structure associated with the Falkland Islands Conservation Zones (FICZ and FOCZ). Arc-shaped and circular fishing patterns visible around the islands corresponded closely to fisheries-management boundaries and associated operational fishing corridors. These structures were preserved after H3 aggregation, indicating that the spatial framework retained management-scale organization of fishing activity across the study region.
+Latent risk was generated to represent potential risk under a standardized minimum fishing-exposure scenario. Unlike realized risk, latent risk is not constrained by where fishing actually occurred. Instead, it asks where predicted species use would imply vulnerability if fishing exposure were present.
 
-<!-- Figure fig:monthly-fishing-activity-2022: monthly non-zero median fishing activity matrix for 2022. -->
-\begin{figure}[htbp]
-\centering
-\includegraphics[height=0.76\textheight,keepaspectratio]{figures/fishing_activity_non_zero_median_monthly_matrix_2022.png}
-\caption{Monthly fishing activity during 2022 summarized as non-zero median vessel-hours by H3 cell. Each panel represents one month, showing the spatial distribution of fishing exposure among cells with observed fishing activity.}
-\label{fig:monthly-fishing-activity-2022}
-\end{figure}
+The implemented workflow used a minimum operational exposure unit of 0.5 vessel-hours per H3 cell-day. This corresponds approximately to one vessel operating within or passing through a grid cell for about 30 minutes at fishing speed. Latent risk therefore provides a complementary view of potential vulnerability, highlighting environmentally and ecologically suitable areas that may not have experienced substantial fishing activity during the observed period.
 
-The monthly fishing-exposure surfaces also revealed substantial temporal variability in the spatial footprint of fishing activity. Some regions exhibited persistent fishing effort throughout the year, while others showed episodic or seasonal occupation. These spatial and temporal differences were important for the resulting riskscapes because realized risk depended directly on the overlap between predicted species use and observed fishing exposure.
+### Plausibility-Filtered Risk
 
-## Realized Risk Surfaces
+Plausibility-filtered latent risk used the Bayesian/GMM environmental plausibility model as a support filter. Cell-days with low environmental plausibility were treated as weakly supported extrapolations rather than confirmed absences. This filtering separates areas where the species-use model predicted elevated use under environmental conditions similar to observed telemetry conditions from areas where predictions were made outside the strongest environmental support domain.
 
-Realized risk surfaces were generated by combining predicted species use with observed fishing exposure across the H3/day framework. These surfaces represent relative spatiotemporal overlap between telemetry-informed species-use predictions and recorded fishing activity rather than direct estimates of observed bycatch probability.
+In the current implementation, plausibility filtering was applied to latent risk rather than to realized fishing exposure. This makes the filtered maps useful for distinguishing potential risk that is environmentally supported from potential risk that is more uncertain. Areas retained after filtering represent locations where predicted species use, standardized exposure, and environmental support were jointly present.
 
-<!-- Suggested figure: Mean realized risk surfaces for BBAL and SAFS during 2022. -->
+### Species Differences in Risk Structure
 
-### Spatial Structure of Realized Risk
+Species-specific risk maps were produced for black-browed albatrosses and South American fur seals using the joint hybrid prediction workflow. However, model diagnostics indicated that the species-use predictions for the two species were broadly similar in spatial structure. As a result, differences between species-specific risk surfaces should be interpreted cautiously.
 
-Realized risk showed strong spatial concentration along the Falkland Islands shelf and shelf-break regions, particularly within recurrent fishing corridors associated with the Falkland Islands Conservation Zones. High-risk regions generally emerged where elevated fishing exposure overlapped with environmentally supported species-use predictions.
+The strongest inference from the current risk products is therefore the shared spatial structure of predicted overlap between species use and fishing exposure. Species differences may still appear through the species indicator in the joint model and through the species-specific plausibility gate, but the current outputs suggest that broad shelf and shelf-break overlap patterns dominate over strong species-specific separation.
 
-The spatial structure of realized risk differed substantially between species. BBAL risk surfaces were more spatially constrained and concentrated west and northwest of the islands, reflecting the narrower environmental-support domain identified by the plausibility framework. SAFS risk surfaces were broader and more spatially diffuse across the continental shelf, consistent with the wider environmental-support patterns observed for this species.
+## Overall Riskscape Patterns
 
-<!-- Suggested figure: Comparison of BBAL and SAFS realized risk surfaces. -->
+### Persistent High-Risk Regions
 
-### Seasonal and Temporal Variability
+Across the available 2022 risk products, the most persistent high-risk areas were associated with the spatial footprint of fishing exposure and predicted species use over shelf and shelf-break waters. Realized risk was more spatially constrained than latent risk because it required observed fishing activity. Latent risk extended the interpretation by identifying areas where predicted species use implied potential vulnerability even where historical fishing activity was low or absent.
 
-Seasonal changes in fishing effort and environmental plausibility produced strong temporal variability in realized risk. Months with expanded shelf and offshore fishing activity generally showed broader realized-risk footprints, while periods of reduced fishing exposure produced more spatially restricted overlap patterns.
+### Shelf and Shelf-Break Structure
 
-The strongest realized-risk conditions typically occurred where recurrent fishing corridors intersected environmentally supported shelf and shelf-break regions. However, substantial portions of the study area retained low realized risk despite moderate species-use predictions because observed fishing activity was absent or weak.
+The risk products reinforced the importance of shelf and shelf-break structure in the Falkland Islands region. Fishing exposure, predicted species use, environmental gradients, and plausibility surfaces all showed spatial organization around shelf waters and shelf transitions. These recurring patterns suggest that the riskscape is not distributed uniformly across the study area, but is organized by persistent physical and operational structure.
 
-<!-- Suggested figure: Monthly realized risk matrix for 2022. -->
+### Seasonal and Interannual Variability
 
-### Influence of Environmental Plausibility Filtering
+The current mapped risk products focus on monthly 2022 summaries. These maps provide a seasonal view of how predicted overlap varied within a single year, but they do not yet represent the full 2014-2023 interannual risk pattern. Extending the same risk summaries across all years would allow direct comparison between seasonal variability within years and interannual variability across the full study period.
 
-Environmental plausibility filtering reduced realized-risk predictions in environmentally weakly supported regions while preserving high-risk structure within the telemetry-informed environmental domain. This effect was strongest in offshore and environmentally uncommon regions where machine-learning species-use predictions extended beyond the dominant environmental conditions represented in the telemetry data.
+### Summary of Dominant Spatial-Temporal Patterns
 
-As a result, plausibility-filtered riskscapes provided a more conservative representation of realized overlap by distinguishing environmentally supported predictions from areas of greater extrapolation uncertainty.
-
-<!-- Suggested figure: Comparison between ungated and plausibility-filtered realized risk surfaces. -->
-
-## Latent Risk Surfaces
-
-## Spatial and Temporal Patterns
+Overall, the riskscape products show that relative bycatch risk emerges from the intersection of three components: predicted species use, fishing exposure, and environmental support. Realized risk identifies where predicted species use overlapped with observed fishing activity, latent risk identifies areas of potential vulnerability under standardized exposure, and plausibility-filtered risk distinguishes environmentally supported predictions from weaker extrapolations. Together, these products provide a structured basis for interpreting where and when bycatch risk is most likely to concentrate, while preserving the distinction between observed exposure, potential exposure, and environmental uncertainty.
 
 \newpage
