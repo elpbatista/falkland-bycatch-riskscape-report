@@ -14,3 +14,5 @@
 \caption{Study area showing the Falkland Islands region, bathymetry, and H3 spatial grid.}
 \label{fig:study-area}
 \end{figure}
+
+\newpage

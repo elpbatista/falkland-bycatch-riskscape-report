@@ -1,6 +1,4 @@
-# Apendices
-
-\newpage
+# Appendices
 
 ## Appendix X. Environmental Predictor Correlations
 
