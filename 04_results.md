@@ -237,7 +237,6 @@ Monthly plausibility surfaces show strong temporal dependence associated with th
 
 These temporal patterns reflect the sampled telemetry-informed environmental domain rather than a generalized year-round habitat representation. Low-plausibility months identify periods that are weakly represented within the available telemetry-derived feature space, not confirmed absence or unsuitable habitat.
 
-
 A 10-component Bayesian/GMM configuration is selected as a compromise between environmental structure, component interpretability, and likelihood improvement relative to lower-component models.
 
 The Bayesian/Gaussian mixture model also assigns each H3/date record to the environmental component with the highest posterior probability. These components summarize recurring environmental combinations within the telemetry-informed feature space.

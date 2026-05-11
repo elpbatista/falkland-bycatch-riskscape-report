@@ -1,22 +1,6 @@
 # Appendices
 
-## Fishing Exposure Summary
-
-This appendix provides additional summaries and diagnostic visualizations for the Global Fishing Watch (GFW) fishing-effort dataset used in the riskscape framework. Raw AIS-derived vessel-presence records were aggregated to the H3 grid to generate daily fishing-exposure features used in the realized-risk workflow.
-
-### Raw Fishing-Effort Dataset
-
-The raw GFW dataset contained 2,297,069 manually curated AIS fishing-vessel presence records from 2,011 unique vessels between 2014 and 2023, representing 3,094,974.5 fishing hours.
-
-The dominant fishing gear types were trawlers, squid jiggers, and set longlines. Trawlers accounted for 1,497,210 fishing hours from 567 vessels, squid jiggers for 1,256,653 fishing hours from 1,207 vessels, and set longlines for 202,871 fishing hours from 41 vessels. The largest fishing-effort contributions were associated with Argentina (ARG), China (CHN), Taiwan (TWN), South Korea (KOR), Spain (ESP), and the Falkland Islands (FLK).
-
-### Spatial Aggregation to the H3 Framework
-
-Raw fishing-effort observations were converted to geographic points, spatially joined to the H3 study grid, and aggregated by `h3` and `date`. The processed fishing-effort table contained 849,818 active `h3`/`date` records spanning 17,218 H3 cells and all 3,652 dates in the 2014–2023 analysis period.
-
-The final fishing-exposure grid retained 3,086,036.2 fishing hours after spatial aggregation. Zero-valued fishing-exposure rows were then added for all H3/date combinations without observed fishing activity, producing a complete 135,887,268-row fishing-exposure framework aligned to the environmental feature grid.
-
-### Mean Fishing Exposure
+## Mean Fishing Exposure
 
 \begin{figure}[htbp]
 \centering
@@ -25,7 +9,7 @@ The final fishing-exposure grid retained 3,086,036.2 fishing hours after spatial
 \label{fig:appendix-fishing-activity-mean-2014-2023}
 \end{figure}
 
-### Seasonal Fishing Variability
+## Seasonal Fishing Variability
 
 \begin{figure}[htbp]
 \centering
@@ -41,7 +25,7 @@ The final fishing-exposure grid retained 3,086,036.2 fishing hours after spatial
 \label{fig:appendix-monthly-fishing-activity-2022}
 \end{figure}
 
-### Additional Temporal Diagnostics
+## Additional Temporal Diagnostics
 
 \begin{figure}[htbp]
 \centering
@@ -57,7 +41,7 @@ The final fishing-exposure grid retained 3,086,036.2 fishing hours after spatial
 \label{fig:appendix-fishing-activity-monthly-2022}
 \end{figure}
 
-## Appendix X. Environmental Predictor Correlations
+## Environmental Predictor Correlations
 
 Spearman rank correlations among dynamic environmental predictors across the full 2014-2023 environmental feature grid are shown below.
 
@@ -196,7 +180,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:sst-monthly-matrix: monthly SST matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/sst_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/sst_mean_monthly_matrix_2022.png}
 \caption{Monthly mean sea surface temperature (SST) during 2022.}
 \label{fig:app-sst-monthly-matrix}
 \end{figure}
@@ -204,7 +188,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:ssh-monthly-matrix: monthly SSH matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/ssh_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/ssh_mean_monthly_matrix_2022.png}
 \caption{Monthly mean sea surface height (SSH) during 2022.}
 \label{fig:app-ssh-monthly-matrix}
 \end{figure}
@@ -212,7 +196,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:wind-speed-monthly-matrix: monthly wind-speed matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/wind_speed_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/wind_speed_mean_monthly_matrix_2022.png}
 \caption{Monthly mean near-surface wind speed during 2022.}
 \label{fig:app-wind-speed-monthly-matrix}
 \end{figure}
@@ -220,7 +204,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:chl-monthly-matrix: monthly log-CHL matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/chl_log_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/chl_log_mean_monthly_matrix_2022.png}
 \caption{Monthly mean log-transformed chlorophyll-a concentration during 2022.}
 \label{fig:app-chl-monthly-matrix}
 \end{figure}
@@ -228,7 +212,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:sst-anom-monthly-matrix: monthly SST anomaly matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/sst_anom_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/sst_anom_mean_monthly_matrix_2022.png}
 \caption{Monthly mean sea surface temperature anomaly during 2022.}
 \label{fig:app-sst-anom-monthly-matrix}
 \end{figure}
@@ -236,7 +220,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:ssh-anom-monthly-matrix: monthly SSH anomaly matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/ssh_anom_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/ssh_anom_mean_monthly_matrix_2022.png}
 \caption{Monthly mean sea surface height anomaly during 2022.}
 \label{fig:app-ssh-anom-monthly-matrix}
 \end{figure}
@@ -244,7 +228,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:wind-speed-anom-monthly-matrix: monthly wind-speed anomaly matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/wind_speed_anom_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/wind_speed_anom_mean_monthly_matrix_2022.png}
 \caption{Monthly mean near-surface wind-speed anomaly during 2022.}
 \label{fig:app-wind-speed-anom-monthly-matrix}
 \end{figure}
@@ -252,7 +236,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:chl-anom-monthly-matrix: monthly log-CHL anomaly matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/chl_log_anom_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/chl_log_anom_mean_monthly_matrix_2022.png}
 \caption{Monthly mean log-transformed chlorophyll-a anomaly during 2022.}
 \label{fig:app-chl-anom-monthly-matrix}
 \end{figure}
@@ -260,7 +244,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:sst-grad-monthly-matrix: monthly SST gradient matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/sst_grad_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/sst_grad_mean_monthly_matrix_2022.png}
 \caption{Monthly mean sea surface temperature gradient during 2022.}
 \label{fig:app-sst-grad-monthly-matrix}
 \end{figure}
@@ -268,7 +252,7 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:ssh-grad-monthly-matrix: monthly SSH gradient matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/ssh_grad_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/ssh_grad_mean_monthly_matrix_2022.png}
 \caption{Monthly mean sea surface height gradient during 2022.}
 \label{fig:app-ssh-grad-monthly-matrix}
 \end{figure}
@@ -276,24 +260,9 @@ The 12-component model achieved slightly improved likelihood statistics relative
 <!-- Figure app:chl-grad-monthly-matrix: monthly log-CHL gradient matrix for 2022. -->
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/chl_log_grad_mean_monthly_matrix_2022.png}
+\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/chl_log_grad_mean_monthly_matrix_2022.png}
 \caption{Monthly mean log-transformed chlorophyll-a gradient during 2022.}
 \label{fig:app-chl-grad-monthly-matrix}
 \end{figure}
-
-\newpage
-
-## Datasets
-
-| Dataset                       | Provider                            | Product                                                     | Variable(s)                                          | Description                                                                                               |
-|-------------------------------|-------------------------------------|-------------------------------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| Sea Surface Temperature (SST) | NASA PO.DAAC                        | MUR-JPL-L4-GLOB-v4.1                                        | `analysed_sst`                                       | Multi-scale Ultra-high Resolution (MUR) Level 4 daily sea surface temperature product.                    |
-| Chlorophyll-a (CHL)           | Copernicus Marine Service           | `cmems_obs-oc_glo_bgc-plankton_my_l4-gapfree-multi-4km_P1D` | `CHL`                                                | Global daily gap-free Level 4 chlorophyll-a concentration product derived from ocean colour observations. |
-| Sea Surface Height (SSH)      | Copernicus Marine Service           | `cmems_obs-sl_glo_phy-ssh_my_allsat-l4-duacs-0.125deg_P1D`  | `adt`                                                | Global daily Level 4 sea level product providing absolute dynamic topography from satellite altimetry.    |
-| Wind                          | Copernicus Climate Data Store (CDS) | `derived-era5-single-levels-daily-statistics`               | `10m_u_component_of_wind`, `10m_v_component_of_wind` | Daily ERA5-derived near-surface wind components at 10 m above sea level.                                  |
-| Fishing Effort                | Global Fishing Watch                | AIS-derived fishing activity products                       | —                                                    | AIS-derived fishing activity and vessel effort products used to estimate fishing exposure.                |
-| Bathymetry                    | GEBCO                               | `gebco_2026`                                                | `elevation`                                          | Global bathymetric elevation model used to derive seafloor depth and bathymetric features.                |
-
-<https://www.earthdata.nasa.gov/data/catalog/pocloud-mur-jpl-l4-glob-v4.1-4.1>
 
 \newpage
