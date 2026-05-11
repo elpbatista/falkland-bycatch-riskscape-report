@@ -1,8 +1,8 @@
 # Methods
 
-This chapter describes the analytical workflow used to construct dynamic bycatch riskscapes for the Falkland Islands region. The workflow integrates environmental raster products, fishing effort observations, species telemetry records, and static spatial reference layers within a common H3-based spatial framework and daily temporal resolution. These harmonized datasets were used to train species-use models, estimate environmental plausibility, and combine predicted species use with fishing exposure to generate relative risk surfaces.
+This chapter describes the analytical workflow used to construct dynamic bycatch riskscapes for the Falkland Islands region. The workflow integrates environmental raster products, fishing effort observations, species telemetry records, and static spatial reference layers within a common H3-based spatial framework and daily temporal resolution. These harmonized datasets were used to train species-use models, estimate environmental plausibility, classify feature-only environmental seascapes, and combine predicted species use with fishing exposure to generate relative risk surfaces.
 
-The methods are organized into five components: the overall riskscape framework, input datasets, spatial and temporal data processing, species-use modeling, and risk estimation. Validation procedures are then summarized, including implemented model diagnostics and additional validation approaches identified for future development.
+The methods are organized into six components: the overall riskscape framework, input datasets, spatial and temporal data processing, species-use modeling, feature-only seascape classification, and risk estimation. Validation procedures are then summarized, including implemented model diagnostics and additional validation approaches identified for future development.
 
 ## Framework
 
@@ -192,6 +192,16 @@ The Bayesian/Gaussian mixture implementation used a Gaussian mixture model fitte
 
 Model outputs were expressed as `species_use_log_pred`, representing predicted species use on the log-transformed scale. Model comparison metrics were computed after back-transforming predictions to the original target scale and included $R^2$, root mean squared error, and mean absolute error.
 
+## Feature-Only Seascape Classification
+
+An additional feature-only seascape classification was implemented as an exploratory comparison with the telemetry-informed Bayesian/Gaussian mixture components. This step used the environmental and static predictor matrix only. Species identity, telemetry-derived response variables, environmental plausibility, fishing exposure, and species-use predictions were excluded from model fitting so that the resulting classes represented recurring environmental states rather than species-specific use or risk.
+
+The feature-only classifier used KMeans clustering with 10 classes, matching the selected number of Bayesian/Gaussian mixture components. Predictors were standardized before clustering, and the fitted model was applied to the full 2014--2023 environmental feature grid. Each H3/date record therefore received a species-independent seascape label describing the dominant environmental regime for that cell-day.
+
+Seascape classes were summarized by their environmental and static predictor distributions, including SST, SSH, wind speed, log-transformed chlorophyll-a, bathymetry, and distance to coast. The seascape labels were also joined back to observed positive species-use records to describe which environmental regimes were represented in the telemetry observations for each species.
+
+Finally, the seascape classes were used in a post hoc comparison with the full hybrid species-use predictions. For each species, predicted log-transformed residence index from the hybrid model was summarized by seascape class and then projected back onto the H3/date grid as a seascape-conditioned species-use surface. This projection was used only to test how much of the predicted species-use structure could be represented by broad environmental regimes. It was not used as the primary risk input because seascape classes intentionally simplify the continuous predictor space and can smooth localized hotspots.
+
 ## Risk Estimation
 
 Risk estimation was implemented as a relative spatiotemporal overlap index, not as a direct prediction of observed bycatch probability. The workflow combined predicted species use, environmental plausibility, and fishing exposure for each H3 cell, date, and species.
@@ -292,6 +302,8 @@ Validation included data-quality checks, model-performance evaluation, and envir
 Species-use models were evaluated using a random train-test split with 25% of rows withheld for testing. Predictions were evaluated after back-transforming from log space to the original residence-index scale. Model comparison metrics included coefficient of determination ($R^2$), root mean squared error (RMSE), and mean absolute error (MAE). Additional diagnostics included predicted-versus-observed plots, residual inspection, and feature-importance analysis. These diagnostics supported interpretation of model behavior but were not treated as independent ecological validation.
 
 Environmental plausibility was evaluated separately from direct species-use prediction. The Bayesian/Gaussian mixture model was used to identify `h3`/`date`/`species` combinations whose environmental conditions were similar to those associated with observed telemetry locations. Plausibility values were therefore interpreted as environmental-support diagnostics rather than as direct validation of species presence or absence. Risk surfaces were interpreted alongside plausibility surfaces to distinguish well-supported predictions from environmental extrapolation.
+
+Feature-only seascapes were evaluated as an interpretive diagnostic rather than as an independent predictive model. Their outputs were compared with Bayesian/Gaussian mixture components, observed positive species-use records, and hybrid species-use prediction surfaces. This comparison was used to assess whether broad environmental regimes could explain the spatial structure of predicted species use and whether they retained localized high-use areas.
 
 Several additional validation approaches were not implemented in the current workflow but would strengthen future analyses. These include spatial or spatiotemporal block cross-validation, validation across individuals or trips, sensitivity analysis of the plausibility-gate parameter, comparison with independent bycatch or observer records, and uncertainty assessment across model classes and aggregation strategies.
 

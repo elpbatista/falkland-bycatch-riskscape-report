@@ -160,10 +160,130 @@ $$
 \label{fig:daily-anomaly-timeseries}
 \end{figure}
 
+\newpage
+
+## Bayesian/GMM Component Selection
+
+Candidate Bayesian/Gaussian mixture configurations with 2, 4, 6, 8, 10, and 12 components were evaluated using likelihood-based diagnostics and regression performance metrics. Increasing the number of components improved log-likelihood and information-criterion scores, but also increased model complexity and component fragmentation.
+
+A 10-component configuration was selected as a compromise between environmental structure, interpretability, and likelihood improvement. Compared with lower-component models, the 10-component solution better separated recurring environmental regimes across shelf, shelf-break, and offshore regions while avoiding the smaller and more weakly occupied components that emerged in the 12-component configuration.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparison of Bayesian/Gaussian mixture configurations used during component-selection analysis.}
+\label{tab:gmm-component-selection}
+\begin{tabular}{rrrrrr}
+\hline
+Components & $R^2$ & RMSE & MAE & BIC & Mean log-like. \\
+\hline
+2  & 0.026 & 94.79 & 6.64 & -45,788 & 3.31 \\
+4  & 0.031 & 94.51 & 6.60 & -112,301 & 7.97 \\
+6  & 0.040 & 94.08 & 6.44 & -134,902 & 9.76 \\
+8  & 0.037 & 94.22 & 6.54 & -161,696 & 11.83 \\
+10 & 0.045 & 93.85 & 6.26 & -177,051 & 13.15 \\
+12 & 0.043 & 93.95 & 6.20 & -198,158 & 14.85 \\
+\hline
+\end{tabular}
+\end{table}
+
+The 12-component model achieved slightly improved likelihood statistics relative to the 10-component configuration, but several components contained substantially smaller fractions of the positive-use training data. The selected 10-component solution therefore retained strong environmental separation while preserving interpretable and well-populated environmental regimes.
 
 \newpage
 
-## Appendix A: Datasets
+## Environmental Monthly Matrixes
+
+<!-- Figure app:sst-monthly-matrix: monthly SST matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/sst_mean_monthly_matrix_2022.png}
+\caption{Monthly mean sea surface temperature (SST) during 2022.}
+\label{fig:app-sst-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:ssh-monthly-matrix: monthly SSH matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/ssh_mean_monthly_matrix_2022.png}
+\caption{Monthly mean sea surface height (SSH) during 2022.}
+\label{fig:app-ssh-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:wind-speed-monthly-matrix: monthly wind-speed matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/wind_speed_mean_monthly_matrix_2022.png}
+\caption{Monthly mean near-surface wind speed during 2022.}
+\label{fig:app-wind-speed-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:chl-monthly-matrix: monthly log-CHL matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/chl_log_mean_monthly_matrix_2022.png}
+\caption{Monthly mean log-transformed chlorophyll-a concentration during 2022.}
+\label{fig:app-chl-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:sst-anom-monthly-matrix: monthly SST anomaly matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/sst_anom_mean_monthly_matrix_2022.png}
+\caption{Monthly mean sea surface temperature anomaly during 2022.}
+\label{fig:app-sst-anom-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:ssh-anom-monthly-matrix: monthly SSH anomaly matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/ssh_anom_mean_monthly_matrix_2022.png}
+\caption{Monthly mean sea surface height anomaly during 2022.}
+\label{fig:app-ssh-anom-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:wind-speed-anom-monthly-matrix: monthly wind-speed anomaly matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/wind_speed_anom_mean_monthly_matrix_2022.png}
+\caption{Monthly mean near-surface wind-speed anomaly during 2022.}
+\label{fig:app-wind-speed-anom-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:chl-anom-monthly-matrix: monthly log-CHL anomaly matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/chl_log_anom_mean_monthly_matrix_2022.png}
+\caption{Monthly mean log-transformed chlorophyll-a anomaly during 2022.}
+\label{fig:app-chl-anom-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:sst-grad-monthly-matrix: monthly SST gradient matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/sst_grad_mean_monthly_matrix_2022.png}
+\caption{Monthly mean sea surface temperature gradient during 2022.}
+\label{fig:app-sst-grad-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:ssh-grad-monthly-matrix: monthly SSH gradient matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/ssh_grad_mean_monthly_matrix_2022.png}
+\caption{Monthly mean sea surface height gradient during 2022.}
+\label{fig:app-ssh-grad-monthly-matrix}
+\end{figure}
+
+<!-- Figure app:chl-grad-monthly-matrix: monthly log-CHL gradient matrix for 2022. -->
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/chl_log_grad_mean_monthly_matrix_2022.png}
+\caption{Monthly mean log-transformed chlorophyll-a gradient during 2022.}
+\label{fig:app-chl-grad-monthly-matrix}
+\end{figure}
+
+\newpage
+
+## Datasets
 
 | Dataset                       | Provider                            | Product                                                     | Variable(s)                                          | Description                                                                                               |
 |-------------------------------|-------------------------------------|-------------------------------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|

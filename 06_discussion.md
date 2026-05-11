@@ -1,5 +1,0 @@
-# Discussion
-
-## Recommendations
-
-\newpage
