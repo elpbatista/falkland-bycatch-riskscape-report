@@ -58,13 +58,4 @@
 > not a substitute for telemetry-informed hotspot detection. This is a generous, accurate
 > framing of your own result.
 
-## Study Area
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.75\textwidth]{figures/study_area.png}
-\caption{Study area showing the Falkland Islands region, bathymetry, and H3 spatial grid.}
-\label{fig:study-area}
-\end{figure}
-
 \newpage

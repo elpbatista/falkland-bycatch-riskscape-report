@@ -1,42 +1,25 @@
 # Methods
 
-This chapter describes the analytical workflow used to construct dynamic bycatch riskscapes for the Falkland Islands region. The workflow integrates environmental raster products, fishing effort observations, species telemetry records, and static spatial reference layers within a common H3-based spatial framework and daily temporal resolution. These harmonized datasets were used to train species-use models, estimate environmental plausibility, classify feature-only environmental seascapes, and combine predicted species use with fishing exposure to generate relative risk surfaces.
+This chapter describes the analytical workflow used to construct dynamic bycatch riskscapes for the Falkland Islands region. The workflow integrates environmental raster products, fishing effort observations, species telemetry records, and static spatial reference layers within a common H3-based spatial framework and daily temporal resolution. The implementation is modular and largely script-driven, with automated stages for data acquisition, feature construction, model training, prediction generation, and batch production of map products. These harmonized datasets were used to train species-use models, estimate environmental plausibility, evaluate environmental validation designs, and translate daily prediction outputs into relative risk surfaces and operator-facing summaries.
 
-The methods are organized into six components: the overall riskscape framework, input datasets, spatial and temporal data processing, species-use modeling, feature-only seascape classification, and risk estimation. Validation procedures are then summarized, including implemented model diagnostics and additional validation approaches identified for future development.
+The methods are organized around the study area and spatial framework, input datasets, data processing, environmental seascape classification, species-use modeling, structured validation, risk estimation, and operator-facing risk-product generation.
 
-## Framework
+## Study Area and Spatial Framework
 
-This project uses a spatially explicit riskscape framework to estimate potential bycatch risk as the overlap between species use, fishing activity, and environmental conditions. The framework integrates environmental and fisheries datasets covering the period 2014-2023 with species-use observations derived from telemetry records collected from tracked individuals during 2022-2023. Because telemetry observations represent limited sampling periods and only tracked individuals, the resulting riskscapes should be interpreted as relative indicators of species use and potential interaction risk rather than definitive representations of population-level species distributions or observed bycatch probability.
+The study focused on the Falkland Islands fisheries region, where fishing activity is managed through licence areas and conservation zones described by the Falkland Islands Government Fisheries Department [@FIG-FD_statistics_2024]. The spatial domain was defined from the Falkland Islands fisheries grid, which covers the region between 47°-57° latitude and 64°-52° longitude, with an additional 50 km buffer to reduce edge effects and support spatial alignment across environmental, fisheries, and biological datasets.
 
-The framework does not attempt to predict observed bycatch events directly. Instead, it represents bycatch risk as a relative spatiotemporal index describing where and when species use and fishing activity co-occur under environmental conditions associated with observed species use.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{figures/study_area.png}
+\caption{Study area showing the Falkland Islands region, bathymetry, and H3 spatial grid.}
+\label{fig:study-area}
+\end{figure}
 
-All datasets were aligned to a common H3 grid and daily temporal resolution. Each record in the modeling framework represents one H3 cell on one date. Environmental variables describe the oceanographic state of each cell-day, species tracking data provide evidence of animal use, and fishing effort data represent operational exposure.
+All datasets were aligned to a common H3 grid and daily temporal resolution. Spatial integration was performed using the H3 hierarchical hexagonal indexing system developed by Uber [@HomeH3], a discrete global grid framework [@sahrGeodesicDiscreteGlobal2003]. The study area was discretized using H3 resolution 6 cells, providing an average cell area of approximately 36 km² and producing 37,209 cells across the fisheries-grid extent and buffer. Each record in the modeling framework represents one H3 cell on one date. Environmental variables describe the oceanographic state of each cell-day, species tracking data provide evidence of animal use, and fishing effort data represent operational exposure.
 
-The conceptual framework separates three components. First, species-use modeling estimates where each species is likely to occur or concentrate as a function of environmental conditions. Second, fishing exposure represents the intensity of fishing activity in each H3 cell and date. Third, the risk surface combines predicted species use and fishing exposure to compute a relative index of potential interaction risk for each H3 cell and date.
+The environmental and fisheries datasets cover 2014-2023. Species-use observations were derived from telemetry records collected from tracked individuals during 2022-2023. Because telemetry observations represent limited sampling periods and only tracked individuals, the resulting riskscapes should be interpreted as relative indicators of species use and potential interaction risk rather than definitive representations of population-level species distributions or observed bycatch probability.
 
-The general risk relationship can be expressed as:
-
-$$
-\mathrm{Risk}(h,t,s)=\mathrm{SpeciesUse}(h,t,s)\times\mathrm{FishingExposure}(h,t)
-$$
-
-where $h$ is an H3 cell, $t$ is date, and $s$ is species. In the implemented workflow, species use and fishing exposure were represented on a transformed scale, so the risk index was computed as:
-
-$$
-\log\left(\mathrm{Risk}(h,t,s)\right)
-=
-\log\left(\mathrm{SpeciesUse}(h,t,s)\right)
-+
-\log\left(\mathrm{FishingExposure}(h,t)\right)
-$$
-
-This formulation treats risk as a relative index rather than an absolute probability of bycatch. High-risk cells therefore represent locations and dates where predicted species use and fishing activity are both high.
-
-To represent minimum operational fishing exposure within the H3 framework, a baseline fishing effort unit of 0.5 vessel-hours per H3 cell was introduced. This value approximates the minimum time required for a fishing vessel operating at fishing speed to traverse an H3 resolution 6 cell. The baseline effort unit was used to estimate latent interaction risk through overlap with predicted species use surfaces, including locations and dates where observed fishing effort was absent or sparse.
-
-The framework assumes that bycatch risk increases with spatiotemporal overlap between species use and fishing activity, and that environmental conditions help explain variation in species use.
-
-## Data
+## Input Data
 
 The analytical framework integrates environmental, fisheries, biological, and spatial reference datasets describing oceanographic conditions, fishing activity, species presence, and management boundaries across the Falkland Islands region. Aggregated datasets were harmonized within a common spatiotemporal framework, enabling the integration of heterogeneous data sources into a unified modeling framework.
 
@@ -44,23 +27,23 @@ The analytical framework integrates environmental, fisheries, biological, and sp
 
 Environmental variables included sea surface temperature (SST), chlorophyll-a concentration (CHL), sea surface height (SSH), near-surface wind components, and bathymetry. Daily SST fields were obtained from the NASA Multi-scale Ultra-high Resolution (MUR) Level 4 product [@nasa/jplGHRSSTLevel42015], chlorophyll-a and SSH products were obtained from the Copernicus Marine Service [@europeanunion-copernicusmarineserviceGlobalOceanColour2022; @europeanunion-copernicusmarineserviceGLOBALOCEANGRIDDED2021], wind components were derived from ERA5 daily statistics distributed through the Copernicus Climate Data Store [@c3sERA5PostprocessedDaily2024], and bathymetric elevation data were obtained from GEBCO [@gebcobathymetriccompilationgroup2026GEBCO_2026GridContinuous2026].
 
-Environmental raster datasets were spatially aligned to the H3 framework and temporally harmonized at daily resolution. Because these products provide continuous spatial coverage across the study area, environmental conditions were available for all H3 cells and dates within the analysis period.
+Environmental raster datasets were spatially aligned to the H3 framework and temporally harmonized at daily resolution. Daily H3 environmental feature tables were generated where valid source data were available.
 
 ### Fisheries Data
 
 Fishing effort data were derived from Global Fishing Watch (GFW) AIS-based [@globalfishingwatchGlobalAISbasedApparent2025] fishing activity products covering the period 2014-2023. The dataset contains 2,297,069 records representing 3,094,974.5 fishing hours from 2,011 unique vessels.
 
-The dominant fishing gear types were trawlers with 1,497,210 fishing hours from 567 vessels, squid jiggers with 1,256,653 fishing hours from 1,207 vessels, and set longlines thet account for 202,871 fishing hours with only 41 vessels. The dataset includes vessels operating under multiple flag states, with the largest fishing effort contributions associated with Argentina (ARG), China (CHN), Taiwan (TWN), South Korea (KOR), Spain (ESP), and the Falkland Islands (FLK).
+The dominant fishing gear types were trawlers with 1,497,210 fishing hours from 567 vessels, squid jiggers with 1,256,653 fishing hours from 1,207 vessels, and set longlines that accounted for 202,871 fishing hours from 41 vessels. The dataset includes vessels operating under multiple flag states, with the largest fishing effort contributions associated with Argentina (ARG), China (CHN), Taiwan (TWN), South Korea (KOR), Spain (ESP), and the Falkland Islands (FLK).
 
-Fishing effort observations were aggregated by H3 cell and date, producing daily spatial fishing effort features including total fishing hours and vessel counts for each `h3`/`date` combination.
+Fishing effort observations were aggregated by H3 cell and date, producing daily spatial fishing effort features including total fishing hours and vessel counts for each `h3`/`date` combination. Fishing activity was used as an exposure layer for realized-risk products and operational summaries; it was not used as a predictor in the species-use model or in the grouped environmental cross-validation design.
 
 ### Biological Data
 
-Species presence data were derived from field telemetry records provided by the South Atlantic Environmental Research Institute (SAERI). The dataset contains 59,182 records with valid geographic coordinates and timestamps collected during 2022-2023.
+Species presence data were derived from field telemetry records provided by the South Atlantic Environmental Research Institute (SAERI). The raw observations are GPS tracking points, and therefore represent observed species presence at specific locations and times. The dataset contains 59,182 records with valid geographic coordinates and timestamps collected during 2022-2023.
 
 The dataset includes observations of Black-browed albatrosses (*Thalassarche melanophris*; BBAL) and South American fur seals (*Arctocephalus australis*; SAFS). BBAL accounts for 33,425 records from 27 individuals and 58 trips covering 16 days between 2022-12-02 and 2022-12-17. SAFS accounts for 25,757 records from 15 individuals and 18 trips collected between 2022-10-22 and 2023-03-16, covering 146 observation days (71 in 2022 and 75 in 2023).
 
-Telemetry observations were aggregated by H3 cell, date, and species, resulting in 10,268 `h3`/`date`/`species` rows.
+Telemetry observations were aggregated by H3 cell, date, and species, resulting in 10,268 `h3`/`date`/`species` rows. After aggregation, these rows were treated as a species-use index for each occupied cell-day rather than as individual point-presence records.
 
 ### Reference Data
 
@@ -70,32 +53,32 @@ Falkland Islands Conservation Zones [@ukho_ficz_focz_limits] defined for fisheri
 
 Natural Earth coastline and land 1:10m physical vectors datasets [@ne_10m_coastline; @ne_10m_land] were used for cartographic reference, masking, and distance-based spatial analyses.
 
-## H3 Spatial Framework
+### External Seascape Product Evaluated
 
-Spatial integration was performed using the H3 hierarchical hexagonal indexing system developed by Uber [@HomeH3]. The study area was discretized using H3 resolution 6 cells, providing an average cell area of approximately 36 km². The fisheries grid extent plus an additional 50 km buffer was converted to an H3 grid containing 37,209 cells. The H3 framework provides globally unique hierarchical spatial indexes and was used as a common spatial reference for integrating environmental variables, fishing effort, and species presence observations across daily temporal intervals.
+NOAA/MBON 8-day global seascape assignments [@NOAA/MBON] were evaluated as an external environmental-regime product but were not retained in the final modeling workflow. In the Falkland Islands study region, class 0 represented unassigned conditions and non-zero class coverage was insufficient during key seasonal windows. For the 2022 diagnostic, non-zero MBON classes covered 54.0% of H3 cell-days overall, but coverage dropped sharply from April through August: 13.3% in April, 2.3% in May, 0.0% in June, 1.2% in July, and 44.3% in August. The final environmental seascape and validation-block framework was therefore derived from the H3 environmental feature matrix rather than from the external MBON product.
 
-Environmental raster variables were aggregated to the H3 grid using area-weighted means. Raster pixels were converted to polygon footprints and intersected with H3 cell polygons. The geodesic area of each pixel-H3 overlap was used to compute normalized weights within each H3 cell. Daily raster values were aggregated by multiplying intersecting pixel values by their overlap weights and summing across pixels while excluding missing or invalid raster values. This produced daily H3-level environmental features aligned to the common `h3`/`date` modeling framework.
+<!-- The 2014-2023 MBON coverage diagnostic matrix should be referenced here after the appendix figure is added. -->
 
 ## Data Processing
 
-Data processing followed a staged pipeline that transformed raw environmental rasters, fishing observations, species telemetry records, and static spatial layers into H3-indexed feature tables. The pipeline used `h3` and `date` as common keys, with H3 indexes stored as unsigned 64-bit integers and dates converted to UTC daily timestamps. Intermediate and final tables were written as yearly Parquet partitions using ZSTD compression.
+Data processing followed a staged pipeline that transformed raw environmental rasters, fishing observations, species telemetry records, and static spatial layers into H3-indexed feature tables. The pipeline used `h3` and `date` as common keys, with H3 indexes stored as unsigned 64-bit integers and dates converted to UTC daily timestamps. Intermediate and final tables were written as yearly Parquet partitions using ZSTD compression. The main processed outputs were the daily environmental feature grid, species-use support table, fishing-exposure table, static spatial covariates, and environmental seascape assignments used for validation and interpretation.
 
-Environmental processing began with raster-to-H3 lookup tables computed separately for each raster product and reused during feature generation. Daily raster values were aggregated to H3 cells using the area-weighted procedure described above. Aggregated environmental tables were grouped by `h3` and `date`, duplicate contributions were averaged, and variables were stored as 32-bit floating point values.
+Environmental processing began with raster-to-H3 lookup tables computed separately for each raster product and reused during feature generation. Environmental raster variables were aggregated to the H3 grid using area-weighted means. Raster pixels were converted to polygon footprints and intersected with H3 cell polygons. The geodesic area of each pixel-H3 overlap was used to compute normalized weights within each H3 cell. Daily raster values were aggregated by multiplying intersecting pixel values by their overlap weights and summing across pixels while excluding missing or invalid raster values. Aggregated environmental tables were grouped by `h3` and `date`, duplicate contributions were averaged, and variables were stored as 32-bit floating point values.
 
 Several derived environmental variables were generated after spatial aggregation. Near-surface wind speed was calculated from zonal and meridional wind components as:
 
 $$
-\mathrm{WindSpeed}
+W(h,t)
 =
-\sqrt{u_{10}^{2}+v_{10}^{2}}
+\sqrt{u_{10}(h,t)^{2}+v_{10}(h,t)^{2}}
 $$
 
 Chlorophyll-a concentration was log-transformed to reduce skew:
 
 $$
-\mathrm{CHL}_{\log}
+C_{\log}(h,t)
 =
-\log\left(1+\mathrm{CHL}\right)
+\log\left(1+C(h,t)\right)
 $$
 
 Seasonality was represented with cyclic day-of-year predictors on a 365-day cycle. For non-leap years, the calendar day of year was used directly. For leap years, dates after February 28 were shifted back by one day so that February 29 was removed from the seasonal cycle. The adjusted day of year, $d^*$, was therefore defined as:
@@ -108,71 +91,83 @@ d, & \text{otherwise}
 \end{cases}
 $$
 
-where $d$ is the calendar day of year and $d^*$ is the adjusted day of year. Seasonal predictors were then encoded as:
+where $d$ is the calendar day of year and $d^*$ is the adjusted day of year. The seasonal predictors stored as `doy_sin` and `doy_cos` were then encoded as:
 
 $$
-\mathrm{doy\_sin}=\sin\left(\frac{2\pi d^*}{365}\right)
+S_d=\sin\left(\frac{2\pi d^*}{365}\right)
 $$
 
 $$
-\mathrm{doy\_cos}=\cos\left(\frac{2\pi d^*}{365}\right)
+C_d=\cos\left(\frac{2\pi d^*}{365}\right)
 $$
 
 Spatial gradients were computed on the H3 grid to represent local environmental contrast. To improve processing efficiency, H3 ring-1 neighbor relationships were precomputed as lookup and index tables and reused during feature generation. For each date, each H3 cell was compared with its valid neighboring cells. Gradients were calculated as the root mean square difference between the focal cell and its neighbors:
 
 $$
-\mathrm{gradient}(i)=\sqrt{\mathrm{mean}\left((X_i-X_j)^2\right)}
+G_X(i,t)=\sqrt{\mathrm{mean}_{j \in N(i)}\left((X(i,t)-X(j,t))^2\right)}
 $$
 
-where $i$ is the focal H3 cell and $j$ are valid neighboring cells. Gradients were calculated for SST, log-transformed chlorophyll-a, and SSH.
+where $G_X(i,t)$ is the local gradient for variable $X$, $i$ is the focal H3 cell, $t$ is date, and $N(i)$ is the set of valid neighboring cells. Gradients were calculated for SST, log-transformed chlorophyll-a, and SSH.
 
 Temporal anomalies were computed relative to local seasonal conditions. For each H3 cell and adjusted day-of-year, a climatological mean was calculated across the full environmental record. Daily anomalies were then calculated as:
 
 $$
-X_{\mathrm{anom}}(i,t)=X(i,t)-\mathrm{mean}\left(X(i,\mathrm{adjusted\_doy})\right)
+A_X(i,t)=X(i,t)-\bar{X}_i(d^*)
 $$
 
 Anomalies were calculated for SST, log-transformed chlorophyll-a, SSH, and wind speed.
 
-Fishing effort records were converted to geographic points, spatially joined to the H3 grid, and aggregated by H3 cell and date. Daily fishing features included total fishing hours and unique vessel counts. Fishing activity was calculated as:
+Fishing effort records were converted to geographic points, spatially joined to the H3 grid, and aggregated by H3 cell and date. Daily fishing-exposure features included total fishing hours and unique vessel counts. Fishing activity was calculated as:
 
 $$
-\mathrm{FishingActivity}(h,t)
+F(h,t)
 =
-\mathrm{FishingHours}(h,t)
+H(h,t)
 \times
-\mathrm{VesselCount}(h,t)
+V(h,t)
 $$
 
-where $h$ is an H3 cell and $t$ is date. `h3`/`date` combinations without fishing observations were retained and assigned zero fishing effort values.
+where $F(h,t)$ is fishing activity, $H(h,t)$ is total fishing hours, $V(h,t)$ is unique vessel count, $h$ is an H3 cell, and $t$ is date. `h3`/`date` combinations without fishing observations were retained and assigned zero fishing effort values.
 
-Telemetry records were cleaned by parsing timestamps, removing invalid dates, and retaining records with valid coordinates. Observations were spatially joined to the H3 grid and aggregated by H3 cell, date, and species. Species-use support variables included telemetry record count, individual count, and trip count. For model training, observed `species`/`date` combinations were expanded across all H3 cells available in the environmental feature grid. Cells without telemetry observations for a given `species`/`date` combination were retained and assigned zero support values.
+Telemetry records were cleaned by parsing timestamps, removing invalid dates, and retaining records with valid coordinates. Observations were spatially joined to the H3 grid and aggregated by H3 cell, date, and species. Species-use support variables included telemetry record count, individual count, and trip count. For model training, observed `species`/`date` combinations were expanded across all H3 cells available in the environmental feature grid. Cells without telemetry observations for a given `species`/`date` combination were retained and assigned zero support values. These zero-use rows represent unobserved H3 cells within the modeled species-date domain, not confirmed biological absences.
 
 Static spatial features were generated once per H3 cell. Bathymetric depth and slope were derived from the GEBCO raster using the same area-weighted H3 aggregation procedure. Distance to coast was calculated geodesically from each H3 centroid to the nearest coastline geometry. H3 centroid latitude and longitude were encoded using sine and cosine transformations to avoid discontinuities at coordinate boundaries.
 
-Final modeling tables were assembled by joining dynamic environmental variables, derived features, static spatial variables, species-use support variables, and fishing-effort features on common `h3`/`date` keys. Dynamic predictors included `sst`, `ssh`, `wind_speed`, log-transformed `chl`, environmental anomalies, H3-neighbor gradients, and seasonal sine/cosine terms. Static predictors included bathymetry, slope, distance to coast, and encoded H3 centroid coordinates. No temporal interpolation or rolling-window smoothing was applied; all features were derived directly from daily source observations and deterministic `h3`/`date` aggregation.
+The standardized environmental and static feature matrix was also used to construct feature-only seascape assignments. A 15 x 15 self-organizing map was fitted to the H3 environmental feature space, producing 225 environmental prototypes. These prototypes were then grouped with hierarchical agglomerative clustering, and the selected 30-class cut was exported to yearly `h3`/`date` seascape assignment tables. Species identity, telemetry-derived species-use values, fishing exposure, environmental plausibility, and risk predictions were excluded from seascape fitting, so the seascape labels represent recurring environmental states rather than species-specific use or risk.
+
+Final modeling tables were assembled by joining dynamic environmental variables, derived features, static spatial variables, species-use support variables, and fishing-exposure fields on common `h3`/`date` keys. Dynamic predictors included `sst`, `ssh`, `wind_speed`, log-transformed `chl`, environmental anomalies, H3-neighbor gradients, and seasonal sine/cosine terms. Static predictors included bathymetry, slope, distance to coast, and encoded H3 centroid coordinates. Fishing-exposure fields were retained for risk-product generation but were excluded from the species-use predictor matrix and from the grouped environmental cross-validation design. No temporal interpolation or rolling-window smoothing was applied; all features were derived directly from daily source observations and deterministic `h3`/`date` aggregation.
+
+## Environmental Seascape Classification
+
+A feature-only seascape classification was implemented to define recurring environmental regimes across the Falkland Islands study region. The approach follows the general logic of hierarchical dynamic seascape frameworks, in which multivariate oceanographic conditions are represented in environmental space and then grouped into interpretable classes [@kavanaughHierarchicalDynamicSeascapes2014; @kavanaughSeascapesNewVernacular2016; @montesDynamicSatelliteSeascapes2020a]. This classification used the environmental and static predictor matrix only. Species identity, telemetry-derived response variables, environmental plausibility, fishing exposure, and species-use predictions were excluded from seascape fitting so that the resulting classes represented recurring environmental states rather than species-specific use or risk.
+
+Predictors were standardized before classification. A 15 x 15 self-organizing map [@kohonenSelforganizingMap1990a] was fitted to the standardized H3 environmental feature space, producing 225 environmental prototypes. The prototype weight vectors were then grouped using Ward hierarchical agglomerative clustering. The selected 30-class cut was exported as a species-independent seascape label for each assigned `h3`/`date` record in the 2014-2023 feature grid. The rationale for selecting the 30-class cut and using it in grouped environmental cross-validation is described in the validation section.
+
+Seascape classes were summarized by their environmental and static predictor distributions, including SST, SSH, wind speed, log-transformed chlorophyll-a, bathymetry, and distance to coast. The seascape labels were also joined back to observed positive species-use records to describe which environmental regimes were represented in the telemetry observations for each species.
+
+In addition to their role in grouped environmental cross-validation, the SOM-hierarchical seascape classes were used in an exploratory proof-of-concept analysis of how environmental regimes could support future risk-estimation products. This analysis was not intended to assess or replace existing dynamic seascape products. Rather, it explored whether relationships between feature-only environmental regimes and telemetry-informed species use could support seascape-conditioned risk summaries. For each species, predicted log-transformed residence index from the hybrid model was summarized by seascape class and projected back onto the `h3`/`date` grid as a seascape-conditioned species-use surface. These surfaces were interpreted as diagnostic products for examining how species use varies across environmental regimes, not as the primary risk input.
 
 ## Species-Use Modeling
 
 Predictor variables represented environmental state, environmental variability, seasonality, and static spatial structure. Dynamic predictors described oceanographic conditions for each `h3`/`date` combination, while derived variables captured local gradients, seasonal anomalies, and cyclic temporal patterns. Static predictors represented persistent geographic structure, including bathymetry, slope, coastal proximity, and spatial position.
 
-Species-use models were trained to predict relative species use from environmental and static spatial predictors. The training dataset was constructed from the `h3`/`date`/`species` species-presence table joined to the environmental feature grid. The response variable was a `ResidenceIndex` defined as the product of telemetry record count and individual count for each observed `h3`/`date`/`species` group:
+Species-use models were trained to predict relative species use from environmental and static spatial predictors. The training dataset was constructed from the `h3`/`date`/`species` species-use support table joined to the environmental feature grid. The response variable was `residence_index`, defined as the product of telemetry record count and individual count for each observed `h3`/`date`/`species` group:
 
 $$
-\mathrm{ResidenceIndex}(h,t,s)
+R(h,t,s)
 =
-\mathrm{PresenceCount}(h,t,s)
+C(h,t,s)
 \times
-\mathrm{IndividualCount}(h,t,s)
+I(h,t,s)
 $$
 
-where $h$ is an H3 cell, $t$ is date, and $s$ is species. This formulation was used to increase the relative influence of locations with both repeated observations and multiple tracked individuals. The modeling target was transformed as:
+where $R(h,t,s)$ is the response value, $C(h,t,s)$ is the telemetry record count, $I(h,t,s)$ is the number of tracked individuals, $h$ is an H3 cell, $t$ is date, and $s$ is species. This formulation was used to increase the relative influence of locations with both repeated observations and multiple tracked individuals. The modeling target was transformed as:
 
 $$
-y=\log\left(1+\mathrm{ResidenceIndex}\right)
+Y(h,t,s)=\log\left(1+R(h,t,s)\right)
 $$
 
-For each observed `species`/`date` combination, all H3 cells in the environmental feature grid were included. Cells without telemetry observations were retained and assigned zero target values, allowing the model to learn from both observed-use and unused cells within the same environmental domain.
+For each observed `species`/`date` combination, all H3 cells in the environmental feature grid were included. Cells without telemetry observations were retained and assigned zero target values, allowing the model to learn from both observed-use and unobserved-use cells within the same environmental domain. These zero values were treated as modeling support for relative species use, not as confirmed biological absences.
 
 Predictor variables included dynamic environmental conditions, derived environmental features, seasonal terms, and static spatial variables. Dynamic predictors included `sst`, `ssh`, `wind_speed`, and log-transformed `chl`. Derived predictors included environmental anomalies and H3-neighbor gradients. Seasonal predictors were represented using cyclic day-of-year sine and cosine terms. Static predictors included bathymetric depth, bathymetric slope, distance to coast, and encoded H3 centroid coordinates.
 
@@ -181,149 +176,140 @@ The implemented workflow used a joint-species modeling approach. Species identit
 Because zero-use rows greatly outnumbered positive-use rows, the training dataset was balanced before model fitting. All positive rows were retained, and an equal number of zero-use rows was randomly sampled. Sample weights were applied during fitting to increase the influence of higher-use observations:
 
 $$
-w
+w(h,t,s)
 =
-1+\mathrm{ResidenceIndex}^{0.75}
+1+R(h,t,s)^{0.75}
 $$
 
-Four model classes were evaluated during model comparison: histogram gradient boosting, random forest, extra trees, and a Bayesian/Gaussian mixture approach. Tree-based models were trained using ensemble learning methods with regularization and constrained tree depth to reduce overfitting.
+Four model classes were evaluated during learner screening using scikit-learn implementations [@pedregosaScikitlearnMachineLearning]: histogram gradient boosting [@friedmanGreedyFunctionApproximation2001], random forest [@breimanRandomForests2001], extra trees [@geurtsExtremelyRandomizedTrees2006], and a custom Bayesian/GMM-style candidate. The random forest and extra trees models used 300 trees, a maximum depth of 20, and a minimum leaf size of 5. The histogram gradient boosting model used 300 boosting iterations, a learning rate of 0.05, 31 maximum leaf nodes, and L2 regularization. The custom Bayesian/GMM-style candidate fitted a 30-component Gaussian mixture model to positive-use observations in standardized feature space, using expectation-maximization logic [@dempsterMaximumLikelihoodIncomplete1977], and combined the resulting likelihood-based prediction with a histogram gradient boosting prior.
 
-The Bayesian/Gaussian mixture implementation used a Gaussian mixture model fitted to positive-use observations in standardized feature space. The resulting environmental likelihood surface was normalized and combined with a histogram gradient boosting prior trained on the full dataset. Final predictions from this estimator were generated as an equal-weighted combination of the likelihood-based estimate and the prior model prediction.
+The final production species-use learner was selected through the validation workflow described below and then refit on all balanced training rows. Model outputs were expressed as `species_use_log_pred`, representing predicted species use on the log-transformed scale.
 
-Model outputs were expressed as `species_use_log_pred`, representing predicted species use on the log-transformed scale. Model comparison metrics were computed after back-transforming predictions to the original target scale and included $R^2$, root mean squared error, and mean absolute error.
+## Validation
 
-## Feature-Only Seascape Classification
+Validation included data-quality checks, learner screening, structured transferability tests, and environmental-support assessment. During preprocessing, feature tables were checked for required columns, consistent `h3` and `date` keys, duplicate records, missing values, and expected data types. Environmental features were inspected after aggregation and transformation to confirm that yearly partitions retained the expected `h3`/`date` structure and that derived variables, including gradients and anomalies, were generated without row inflation.
 
-An additional feature-only seascape classification was implemented as an exploratory comparison with the telemetry-informed Bayesian/Gaussian mixture components. This step used the environmental and static predictor matrix only. Species identity, telemetry-derived response variables, environmental plausibility, fishing exposure, and species-use predictions were excluded from model fitting so that the resulting classes represented recurring environmental states rather than species-specific use or risk.
+The first validation stage screened candidate species-use learners using a row-level random split, with 25% of balanced training rows withheld for testing. This random split was used only as an initial learner-comparison benchmark because randomly mixed training and test rows can overstate transferability when observations are spatially or environmentally structured [@valaviBlockCVPackage2019]. Predictions were evaluated after back-transforming from log space to the original `residence_index` scale, and model comparison metrics included coefficient of determination ($R^2$), root mean squared error (RMSE), and mean absolute error (MAE).
 
-The feature-only classifier used KMeans clustering with 10 classes, matching the selected number of Bayesian/Gaussian mixture components. Predictors were standardized before clustering, and the fitted model was applied to the full 2014--2023 environmental feature grid. Each H3/date record therefore received a species-independent seascape label describing the dominant environmental regime for that cell-day.
+After learner screening, Extra Trees was evaluated under more structured validation designs. These included a row-random 12% holdout benchmark, spatial H3 parent-block holdouts, buffered spatial holdouts, custom Bayesian/GMM-style environmental-component holdouts, and SOM-hierarchical seascape grouped folds. Following the logic of spatially and environmentally separated cross-validation folds [@valaviBlockCVPackage2019], these structured validation designs were intended to test transfer across geographic or environmental partitions rather than interpolation among randomly mixed cell-days.
 
-Seascape classes were summarized by their environmental and static predictor distributions, including SST, SSH, wind speed, log-transformed chlorophyll-a, bathymetry, and distance to coast. The seascape labels were also joined back to observed positive species-use records to describe which environmental regimes were represented in the telemetry observations for each species.
+The selected validation design used SOM-hierarchical k=30 seascape classes as environmental groups in five-fold grouped cross-validation. Complete seascape groups were assigned to folds; groups were allocated to balance total rows and positive species-use support across species as much as possible. Each fold withheld one set of environmental seascape groups for testing and trained the model on the remaining groups. This produced an environmental transferability diagnostic for the joint Extra Trees species-use model and supported the final choice of the SOM-hierarchical k=30 grouped environmental cross-validation design, with the quantitative comparison among validation variants reported in the results.
 
-Finally, the seascape classes were used in a post hoc comparison with the full hybrid species-use predictions. For each species, predicted log-transformed residence index from the hybrid model was summarized by seascape class and then projected back onto the H3/date grid as a seascape-conditioned species-use surface. This projection was used only to test how much of the predicted species-use structure could be represented by broad environmental regimes. It was not used as the primary risk input because seascape classes intentionally simplify the continuous predictor space and can smooth localized hotspots.
+The final production species-use model was refit after validation using the selected Extra Trees learner and all balanced training rows. Production-fit diagnostics were retained for reproducibility and model inspection but were not treated as independent validation because the production model was fit to the full balanced training dataset.
+
+Environmental plausibility was evaluated separately from direct species-use prediction. The Bayesian/Gaussian mixture model was used to identify `h3`/`date`/`species` combinations whose environmental conditions were similar to those associated with observed telemetry locations. Plausibility values were therefore interpreted as environmental-support diagnostics rather than as direct validation of species presence or absence. Risk surfaces were interpreted alongside plausibility surfaces to distinguish well-supported predictions from environmental extrapolation.
+
+Additional validation would be required to assess realized bycatch prediction directly. In particular, independent observer bycatch records, individual- or trip-level holdouts, and sensitivity analysis of the plausibility-gate parameter would strengthen future versions of the workflow.
 
 ## Risk Estimation
 
-Risk estimation was implemented as a relative spatiotemporal overlap index, not as a direct prediction of observed bycatch probability. The workflow combined predicted species use, environmental plausibility, and fishing exposure for each H3 cell, date, and species.
+Risk estimation was implemented as a relative spatiotemporal overlap index, not as a direct prediction of observed bycatch probability. This follows the broader use of telemetry-informed habitat or distribution models combined with fisheries activity to assess potential bycatch risk through spatial overlap [@zydelisDynamicHabitatModels2011; @clayComprehensiveLargescaleAssessment2019]. The workflow combined predicted species use, environmental plausibility, and fishing exposure for each `h3` cell, `date`, and `species`.
+
+The conceptual framework separates three components. First, species-use modeling estimates where each species is likely to occur or concentrate as a function of environmental conditions. Second, fishing exposure represents the intensity of fishing activity in each H3 cell and date. Third, the risk surface combines predicted species use and fishing exposure to compute a relative index of potential interaction risk for each H3 cell and date. This framing is consistent with dynamic-management approaches that translate changing biological and fisheries information into spatial decision-support products [@maxwellDynamicOceanManagement2015; @hazenDynamicOceanManagement2018].
+
+Conceptually, relative risk increases when species use and fishing exposure overlap:
+
+$$
+Q(h,t,s)=U(h,t,s)\times E(h,t)
+$$
+
+where $h$ is an H3 cell, $t$ is date, $s$ is species, $Q(h,t,s)$ is relative risk, $U(h,t,s)$ is predicted species use, and $E(h,t)$ is fishing exposure. In the implemented workflow, both terms were represented on transformed scales, so stored risk values should be interpreted as relative risk scores rather than raw products or absolute bycatch probabilities. High-risk cells therefore represent locations and dates where predicted species use and fishing activity are both high. The framework assumes that bycatch risk increases with spatiotemporal overlap between species use and fishing activity, and that environmental conditions help explain variation in species use.
 
 ### Environmental plausibility
 
-Environmental plausibility was estimated with the Bayesian/Gaussian mixture model. For each `h3`/`date`/`species` combination, the model calculated the log density of the environmental feature vector under the fitted Gaussian mixture model. Log densities were normalized to a bounded plausibility score using the fitted 1st and 99th percentile density limits:
+Environmental plausibility was estimated with the Bayesian/Gaussian mixture model. For each `h3`/`date`/`species` combination, the model calculated the log density of the environmental feature vector under the fitted Gaussian mixture model. The model was fitted on positive-use observations, and its 1st and 99th percentile training log-density values were stored as normalization limits. For a predicted cell-day, the normalized plausibility score was:
 
 $$
-\mathrm{Plausibility}(h,t,s)
+p_s(h,t)
 =
 \mathrm{clip}
 \left(
-\frac{
-\ell(h,t,s) - \ell_{\min}
-}{
-\ell_{\max} - \ell_{\min}
-},
+\frac{d_s(h,t)-d_{s,\min}}{d_{s,\max}-d_{s,\min}},
 0,
 1
 \right)
 $$
 
-where $\ell(h,t,s)$ is the Gaussian mixture log density for H3 cell $h$, date $t$, and species $s$, and $\ell_{\min}$ and $\ell_{\max}$ are the lower and upper normalization limits estimated during model fitting. Plausibility values near 1 indicate environmental conditions similar to those associated with observed species use; values near 0 indicate weak environmental support relative to the fitted use-space distribution.
-
-The plausibility score was used as an exploratory support filter for the Extra Trees species-use predictions. Let $d(h,t,s)$ be the Bayesian/Gaussian mixture log density for H3 cell $h$, date $t$, and species $s$. The normalized plausibility score was:
-
-$$
-p(h,t,s)
-=
-\mathrm{clip}
-\left(
-\frac{d(h,t,s)-d_{\min}}{d_{\max}-d_{\min}},
-0,
-1
-\right)
-$$
+where $d_s(h,t)$ is the Gaussian mixture log density, and $d_{s,\min}$ and $d_{s,\max}$ are the lower and upper normalization limits estimated during model fitting. Plausibility values near 1 indicate environmental conditions similar to those associated with observed species use; values near 0 indicate weak environmental support relative to the fitted use-space distribution.
 
 The plausibility gate was then defined as:
 
 $$
-g(h,t,s)
+g_s(h,t)
 =
-1-c_s\left(1-p(h,t,s)\right)
+1-c_s\left(1-p_s(h,t)\right)
 $$
 
 Predicted Extra Trees species use was first converted from log space to the original target scale, multiplied by the gate, and then transformed back to log space:
 
 $$
-u^*(h,t,s)
+u^*_s(h,t)
 =
-u_{\mathrm{ExtraTrees}}(h,t,s)\times g(h,t,s)
+\left(\exp(m_s(h,t))-1\right)\times g_s(h,t)
 $$
 
 $$
-\log\left(1+u^*(h,t,s)\right)
+m^*_s(h,t)
 =
-\mathrm{final\ species\mbox{-}use\ log\ prediction}
+\log\left(1+u^*_s(h,t)\right)
 $$
 
-where $c_s$ is the maximum proportional reduction allowed under the plausibility gate. In this implementation, $c_s = 0.10$ was applied to both species. Thus, the gate was bounded by:
+where $m_s(h,t)$ is the ungated Extra Trees prediction on the log-transformed species-use scale, $u^*_s(h,t)$ is gated species use on the original target scale, and $m^*_s(h,t)$ is the final gated species-use prediction stored as `species_use_log_pred`. The ungated Extra Trees prediction was retained as `species_use_ml_log_pred`. The parameter $c_s$ is the maximum proportional reduction allowed under the plausibility gate. In this implementation, $c_s = 0.10$ was applied to both species. Thus, the gate was bounded by:
 
 $$
-g(h,t,s)\in[0.9,1.0]
+g_s(h,t)\in[0.9,1.0]
 $$
 
-Even when environmental plausibility was zero, predicted species use was only reduced by 10% rather than forced to zero.
-
-The plausibility gate was used as an exploratory support filter rather than as a calibrated biological correction factor. Because the gate value was not estimated from independent validation data, plausibility-filtered outputs were interpreted alongside the ungated species-use and risk surfaces. This allowed areas of weak environmental support to be identified without treating low plausibility as confirmed species absence.
+Even when environmental plausibility was zero, predicted species use was only reduced by 10% rather than forced to zero. The plausibility gate was used as an exploratory support filter rather than as a calibrated biological correction factor. Because the gate value was not estimated from independent validation data, plausibility-filtered outputs were interpreted alongside the ungated species-use and risk surfaces. This allowed areas of weak environmental support to be identified without treating low plausibility as confirmed species absence.
 
 ### Fishing exposure and realized risk
 
-Observed fishing activity was used to estimate realized risk. For each `h3`/`date` combination, fishing activity was calculated as:
+Observed fishing activity was used to estimate realized risk. Global Fishing Watch defines apparent fishing effort as AIS-derived apparent fishing activity summarized as fishing hours for a vessel or area over time [@GFW_FAQs]. These apparent fishing hours were first aggregated to the `h3`/`date` grid. For realized-risk mapping, fishing exposure was then represented as a derived fleet-concentration-weighted activity index, calculated as apparent fishing hours multiplied by the number of unique vessels observed in the same cell-day:
 
 $$
-\mathrm{FishingActivity}(h,t)
+F(h,t)
 =
-\mathrm{FishingHours}(h,t)
+H(h,t)
 \times
-\mathrm{VesselCount}(h,t)
+V(h,t)
 $$
 
-Fishing activity was transformed using:
+where $H(h,t)$ is total apparent fishing hours and $V(h,t)$ is the number of unique vessels observed in the cell-day. This derived index is not the native Global Fishing Watch effort metric; it was used as a relative proxy to emphasize cell-days with both high apparent fishing duration and multiple active vessels. The index was transformed using:
 
 $$
-\mathrm{FishingActivityLog}(h,t)
+f(h,t)
 =
-\log\left(1 + \mathrm{FishingActivity}(h,t)\right)
+\log\left(1 + F(h,t)\right)
 $$
 
-The realized risk index was then calculated additively in log space:
+The realized risk score was then calculated additively on the transformed scale:
 
 $$
-\mathrm{RiskLogPred}(h,t,s)
+r_s(h,t)
 =
-\mathrm{SpeciesUseLogPred}(h,t,s)
+m^*_s(h,t)
 +
-\mathrm{FishingActivityLog}(h,t)
+f(h,t)
 $$
 
-This is equivalent to estimating risk as a multiplicative overlap between species use and fishing exposure on the original scale. Cells with no observed fishing activity received no realized fishing-exposure contribution, even when predicted species use was high.
+This score is monotonic in both gated species use and fishing exposure, but it is not a calibrated bycatch probability and is not stored as a raw product of species use and fishing activity. Cells with no observed fishing activity received no fishing-exposure contribution, even when predicted species use was high.
 
 ### Latent risk
 
-Latent risk was estimated using a standardized minimum fishing exposure instead of observed fishing activity. A baseline exposure of 0.5 vessel-hours per H3 cell-day was used, representing approximately one vessel operating within or traversing an H3 resolution 6 cell for about 30 minutes at fishing speed.
+Latent risk was estimated using a standardized minimum fishing exposure instead of observed fishing activity. A baseline exposure of 0.5 vessel-hours per H3 cell-day was used, represented on the transformed scale as $\log(1+0.5)$. This baseline corresponds to approximately one vessel operating within or traversing an H3 resolution 6 cell for about 30 minutes at fishing speed.
 
-Latent risk identifies where predicted species use would imply potential interaction risk if fishing activity were present. In contrast, realized risk identifies where predicted species use overlapped with observed fishing activity.
+Latent risk identifies where predicted species use would imply potential interaction risk if fishing activity were present. In contrast, realized-risk surfaces add the observed fishing-exposure term where activity was present.
 
-For plausibility-filtered latent risk, low-plausibility cell-days were treated as environmentally weakly supported rather than confirmed absences. Where plausibility fell below the selected support threshold, latent plausible risk was not reported for that cell-day.
+For plausibility-aware latent-risk maps, low-plausibility cell-days were treated as environmentally weakly supported rather than confirmed absences. These products were interpreted together with the plausibility layer, so weakly supported predictions could be flagged without treating low plausibility as proof of absence.
 
-Final prediction outputs included H3 cell, date, species, hybrid species-use prediction, fishing exposure on the log scale, risk prediction on the log scale, plausibility, and gate value.
+### Operator-facing risk products
 
-## Validation
+Operator-facing products were generated as aggregations and visual translations of the daily H3 prediction cube, not as separate models. Monthly prediction maps and monthly latent-risk matrices summarized the daily prediction outputs by species and H3 cell using the same spatial extent, basemap layers, and binned risk-color conventions as the main prediction maps.
 
-Validation included data-quality checks, model-performance evaluation, and environmental-support assessment. During preprocessing, feature tables were checked for required columns, consistent `h3` and `date` keys, duplicate records, missing values, and expected data types. Environmental features were inspected after aggregation and transformation to confirm that yearly partitions retained the expected `h3`/`date` structure and that derived variables, including gradients and anomalies, were generated without row inflation.
+Weekly planning products were derived from latent risk. Daily latent-risk predictions were grouped by ISO week for each `h3` cell and `species`. A 2014-2023 weekly climatology was produced by averaging weekly latent risk across years, providing an expected seasonal-risk surface for each ISO week. A separate 2022 weekly sequence was exported as an animation-oriented product to show one realized annual progression through the same weekly plotting framework.
 
-Species-use models were evaluated using a random train-test split with 25% of rows withheld for testing. Predictions were evaluated after back-transforming from log space to the original residence-index scale. Model comparison metrics included coefficient of determination ($R^2$), root mean squared error (RMSE), and mean absolute error (MAE). Additional diagnostics included predicted-versus-observed plots, residual inspection, and feature-importance analysis. These diagnostics supported interpretation of model behavior but were not treated as independent ecological validation.
+As an applied management-unit example, the weekly H3 climatology was also aggregated to the Falklands Fisheries grid. Fisheries-grid summaries were plotted with protection-zone overlays and grid boundaries to illustrate how the H3 prediction cube can be translated into management units without changing the underlying model. These products were interpreted as planning and communication summaries of the modeled risk surfaces rather than as new validation evidence.
 
-Environmental plausibility was evaluated separately from direct species-use prediction. The Bayesian/Gaussian mixture model was used to identify `h3`/`date`/`species` combinations whose environmental conditions were similar to those associated with observed telemetry locations. Plausibility values were therefore interpreted as environmental-support diagnostics rather than as direct validation of species presence or absence. Risk surfaces were interpreted alongside plausibility surfaces to distinguish well-supported predictions from environmental extrapolation.
-
-Feature-only seascapes were evaluated as an interpretive diagnostic rather than as an independent predictive model. Their outputs were compared with Bayesian/Gaussian mixture components, observed positive species-use records, and hybrid species-use prediction surfaces. This comparison was used to assess whether broad environmental regimes could explain the spatial structure of predicted species use and whether they retained localized high-use areas.
-
-Several additional validation approaches were not implemented in the current workflow but would strengthen future analyses. These include spatial or spatiotemporal block cross-validation, validation across individuals or trips, sensitivity analysis of the plausibility-gate parameter, comparison with independent bycatch or observer records, and uncertainty assessment across model classes and aggregation strategies.
+Final prediction outputs included `h3`, `date`, `species`, the hybrid species-use prediction, fishing exposure on the log scale, risk prediction on the log scale, `plausibility`, and `plausibility_gate`.
 
 \newpage

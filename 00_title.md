@@ -1,6 +1,6 @@
 ---
 title: "Dynamic Bycatch Riskscape Framework for the Falkland Islands"
-author: "Jorge L. Batista Echevarría"
+author: "Jorge L. Batista (PB) Echevarría"
 date: "2026"
 
 toc-depth: 3

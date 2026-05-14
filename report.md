@@ -78,4 +78,15 @@ $$
 
 \newpage
 
+```bash
+pandoc \
+  00_title.md \
+  03_methods.md \
+  07_references.md \
+  --citeproc \
+  -o _draft_batistaj_capstone.pdf
+```
+
+\newpage
+
 ## References

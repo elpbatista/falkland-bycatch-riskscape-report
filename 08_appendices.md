@@ -5,7 +5,7 @@
 \begin{figure}[htbp]
 \centering
 \includegraphics[height=0.48\textheight,keepaspectratio]{figures/fishing_activity_mean_2014-2023.png}
-\caption{Mean fishing activity during 2014--2023 summarized as vessel-hours by H3 cell.}
+\caption{Mean fishing activity during 2014-2023 summarized as vessel-hours by H3 cell.}
 \label{fig:appendix-fishing-activity-mean-2014-2023}
 \end{figure}
 
@@ -14,7 +14,7 @@
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fishing_activity_monthly_totals_2014-2023.png}
-\caption{Monthly fishing activity during 2014--2023 summarized as total fishing hours and unique vessel counts across the study area.}
+\caption{Monthly fishing activity during 2014-2023 summarized as total fishing hours and unique vessel counts across the study area.}
 \label{fig:appendix-fishing-activity-monthly-totals}
 \end{figure}
 
@@ -131,7 +131,7 @@ $$
 \includegraphics[width=0.48\textwidth]{figures/chl_log_anom_histogram_2014-2023.png} &
 \includegraphics[width=0.48\textwidth]{figures/ssh_anom_histogram_2014-2023.png}
 \end{tabular}
-\caption{Distributions of environmental anomaly predictors across the full 2014--2023 feature set. The upper row shows SST and wind-speed anomalies, and the lower row shows CHL and SSH anomalies.}
+\caption{Distributions of environmental anomaly predictors across the full 2014-2023 feature set. The upper row shows SST and wind-speed anomalies, and the lower row shows CHL and SSH anomalies.}
 \label{fig:environmental-anomaly-histograms}
 \end{figure}
 
@@ -140,7 +140,7 @@ $$
 \centering
 \includegraphics[width=0.85\textwidth]{figures/sst_anom_daily_mean_2014-2023.png}\\[0.5em]
 \includegraphics[width=0.85\textwidth]{figures/wind_speed_anom_daily_mean_2014-2023.png}
-\caption{Daily mean environmental anomalies across the study area for 2014--2023. The upper panel shows SST anomalies and the lower panel shows wind-speed anomalies.}
+\caption{Daily mean environmental anomalies across the study area for 2014-2023. The upper panel shows SST anomalies and the lower panel shows wind-speed anomalies.}
 \label{fig:daily-anomaly-timeseries}
 \end{figure}
 

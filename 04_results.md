@@ -4,7 +4,7 @@
 
 The final study grid contains 37,209 H3 resolution 6 cells covering the Falkland Islands fisheries grid plus a 50 km buffer. Across the 2014-2023 analysis period, this produces 3,652 daily time steps and 135,887,268 H3 cell-day records in the environmental feature grid. Environmental tables contain no duplicate `h3`/`date` keys and provide daily environmental values across the full study grid.
 
-The processed fishing-exposure table contains 849,818 active `h3`/`date` records spanning 17,218 H3 cells and retaining 3,086,036.2 fishing hours after spatial aggregation. Fishing exposure is expanded to the full H3/date framework by assigning zero-valued exposure to non-observed cell-days.
+The processed fishing-exposure table contains 849,818 active `h3`/`date` records spanning 17,218 H3 cells and retaining 3,086,036.2 fishing hours after spatial aggregation. Fishing exposure is expanded to the full `h3`/`date` framework by assigning zero-valued exposure to non-observed cell-days.
 
 <!-- Figure fig:species-presence-observations: telemetry presence count maps by species. -->
 \begin{figure}[htbp]
@@ -86,7 +86,7 @@ Fishing exposure across the study region is represented by 3,086,036.2 fishing h
 \centering
 \includegraphics[height=0.48\textheight,keepaspectratio]{figures/fishing_activity_mean_2014-2023.png}
 
-\small Figure~\thefigure. Mean fishing activity during 2014--2023 summarized as vessel-hours by H3 cell.
+\small Figure~\thefigure. Mean fishing activity during 2014-2023 summarized as vessel-hours by H3 cell.
 \end{center}
 
 Fishing exposure is dominated by trawlers and squid jiggers, which together account for approximately 2.75 million fishing hours during 2014–2023. However, the current framework treats fishing exposure generically and does not yet differentiate species-specific interaction risk by fishing gear type.
@@ -100,7 +100,7 @@ Fishing exposure also shows strong seasonal structure. Shelf and shelf-break fis
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.76\textwidth,keepaspectratio]{figures/fishing_activity_non_zero_median_monthly_matrix_2022.png}
-\caption{Monthly fishing activity during 2022 summarized as non-zero median vessel-hours by H3 cell. Each panel represents one month and shows the spatial distribution of fishing exposure among cells with observed fishing activity. The 2022 maps provide a representative example of the recurring seasonal redistribution patterns observed across the full 2014--2023 analysis period.}
+\caption{Monthly fishing activity during 2022 summarized as non-zero median vessel-hours by H3 cell. Each panel represents one month and shows the spatial distribution of fishing exposure among cells with observed fishing activity. The 2022 maps provide a representative example of the recurring seasonal redistribution patterns observed across the full 2014-2023 analysis period.}
 \label{fig:monthly-fishing-activity-2022}
 \end{figure}
 
@@ -218,7 +218,7 @@ Plausibility also varies through time. Yearly non-zero median plausibility summa
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.78\textwidth]{figures/yearly_non_zero_median_plausibility_2014-2023.png}
-\caption{Yearly non-zero median environmental plausibility across the study region for black-browed albatrosses and South American fur seals during 2014--2023. Values summarize typical non-zero Bayesian/Gaussian mixture environmental support within each year, matching the aggregation used for the mapped plausibility surfaces.}
+\caption{Yearly non-zero median environmental plausibility across the study region for black-browed albatrosses and South American fur seals during 2014-2023. Values summarize typical non-zero Bayesian/Gaussian mixture environmental support within each year, matching the aggregation used for the mapped plausibility surfaces.}
 \label{fig:yearly-non-zero-median-plausibility}
 \end{figure}
 
@@ -231,7 +231,7 @@ Monthly plausibility surfaces show strong temporal dependence associated with th
 \includegraphics[width=0.48\textwidth]{figures/monthly_non_zero_median_plausibility_BBAL_2014-2023.png} &
 \includegraphics[width=0.48\textwidth]{figures/monthly_non_zero_median_plausibility_SAFS_2014-2023.png}
 \end{tabular}
-\caption{Monthly non-zero median environmental plausibility surfaces across 2014--2023 for black-browed albatrosses (left) and South American fur seals (right). Each monthly surface summarizes Bayesian/Gaussian mixture environmental support by H3 cell among modeled days with non-zero plausibility.}
+\caption{Monthly non-zero median environmental plausibility surfaces across 2014-2023 for black-browed albatrosses (left) and South American fur seals (right). Each monthly surface summarizes Bayesian/Gaussian mixture environmental support by H3 cell among modeled days with non-zero plausibility.}
 \label{fig:monthly-plausibility}
 \end{figure}
 
@@ -239,7 +239,7 @@ These temporal patterns reflect the sampled telemetry-informed environmental dom
 
 A 10-component Bayesian/GMM configuration is selected as a compromise between environmental structure, component interpretability, and likelihood improvement relative to lower-component models.
 
-The Bayesian/Gaussian mixture model also assigns each H3/date record to the environmental component with the highest posterior probability. These components summarize recurring environmental combinations within the telemetry-informed feature space.
+The Bayesian/Gaussian mixture model also assigns each `h3`/`date` record to the environmental component with the highest posterior probability. These components summarize recurring environmental combinations within the telemetry-informed feature space.
 
 <!-- Figure fig:monthly-dominant-bayesian-gmm-components: monthly environmental component matrix for 2022. -->
 \begin{figure}[htbp]
@@ -326,7 +326,7 @@ Cmp & Observed rows & Rows (\%) & Residence sum & Mean residence \\
 
 ## Feature-Only Environmental Seascapes
 
-Feature-only KMeans seascapes identify recurring environmental regimes across the full study-region feature cube. The 10-class KMeans model assigns one seascape class to each H3 cell-day across the 2014--2023 environmental feature grid, classifying 128,958,431 H3 cell-day records. These seascapes are species-independent: they use the same environmental and static predictors as the broader workflow but exclude species identity, telemetry presence, plausibility, and prediction variables.
+Feature-only KMeans seascapes identify recurring environmental regimes across the full study-region feature cube. The 10-class KMeans model assigns one seascape class to each H3 cell-day across the 2014-2023 environmental feature grid, classifying 128,958,431 H3 cell-day records. These seascapes are species-independent: they use the same environmental and static predictors as the broader workflow but exclude species identity, telemetry presence, plausibility, and prediction variables.
 
 The monthly KMeans seascapes show broad seasonal reorganization across shelf, shelf-break, and offshore regions (Figure \ref{fig:monthly-dominant-kmeans-seascapes}). This feature-only classification provides a baseline for comparing general environmental regimes with the telemetry-informed Bayesian/GMM components.
 
@@ -344,7 +344,7 @@ The seascape classes separate broad environmental regimes associated with shelf 
 \begin{table}[htbp]
 \centering
 \tiny
-\caption{Summary statistics for feature-only KMeans seascape classes across the 2014--2023 environmental feature grid. Values are class means $\pm$ standard deviations for selected environmental and static predictors. SST is reported in degrees Celsius; chlorophyll-a is reported on the log-transformed scale so that the standard deviation is symmetric in the modeled feature space.}
+\caption{Summary statistics for feature-only KMeans seascape classes across the 2014-2023 environmental feature grid. Values are class means $\pm$ standard deviations for selected environmental and static predictors. SST is reported in degrees Celsius; chlorophyll-a is reported on the log-transformed scale so that the standard deviation is symmetric in the modeled feature space.}
 \label{tab:kmeans-seascape-summary}
 \begin{tabular}{rrrrrrrr}
 \hline
@@ -370,7 +370,7 @@ Feature-only seascapes and Bayesian/GMM components show moderate but incomplete 
 \begin{table}[htbp]
 \centering
 \scriptsize
-\caption{Dominant crosswalk between feature-only KMeans seascape classes and Bayesian/GMM environmental components across 2014--2023. The table reports the most frequent Bayesian/GMM component within each seascape class after collapsing component assignments to species-independent H3 cell-day records.}
+\caption{Dominant crosswalk between feature-only KMeans seascape classes and Bayesian/GMM environmental components across 2014-2023. The table reports the most frequent Bayesian/GMM component within each seascape class after collapsing component assignments to species-independent H3 cell-day records.}
 \label{tab:seascape-component-crosswalk}
 \begin{tabular}{rrrrr}
 \hline
@@ -443,7 +443,7 @@ Seascape-conditioned species-use summaries retain broad environmental-regime str
 \includegraphics[width=0.48\textwidth]{figures/seascape_kmeans_k10_joint_species_use_log_pred_non_zero_mean_BBAL_2022_all_months.png} &
 \includegraphics[width=0.48\textwidth]{figures/seascape_kmeans_k10_joint_species_use_log_pred_non_zero_mean_SAFS_2022_all_months.png}
 \end{tabular}
-\caption{Monthly seascape-conditioned species-use surfaces during 2022 for black-browed albatrosses (left) and South American fur seals (right). Values summarize predicted log-transformed residence index after projecting species-specific seascape summaries back onto the H3/date grid and aggregating the vertical H3/day stack by non-zero mean.}
+\caption{Monthly seascape-conditioned species-use surfaces during 2022 for black-browed albatrosses (left) and South American fur seals (right). Values summarize predicted log-transformed residence index after projecting species-specific seascape summaries back onto the `h3`/`date` grid and aggregating the vertical H3/day stack by non-zero mean.}
 \label{fig:seascape-conditioned-species-use-2022}
 \end{figure}
 
@@ -494,6 +494,6 @@ Plausibility-filtered latent risk retains areas where predicted species use, bas
 
 Species-specific bycatch-interaction risk structure differs mainly in spatial extent and concentration. Risk surfaces for potential black-browed albatross bycatch interactions are broader and extend farther across western and southwestern shelf and shelf-break waters, whereas risk surfaces for potential South American fur seal bycatch interactions are more compact and centered closer to the islands and inner shelf. Despite these differences, both species show the same dominant organizing pattern: relative risk increases where predicted species use and fishing exposure overlap under environmentally supported conditions.
 
-Together, realized risk and plausibility-filtered latent risk distinguish observed exposure, potential exposure, and environmental-support uncertainty within a common H3/date framework. These results show that relative bycatch risk is not uniformly distributed across the Falkland Islands region, but instead emerges from the combined spatial structure of species-use predictions, fishing exposure, and environmental support.
+Together, realized risk and plausibility-filtered latent risk distinguish observed exposure, potential exposure, and environmental-support uncertainty within a common `h3`/`date` framework. These results show that relative bycatch risk is not uniformly distributed across the Falkland Islands region, but instead emerges from the combined spatial structure of species-use predictions, fishing exposure, and environmental support.
 
 \newpage
