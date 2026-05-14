@@ -227,29 +227,48 @@ $$
 
 where $\ell(h,t,s)$ is the Gaussian mixture log density for H3 cell $h$, date $t$, and species $s$, and $\ell_{\min}$ and $\ell_{\max}$ are the lower and upper normalization limits estimated during model fitting. Plausibility values near 1 indicate environmental conditions similar to those associated with observed species use; values near 0 indicate weak environmental support relative to the fitted use-space distribution.
 
-The plausibility score was used as an exploratory support filter for the Extra Trees species-use predictions. Predictions were first converted from log space to the original target scale, multiplied by a species-specific gate, and then transformed back to log space:
+The plausibility score was used as an exploratory support filter for the Extra Trees species-use predictions. Let $d(h,t,s)$ be the Bayesian/Gaussian mixture log density for H3 cell $h$, date $t$, and species $s$. The normalized plausibility score was:
 
 $$
-\mathrm{Gate}(h,t,s)
+p(h,t,s)
 =
-1 - c_s \left(1 - \mathrm{Plausibility}(h,t,s)\right)
+\mathrm{clip}
+\left(
+\frac{d(h,t,s)-d_{\min}}{d_{\max}-d_{\min}},
+0,
+1
+\right)
 $$
 
+The plausibility gate was then defined as:
+
 $$
-\mathrm{HybridUse}(h,t,s)
+g(h,t,s)
 =
-\mathrm{Use}_{ML}(h,t,s)
-\times
-\mathrm{Gate}(h,t,s)
+1-c_s\left(1-p(h,t,s)\right)
 $$
 
+Predicted Extra Trees species use was first converted from log space to the original target scale, multiplied by the gate, and then transformed back to log space:
+
 $$
-\mathrm{HybridUseLog}(h,t,s)
+u^*(h,t,s)
 =
-\log\left(1+\mathrm{HybridUse}(h,t,s)\right)
+u_{\mathrm{ExtraTrees}}(h,t,s)\times g(h,t,s)
 $$
 
-where $c_s$ is the maximum proportional reduction allowed under the plausibility gate. In this implementation, a fixed demonstration value of $c_s = 0.10$ was applied to both species. Thus, even when environmental plausibility was low, predicted species use was only weakly reduced rather than forced to zero.
+$$
+\log\left(1+u^*(h,t,s)\right)
+=
+\mathrm{final\ species\mbox{-}use\ log\ prediction}
+$$
+
+where $c_s$ is the maximum proportional reduction allowed under the plausibility gate. In this implementation, $c_s = 0.10$ was applied to both species. Thus, the gate was bounded by:
+
+$$
+g(h,t,s)\in[0.9,1.0]
+$$
+
+Even when environmental plausibility was zero, predicted species use was only reduced by 10% rather than forced to zero.
 
 The plausibility gate was used as an exploratory support filter rather than as a calibrated biological correction factor. Because the gate value was not estimated from independent validation data, plausibility-filtered outputs were interpreted alongside the ungated species-use and risk surfaces. This allowed areas of weak environmental support to be identified without treating low plausibility as confirmed species absence.
 
