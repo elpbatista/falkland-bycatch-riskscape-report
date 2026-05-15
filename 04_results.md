@@ -198,7 +198,22 @@ The same SOM-hierarchical classes were used for grouped environmental validation
 
 The external MBON seascape product was also evaluated as a contextual comparison, but it was not retained as the final seascape framework for the Falkland Islands workflow because regional coverage was not sufficient across the seasonal domain needed for model support. In the 2022 non-zero area-weighted table, coverage dropped sharply from April through August: 13.3\% in April, 2.3\% in May, 0.0\% in June, 1.2\% in July, and 44.3\% in August. This result is reported as a product-coverage finding for this regional application rather than as a critique of the MBON product itself; the monthly MBON matrix is retained in the appendices.
 
-As an exploratory extension, the selected SOM-hierarchical k=30 seascapes were used to test whether broad environmental regimes could support a coarse species-use and risk surrogate. Predicted species-use values from the final hybrid product were summarized by seascape class and projected back to the H3/date grid before computing latent risk. The resulting monthly matrices retained broad seasonal and spatial structure for both species, but they also smoothed localized gradients relative to the primary H3 prediction products. This analysis therefore supports seascapes as a promising communication and hypothesis-building layer, not as the primary risk product; the exploratory matrices are retained in the appendices.
+As an exploratory extension, the selected SOM-hierarchical k=30 seascapes were used to test whether broad environmental regimes could support a coarse species-use and risk surrogate. Predicted species-use values from the final hybrid product were summarized by seascape class and projected back to the `h3`/`date` grid before computing latent risk. The resulting monthly matrices retained broad seasonal and spatial structure for both species, but they smoothed localized gradients relative to the primary H3 prediction products. This smoothing reduced the fine-grain high-use areas visible in the full prediction surfaces, meaning that the seascape-conditioned surrogate did not preserve localized hotspot intensity. This pattern was confirmed by comparing 2022 H3-level non-zero mean log species-use surfaces from the seascape-conditioned surrogate against the full hybrid prediction surface (Table \ref{tab:seascape-surrogate-comparison}). The seascape-conditioned surface was strongly correlated with the full BBAL surface and moderately correlated with the full SAFS surface, but the 99th-percentile values were substantially lower in the surrogate for both species. This analysis therefore supports seascapes as a promising communication and hypothesis-building layer, not as the primary risk product; the exploratory matrices are retained in the appendices.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparison between the full hybrid species-use surface and the SOM-hierarchical k=30 seascape-conditioned species-use surrogate during 2022. Metrics compare H3-level non-zero mean log species-use values by species.}
+\label{tab:seascape-surrogate-comparison}
+\begin{tabular}{lrrrr}
+\hline
+Species & Spatial correlation & Full q99 & Seascape q99 & q99 ratio \\
+\hline
+BBAL & 0.829 & 1.383 & 0.716 & 0.518 \\
+SAFS & 0.613 & 0.829 & 0.281 & 0.339 \\
+\hline
+\end{tabular}
+\end{table}
 
 ## Prediction and Plausibility Products
 
