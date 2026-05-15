@@ -33,8 +33,8 @@
 > • Fishing exposure is gear-agnostic. GFW data has gear-type metadata; one paragraph on
 > gear-conditional risk (trawler-dominated BBAL warp-strike vs. longline-dominated
 > hooking) would strengthen the management interpretation significantly.
-> • Plausibility-gate c_s = 0.10 is a demonstration value. A single sensitivity figure (c_s ∈ {0,
-> 0.1, 0.5, 1.0}) on BBAL latent risk closes this nicely.
+> • Plausibility-gate c_s = 0.10 is a demonstration value. A single sensitivity figure
+> comparing c_s values 0, 0.1, 0.5, and 1.0 on BBAL latent risk closes this nicely.
 > • No independent bycatch observer validation. Frame as top-priority next step, conditional
 > on SAERI data access.
 

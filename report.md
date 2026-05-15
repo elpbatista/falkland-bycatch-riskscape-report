@@ -10,6 +10,7 @@ bibliography: references.bib
 csl: apa.csl
 header-includes:
   - \usepackage{graphicx}
+  - \usepackage[font=small,labelfont=bf]{caption}
 ---
 
 \newpage
@@ -82,6 +83,7 @@ $$
 pandoc \
   00_title.md \
   03_methods.md \
+  04_results.md \
   07_references.md \
   --citeproc \
   -o _draft_batistaj_capstone.pdf

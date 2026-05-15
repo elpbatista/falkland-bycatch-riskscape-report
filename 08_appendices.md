@@ -146,32 +146,48 @@ $$
 
 \newpage
 
-## Bayesian/GMM Component Selection
+## Seascape Support Products
 
-Candidate Bayesian/Gaussian mixture configurations with 2, 4, 6, 8, 10, and 12 components were evaluated using likelihood-based diagnostics and regression performance metrics. Increasing the number of components improved log-likelihood and information-criterion scores, but also increased model complexity and component fragmentation.
-
-A 10-component configuration was selected as a compromise between environmental structure, interpretability, and likelihood improvement. Compared with lower-component models, the 10-component solution better separated recurring environmental regimes across shelf, shelf-break, and offshore regions while avoiding the smaller and more weakly occupied components that emerged in the 12-component configuration.
-
-\begin{table}[htbp]
+\begin{figure}[htbp]
 \centering
-\small
-\caption{Comparison of Bayesian/Gaussian mixture configurations used during component-selection analysis.}
-\label{tab:gmm-component-selection}
-\begin{tabular}{rrrrrr}
-\hline
-Components & $R^2$ & RMSE & MAE & BIC & Mean log-like. \\
-\hline
-2  & 0.026 & 94.79 & 6.64 & -45,788 & 3.31 \\
-4  & 0.031 & 94.51 & 6.60 & -112,301 & 7.97 \\
-6  & 0.040 & 94.08 & 6.44 & -134,902 & 9.76 \\
-8  & 0.037 & 94.22 & 6.54 & -161,696 & 11.83 \\
-10 & 0.045 & 93.85 & 6.26 & -177,051 & 13.15 \\
-12 & 0.043 & 93.95 & 6.20 & -198,158 & 14.85 \\
-\hline
-\end{tabular}
-\end{table}
+\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/monthly_dominant_mbon_seascapes_mbon_8day_area_weighted_2022.png}
+\caption{Monthly dominant MBON seascape classes during 2022 after area-weighted assignment to the study H3 grid. This appendix figure supports the MBON coverage assessment discussed in the Results.}
+\label{fig:appendix-mbon-dominant-seascapes-2022}
+\end{figure}
 
-The 12-component model achieved slightly improved likelihood statistics relative to the 10-component configuration, but several components contained substantially smaller fractions of the positive-use training data. The selected 10-component solution therefore retained strong environmental separation while preserving interpretable and well-populated environmental regimes.
+\begin{figure}[htbp]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.48\textwidth]{figures/seascape_som_15x15_hierarchical_k30_joint_latent_risk_log_pred_non_zero_mean_BBAL_2022_monthly_matrix.png} &
+\includegraphics[width=0.48\textwidth]{figures/seascape_som_15x15_hierarchical_k30_joint_latent_risk_log_pred_non_zero_mean_SAFS_2022_monthly_matrix.png} \\
+\end{tabular}
+\caption{Exploratory seascape-conditioned monthly latent-risk surrogate for BBAL (left) and SAFS (right) during 2022. Values were derived by summarizing final predicted species use by SOM-hierarchical k=30 class and projecting class-level values back to the H3/date grid before latent-risk calculation.}
+\label{fig:appendix-seascape-risk-surrogate-2022}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.48\textwidth]{figures/monthly_non_zero_mean_plausibility_BBAL_2014-2023.png} &
+\includegraphics[width=0.48\textwidth]{figures/monthly_non_zero_mean_plausibility_SAFS_2014-2023.png} \\
+\end{tabular}
+\caption{Monthly environmental plausibility distributions for BBAL (left) and SAFS (right) across 2014-2023, summarized as non-zero mean plausibility by H3 cell and calendar month. The panels show seasonal differences in the environmental-support layer rather than species presence probability.}
+\label{fig:appendix-monthly-plausibility-2014-2023}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_log_pred_non_zero_mean_BBAL_2022_monthly_matrix.png} &
+\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_log_pred_non_zero_mean_SAFS_2022_monthly_matrix.png} \\
+\end{tabular}
+\caption{Monthly latent-risk matrices for BBAL (left) and SAFS (right) during 2022. Latent risk applies a standardized minimum fishing exposure, so the panels show potential interaction risk independent of observed fishing activity.}
+\label{fig:appendix-latent-risk-monthly-2022}
+\end{figure}
+
+\newpage
+
+\input{tables/som_k30_class_environment_profiles.tex}
 
 \newpage
 

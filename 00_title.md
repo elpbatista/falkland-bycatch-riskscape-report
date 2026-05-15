@@ -16,6 +16,7 @@ header-includes:
   - \usepackage{graphicx}
   - \usepackage{float}
   - \usepackage{pdflscape}
+  - \usepackage[font=small,labelfont=bf]{caption}
 ---
 
 \newpage
