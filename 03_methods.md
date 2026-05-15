@@ -17,6 +17,10 @@ The study focused on the Falkland Islands fisheries region, where fishing activi
 
 All datasets were aligned to a common H3 grid and daily temporal resolution. Spatial integration was performed using the H3 hierarchical hexagonal indexing system developed by Uber [@HomeH3], a discrete global grid framework [@sahrGeodesicDiscreteGlobal2003]. The study area was discretized using H3 resolution 6 cells, providing an average cell area of approximately 36 km² and producing 37,209 cells across the fisheries-grid extent and buffer. Each record in the modeling framework represents one H3 cell on one date. Environmental variables describe the oceanographic state of each cell-day, species tracking data provide evidence of animal use, and fishing effort data represent operational exposure.
 
+\begin{tcolorbox}[title={Box 2. Why use the hexagonal H3 grid?},colback=gray!5,colframe=gray!45,arc=1mm,boxrule=0.4pt,left=1.5mm,right=1.5mm,top=1mm,bottom=1mm,width=0.85\textwidth,center]
+The study region was divided into 37,209 hexagonal cells, each roughly 36 km². Hexagons have one practical advantage over familiar latitude-longitude rectangles: each cell has six immediate neighbors arranged evenly around it. This makes it straightforward to ask questions such as how rapidly sea-surface temperature changes across a local neighborhood, with less directional bias than a rectangular grid. The workflow uses Uber's open H3 system, which gives every environmental value, telemetry record, fishing-exposure value, and risk score a shared spatial address.
+\end{tcolorbox}
+
 The environmental and fisheries datasets cover 2014-2023. Species-use observations were derived from telemetry records collected from tracked individuals during 2022-2023. Because telemetry observations represent limited sampling periods and only tracked individuals, the resulting riskscapes should be interpreted as relative indicators of species use and potential interaction risk rather than definitive representations of population-level species distributions or observed bycatch probability.
 
 ## Input Data
@@ -139,6 +143,10 @@ Final modeling tables were assembled by joining dynamic environmental variables,
 
 A feature-only seascape classification was implemented to define recurring environmental regimes across the Falkland Islands study region. The approach follows the general logic of hierarchical dynamic seascape frameworks, in which multivariate oceanographic conditions are represented in environmental space and then grouped into interpretable classes [@kavanaughHierarchicalDynamicSeascapes2014; @kavanaughSeascapesNewVernacular2016; @montesDynamicSatelliteSeascapes2020a]. This classification used the environmental and static predictor matrix only. Species identity, telemetry-derived response variables, environmental plausibility, fishing exposure, and species-use predictions were excluded from seascape fitting so that the resulting classes represented recurring environmental states rather than species-specific use or risk.
 
+\begin{tcolorbox}[title={Box 3. What do seascapes do here?},colback=gray!5,colframe=gray!45,arc=1mm,boxrule=0.4pt,left=1.5mm,right=1.5mm,top=1mm,bottom=1mm,width=0.85\textwidth,center]
+Seascapes group similar ocean conditions into recurring environmental regimes. In this report, they are not treated as species habitats by themselves and they do not replace the main species-use model. Instead, they serve two supporting roles. First, they define environmental groups for validation, testing whether the model transfers across different ocean regimes. Second, they provide an exploratory way to summarize how predicted species use and risk vary among broad environmental conditions. The results show that seascapes are useful for interpretation and communication, while the full H3 prediction surfaces are needed to retain finer local hotspots.
+\end{tcolorbox}
+
 Predictors were standardized before classification. A 15 x 15 self-organizing map [@kohonenSelforganizingMap1990a] was fitted to the standardized H3 environmental feature space, producing 225 environmental prototypes. The prototype weight vectors were then grouped using Ward hierarchical agglomerative clustering. The selected 30-class cut was exported as a species-independent seascape label for each assigned `h3`/`date` record in the 2014-2023 feature grid. The rationale for selecting the 30-class cut and using it in grouped environmental cross-validation is described in the validation section.
 
 Seascape classes were summarized by their environmental and static predictor distributions, including SST, SSH, wind speed, log-transformed chlorophyll-a, bathymetry, and distance to coast. The seascape labels were also joined back to observed positive species-use records to describe which environmental regimes were represented in the telemetry observations for each species.
@@ -205,6 +213,10 @@ Risk estimation was implemented as a relative spatiotemporal overlap index, not 
 
 The conceptual framework separates three components. First, species-use modeling estimates where each species is likely to occur or concentrate as a function of environmental conditions. Second, fishing exposure represents the intensity of fishing activity in each H3 cell and date. Third, the risk surface combines predicted species use and fishing exposure to compute a relative index of potential interaction risk for each H3 cell and date. This framing is consistent with dynamic-management approaches that translate changing biological and fisheries information into spatial decision-support products [@maxwellDynamicOceanManagement2015; @hazenDynamicOceanManagement2018].
 
+\begin{tcolorbox}[title={Box 4. Realized vs. latent risk},colback=gray!5,colframe=gray!45,arc=1mm,boxrule=0.4pt,left=1.5mm,right=1.5mm,top=1mm,bottom=1mm,width=0.85\textwidth,center]
+Two risk maps are reported. Realized risk is where predicted animal use overlaps actual observed fishing activity: the modeled hotspots under recorded fishing patterns. Latent risk is where predicted use is high even if no boats happened to be fishing there during the summarized period: places where risk could emerge if effort redistributed. The distinction matters because reducing a current hotspot is most useful when effort does not simply move into a latent hotspot. Showing both maps lets managers see that redistribution possibility before, rather than after, a decision.
+\end{tcolorbox}
+
 Conceptually, relative risk increases when species use and fishing exposure overlap:
 
 $$
@@ -229,6 +241,10 @@ p_s(h,t)
 $$
 
 where $d_s(h,t)$ is the Gaussian mixture log density, and $d_{s,\min}$ and $d_{s,\max}$ are the lower and upper normalization limits estimated during model fitting. Plausibility values near 1 indicate environmental conditions similar to those associated with observed species use; values near 0 indicate weak environmental support relative to the fitted use-space distribution.
+
+\begin{tcolorbox}[title={Box 5. What does environmental plausibility do?},colback=gray!5,colframe=gray!45,arc=1mm,boxrule=0.4pt,left=1.5mm,right=1.5mm,top=1mm,bottom=1mm,width=0.85\textwidth,center]
+The species-use model can predict across the full study region, including places that are environmentally unlike the places where tracked animals were observed. Those predictions are the least certain. To flag this, a second model, a Gaussian mixture fitted to observed-use environmental conditions, scores each cell-day by how similar it is to the environmental space represented in the tracking data. Predictions in low-plausibility cells are slightly damped, but not zeroed out, because low plausibility means "we are extrapolating," not "no animals are here."
+\end{tcolorbox}
 
 The plausibility gate was then defined as:
 

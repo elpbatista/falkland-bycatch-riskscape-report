@@ -17,6 +17,7 @@ header-includes:
   - \usepackage{float}
   - \usepackage{pdflscape}
   - \usepackage[font=small,labelfont=bf]{caption}
+  - \usepackage[most]{tcolorbox}
 ---
 
 \newpage

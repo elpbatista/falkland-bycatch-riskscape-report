@@ -1,61 +1,31 @@
 # Introduction
 
-> Introduces the reader to the report. Describes the problem that is to be address, what the current state of knowledge is in this area, and the motivation for resolving this issue. It also outlines the structure of the report.
-> What the Introduction should do
-> Target ~1200–1500 words. Three connected literatures, then the gap and the contribution,
-> then research questions. Note there are more uptpdate references. Thes e are just some I have
-> noted form my previous work:
-> • Bycatch as a global conservation problem, specific to seabirds and pinnipeds. Lewison et
-> al. (2014), Croxall et al. (2012), Phillips et al. (2016) for the global framing; Grémillet et > al.
-> (2000), Catry et al. (2013), Favero et al. (2011), Tamini et al. (2015) for BBAL on the
-> Patagonian shelf; Baylis et al. (2015) for SAFS in the Falklands.
-> • Dynamic ocean management as the state-of-the-art response. Hobday et al. (2010),
-> Žydelis et al. (2011, the closest direct antecedent — telemetry-driven dynamic habitat
-> models for albatrosses overlapped with longline observer data), Maxwell et al. (2015),
-> Hazen et al. (2018, EcoCast), Welch et al. (2019). The throughline: from static seasonal
-> closures to environment-conditioned, telemetry-informed near-real-time risk surfaces.
-> • Seascape ecology as the classification framework. Kavanaugh et al. (2014, 2016),
-> Woodill, Kavanaugh, Harte & Watson (2021). The throughline: dynamic environmental
-> classification gives a synoptic biogeographic vocabulary for marine ecosystems. The open
-> question your work tests directly is whether seascape classifications, on their own, are
-> sufficient for products as fine-scale as bycatch hotspot detection.
-> • The gap and the contribution. No daily-resolution riskscape exists for the Falkland Islands
-> EEZ; this project builds one, makes the plausibility-gated hybrid the central
-> methodological move, separates realized from latent risk, and uses the dataset to test the
-> seascape-substitution hypothesis directly.
-> Then explicit research questions. I'd suggest something like:
-> RQ1: Where and when do predicted BBAL and SAFS use and observed fishing effort co-occur in
-> the Falkland Islands EEZ between 2014 and 2023?
-> RQ2: How does observed (realized) bycatch-interaction risk differ from potential (latent) risk
-> under a baseline minimum-exposure scenario?
-> RQ3: Can unsupervised feature-only environmental seascapes substitute for telemetry-informed
-> species-use predictions for hotspot detection, and if not, how does the substitution fail?
-> On the seascape framing — important
-> This is the piece I want you to be most thoughtful about. The seascape-substitution result is
-> almost certainly going to be the most interesting part of the paper from Maria's perspective,
-> because it sits directly inside her published framework and tests a proposition that the
-> seascape literature has not previously tested quantitatively. Frame it accordingly:
-> • Position your work as extending the seascape framework rather than critiquing it.
-> Kavanaugh et al. (2014, 2016) established that dynamic seascapes capture coherent
-> biogeochemical regimes. Woodill et al. (2021) showed seascapes predict where distant-
-> water fleets fish. Your project asks the next question down: are seascape classifications,
-> alone, sufficient for bycatch hotspot detection? Your answer is well-supported and
-> substantive — they preserve broad structure (spatial correlations 0.54–0.83) but
-> compress hotspot intensity at the upper tail (99th-percentile drops by roughly half for
-> BBAL). This is a contribution to the seascape literature, not a negative result against it.
-> • Be precise about what your KMeans seascapes are and aren't. You did a feature-only
-> KMeans with 10 classes on the same predictor matrix used for the hybrid model,
-> excluding species identity. That's a reasonable comparison object but it's not the same
-> construction as the operational MBON/NOAA Seascape Pelagic Habitat Classification — be
-> explicit about this in Methods so the comparison is read correctly.
-> • The Woodill et al. paper is directly relevant. We used seascapes to predict EEZ incursions
-> by distant-water vessels — i.e., we used seascapes as a predictive feature space for a
-> fisheries-management question. Your paper is the natural follow-on: "if seascapes work
-> for that question, do they also work for the more spatially fine-grained question of
-> bycatch hotspot detection?" Cite it explicitly and frame your work as extending that line.
-> • Suggest in the Discussion that the seascape-conditioned surfaces are useful as an
-> interpretation layer (which they clearly are — Tables 4–9 show this nicely) even if they are
-> not a substitute for telemetry-informed hotspot detection. This is a generous, accurate
-> framing of your own result.
+Incidental capture in fisheries remains one of the main conservation problems for marine megafauna. Bycatch affects seabirds, marine mammals, and sea turtles across broad ocean regions, with impacts that vary among taxa, gears, fleets, and management jurisdictions [@lewisonGlobalPatternsMarine2014]. Seabirds are particularly exposed to at-sea threats from commercial fisheries, and albatrosses and large petrels have received sustained conservation attention because of their wide-ranging movements, delayed life histories, and interaction with longline and trawl fisheries [@croxallSeabirdConservationStatus2012; @phillipsConservationStatusPriorities2016]. These problems are not only global. They are also expressed regionally in productive shelf systems where mobile predators and fisheries repeatedly use the same oceanographic features.
+
+The Falkland Islands region is one such system. The surrounding shelf and shelf-break waters support internationally important marine predator populations [@augeFrameworkMappingKey2018; @baylisImportantAtSeaAreas2019], while regional fisheries create intensive and seasonally structured fishing activity [@FIG-FD_statistics_2024]. Previous work has shown that black-browed albatrosses from the Falkland Islands use extensive areas of the Patagonian Shelf and can overlap with international fisheries [@gremilletBlackbrowedAlbatrossesInternational2000]. More recent modeling of black-browed albatross distribution in the region highlighted the importance of environmental conditions, fisheries activity, accessibility to feeding areas, and colony-level structure when predicting at-sea use [@catryPredictingDistributionThreatened2013]. South American fur seals also use Falkland Islands shelf and shelf-slope habitats, and their spatial overlap with trawl fisheries has been documented as a management concern [@baylisHabitatUseAdult2018; @riazSpatialOverlapSouth2023a]. Together, these studies show that the region requires risk products able to connect animal use, fishing exposure, and changing environmental conditions at scales relevant to management.
+
+Static maps are useful for identifying broad areas of conservation importance, but they can miss the temporal variability that structures pelagic ecosystems and fishing activity. This limitation is especially relevant for wide-ranging marine predators, where static management frameworks may need to be complemented by approaches that respond at finer spatial and temporal scales [@baylisOverlapMarinePredators2021]. Marine predators, fishing fleets, and the environmental features that influence both are dynamic. Dynamic habitat and bycatch-risk models address this problem by relating telemetry or occurrence data to environmental conditions and projecting those relationships across space and time [@zydelisDynamicHabitatModels2011]. This logic underlies dynamic ocean management, where spatial guidance can change as ocean conditions and species distributions shift [@maxwellDynamicOceanManagement2015]. Operational tools such as EcoCast show how daily environmental data, species models, and fisheries objectives can be combined into decision-support products for reducing bycatch while supporting fisheries [@hazenDynamicOceanManagement2018; @welchDecisionsupportToolsDynamic2020].
+
+A second relevant line of work is pelagic seascape ecology. Dynamic seascape classifications provide a way to summarize multivariate ocean conditions into coherent environmental regimes, giving a shared vocabulary for monitoring, comparison, and management of changing pelagic systems [@kavanaughHierarchicalDynamicSeascapes2014; @kavanaughSeascapesNewVernacular2016]. Satellite seascape products have been used as biogeographic frameworks for interpreting ecosystem variability [@montesDynamicSatelliteSeascapes2020a], and seascape classes have also been used in fisheries-management questions, including prediction of distant-water fishing-vessel incursions into exclusive economic zones [@woodillOceanSeascapesPredict2021]. These applications suggest that seascapes can be powerful environmental interpretation layers. A more specific question remains: when the target is fine-scale bycatch-risk mapping, can feature-only seascape classes substitute for telemetry-informed species-use predictions, or are they better used as validation and interpretation layers?
+
+This project addresses that question through a dynamic bycatch riskscape framework for the Falkland Islands region. The workflow integrates daily environmental features, telemetry-derived species use, apparent fishing exposure, environmental plausibility, and operator-facing risk products on a common H3 spatial grid. The term "riskscape" is used here to describe a spatially and temporally explicit set of relative risk surfaces, not a calibrated estimate of bycatch probability. The framework separates three related products: predicted species use, realized risk where predicted use overlaps observed fishing activity, and latent risk where potential interaction risk is mapped independently of observed fishing activity. This separation is important because high predicted species use does not necessarily imply high realized interaction risk unless fishing exposure is also present.
+
+\begin{tcolorbox}[title={Box 1. What is a riskscape?},colback=gray!5,colframe=gray!45,arc=1mm,boxrule=0.4pt,left=1.5mm,right=1.5mm,top=1mm,bottom=1mm,width=0.85\textwidth,center]
+A riskscape is a map of where and when two things overlap: animals using the ocean and people fishing in it. This report does not measure bycatch directly. Instead, it estimates where black-browed albatrosses and South American fur seals are likely to be, based on satellite environmental data and tracking records, and where fishing vessels actually fished, day by day. Where those two surfaces are both high, the relative risk of an interaction is high. The result is not a prediction of how many birds or seals are caught; it is a map of where attention is most warranted.
+\end{tcolorbox}
+
+The study focuses on black-browed albatross (BBAL) and South American fur seal (SAFS), two species with different movement ecology, telemetry coverage, and likely fisheries-interaction pathways. The workflow uses telemetry records as species-use observations, expands them across a daily H3 environmental domain, and evaluates candidate species-use models under both conventional and structured validation designs. The final production model uses an Extra Trees learner for species-use prediction, while a Bayesian/Gaussian mixture component is retained as an environmental plausibility layer. This distinction is central to the framework: the primary prediction surface estimates relative species use, while the plausibility layer identifies predictions made under weaker environmental support.
+
+Seascapes enter the framework in two roles. First, SOM-hierarchical environmental classes are used to define grouped validation folds, testing whether the species-use model transfers across environmental regimes rather than only across randomly mixed rows. Second, the same classes are used in an exploratory seascape-conditioned risk surrogate, in which final species-use predictions are summarized by seascape class and projected back to the daily H3 grid. This experiment extends the seascape framework into a new question: whether broad environmental regimes can communicate or approximate species-use and risk patterns, and where the continuous H3 prediction surfaces remain necessary.
+
+The objectives of the report are therefore to:
+
+1. Build a reproducible daily H3 workflow for integrating environmental predictors, telemetry-derived species use, and fishing exposure in the Falkland Islands region.
+2. Train and validate species-use models for BBAL and SAFS, using grouped environmental validation to evaluate transfer across feature-defined regimes.
+3. Produce relative realized and latent risk products that distinguish observed fishing overlap from potential interaction risk.
+4. Evaluate whether SOM-hierarchical seascape classes can support validation, ecological interpretation, and an exploratory risk surrogate without replacing the primary telemetry-informed prediction surface.
+5. Demonstrate operator-facing products, including weekly climatology, fisheries-grid summaries, and gear-aware examples, as a basis for future operational extension.
+
+The report is organized as follows. The Methods section describes the study area, input data, feature processing, species-use modeling, validation, risk estimation, and operator-product workflow. The Results section reports the integrated data products, model-selection and validation diagnostics, seascape and plausibility findings, and realized, latent, and operator-facing risk outputs. The Discussion interprets the framework as a relative planning tool, considers the role of seascapes and environmental plausibility, and identifies future improvements including broader telemetry coverage, independent bycatch validation, gear-specific calibration, and forecasting extensions.
 
 \newpage
