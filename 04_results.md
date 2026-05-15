@@ -1,8 +1,8 @@
 # Results
 
-This section reports the main outputs of the riskscape workflow: the integrated daily H3 data products, environmental feature products, species-use model validation, environmental plausibility layers, and risk products generated for the Falkland Islands region. Results are presented as direct workflow outputs and model comparisons, with operational products summarized only where they are supported by generated repository artifacts.
+The riskscape workflow produced a daily H3 prediction framework, model-validation diagnostics, environmental plausibility layers, and risk products for the Falkland Islands region. The results below first summarize the integrated data products, then report fishing-exposure patterns, species-use model selection, seascape and plausibility diagnostics, and the realized, latent, and operator-facing risk products generated from the final prediction cube.
 
-## Integrated Data and Environmental Feature Products
+## Integrated Data Products
 
 The final study grid contains 37,209 H3 resolution 6 cells covering the Falkland Islands fisheries grid plus a 50 km buffer. Across the 2014-2023 analysis period, this produces 3,652 daily time steps and 135,887,268 H3 cell-day records in the environmental feature grid. Environmental tables contain no duplicate `h3`/`date` keys and provide daily environmental values across the full study grid.
 
@@ -194,20 +194,13 @@ This feature-importance pattern increased the value of the environmental validat
 
 The SOM-hierarchical k=30 seascape classification produced a dynamic environmental-regime layer over the study grid. In 2022, dominant monthly classes changed through the seasonal cycle and showed coherent spatial structure across shelf, shelf-break, and offshore waters (Figure \ref{fig:som-k30-dominant-seascapes-2022}). This result supports the use of the SOM-hierarchical classes as an environmental grouping framework for validation, rather than as a direct replacement for the continuous environmental predictor space.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\textwidth,keepaspectratio]{figures/monthly_dominant_som_hierarchical_seascapes_som_15x15_hierarchical_k30_2022.png}
-\caption{Monthly dominant SOM-hierarchical k=30 seascape classes during 2022. The figure shows the environmental-regime layer used to define grouped environmental validation folds and to support the exploratory seascape-risk surrogate.}
-\label{fig:som-k30-dominant-seascapes-2022}
-\end{figure}
-
-The same SOM-hierarchical classes were used for grouped environmental validation, so the telemetry-supported class profiles provide a bridge between validation design and ecological interpretation. BBAL telemetry records occurred in 8 of the 30 classes, with 77.2\% of observed rows concentrated in classes 2 and 1. These two classes represented relatively shallow shelf-associated conditions, with mean depths of 0.26 and 0.37 km and mean distances to coast of 160 and 185 km, respectively. SAFS telemetry records occurred in 27 of the 30 classes, with the two most frequent classes also being classes 2 and 1 but accounting for a smaller share of the observed rows (40.0\%). SAFS therefore occupied a broader set of seascape classes, including more offshore and deeper classes. For readability, the main text reports only classes with species telemetry counts; the complete 30-class environmental profile is retained as an appendix-ready support table.
+The same SOM-hierarchical classes were used for grouped environmental validation, so the telemetry-supported class profiles provide a bridge between validation design and ecological interpretation. BBAL telemetry records occurred in 8 of the 30 classes, with 77.2\% of observed rows concentrated in classes 2 and 1. These two classes represented relatively shallow shelf-associated conditions, with mean depths of 0.26 and 0.37 km and mean distances to coast of 160 and 185 km, respectively. SAFS telemetry records occurred in 27 of the 30 classes, with the two most frequent classes also being classes 2 and 1 but accounting for a smaller share of the observed rows (40.0\%). SAFS therefore occupied a broader set of seascape classes, including more offshore and deeper classes. For readability, the main text reports only classes with species telemetry counts; the complete 30-class environmental profile is retained in the appendices.
 
 The external MBON seascape product was also evaluated as a contextual comparison, but it was not retained as the final seascape framework for the Falkland Islands workflow because regional coverage was not sufficient across the seasonal domain needed for model support. In the 2022 non-zero area-weighted table, coverage dropped sharply from April through August: 13.3\% in April, 2.3\% in May, 0.0\% in June, 1.2\% in July, and 44.3\% in August. This result is reported as a product-coverage finding for this regional application rather than as a critique of the MBON product itself; the monthly MBON matrix is retained in the appendices.
 
 As an exploratory extension, the selected SOM-hierarchical k=30 seascapes were used to test whether broad environmental regimes could support a coarse species-use and risk surrogate. Predicted species-use values from the final hybrid product were summarized by seascape class and projected back to the H3/date grid before computing latent risk. The resulting monthly matrices retained broad seasonal and spatial structure for both species, but they also smoothed localized gradients relative to the primary H3 prediction products. This analysis therefore supports seascapes as a promising communication and hypothesis-building layer, not as the primary risk product; the exploratory matrices are retained in the appendices.
 
-## Environmental Plausibility and Prediction Products
+## Prediction and Plausibility Products
 
 Environmental plausibility products showed different support structures for the two species. Across 2014-2023, BBAL had non-zero plausibility in 1,442,841 species-cell-days, or 1.1\% of the full species-specific H3/date grid, with a non-zero mean plausibility of 0.334. SAFS had broader environmental support, with non-zero plausibility in 12,896,194 species-cell-days, or 10.0\% of the grid, with a non-zero mean plausibility of 0.288. These values represent relative environmental support within the modeled feature space, not direct estimates of species presence probability.
 
@@ -256,7 +249,7 @@ The final hybrid prediction product combines the selected Extra Trees species-us
 \label{fig:species-use-predictions-2022}
 \end{figure}
 
-## Realized, Latent, and Operator-Facing Risk Products
+## Risk and Operator-Facing Products
 
 Relative bycatch risk emerges where predicted species use and fishing activity overlap, and its magnitude depends on both components. The risk surfaces are relative spatiotemporal indices, not calibrated estimates of observed bycatch probability.
 

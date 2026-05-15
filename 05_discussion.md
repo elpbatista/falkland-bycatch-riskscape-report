@@ -1,53 +1,29 @@
 # Discussion
 
-> Provides clear, concise interpretation of the results of the project. Tiestogether concepts to create an interpretation that is greater than the individual results. Relates results back to the objectives of the project and to previous studies reported in the literature, if appropriate. Discusses uncertainties andassumptions that influenced the results.
->
-> What the Discussion should do
-> Target ~1500–2000 words. Three main blocks:
-> Applied findings
-> • Where the BBAL hotspots are (western/northwestern shelf and shelf-break) and how this
-> matches the literature on BBAL warp-strike risk on the Patagonian shelf.
-> • Where the SAFS hotspots are (compact, inner-shelf, near the islands) and what that
-> implies for mitigation tractability.
-> • How the realized vs. latent distinction reframes displacement concerns about static
-> closures, with a concrete example from your maps.
-> • How the FICZ/FOCZ structure appears in the realized-risk surfaces because effort honors
-> those boundaries.
-> • Species-specific implications: broad BBAL risk → fleet-wide gear measures (bird-scaring
-> lines, warp deflectors, weighted lines) more efficient than closures; compact SAFS risk →
-> near-colony spatial measures tractable.
-> Methodological findings
-> • The plausibility-gated hybrid behaves as designed and is portable to other regions.
-> • The quantitative seascape-substitution result — frame as positive contribution to the
-> seascape literature (see above).
-> • Static spatial predictors (bathymetry, distance-to-coast) dominate feature importance.
-> Honest discussion: real ecology of two shelf-associated species, or sign that limited
-> telemetry temporal coverage constrains the dynamic signal? Probably both, and worth
-> saying so.
-> • The R² caveat — straightforward once the block CV is in.
-> • Pipeline portability — would run for South Georgia, Crozet, Kerguelen with telemetry +
-> GFW + Copernicus + GEBCO coverage. Worth flagging.
-> Limitations, prioritized
-> • Telemetry coverage is a snapshot — BBAL 16 days in December 2022, SAFS 146 days.
-> Acknowledge first.
-> • Fishing exposure is gear-agnostic. GFW data has gear-type metadata; one paragraph on
-> gear-conditional risk (trawler-dominated BBAL warp-strike vs. longline-dominated
-> hooking) would strengthen the management interpretation significantly.
-> • Plausibility-gate c_s = 0.10 is a demonstration value. A single sensitivity figure
-> comparing c_s values 0, 0.1, 0.5, and 1.0 on BBAL latent risk closes this nicely.
-> • No independent bycatch observer validation. Frame as top-priority next step, conditional
-> on SAERI data access.
+This project demonstrates that telemetry-derived species use, environmental predictors, and fishing activity can be integrated into a daily H3-based riskscape workflow for the Falkland Islands region. The main contribution is not a single map, but a reproducible framework that separates species-use prediction, fishing exposure, environmental plausibility, and risk-product translation. This separation matters because each layer answers a different question: where the species-use model predicts relative use, where fishing activity occurred, where predictions are environmentally supported, and how those components combine into realized or potential interaction risk.
 
----
+The results also show why a dynamic workflow is preferable to a static overlap summary, consistent with dynamic habitat and ocean-management approaches that use changing environmental and fisheries information to support spatial decision-making [@zydelisDynamicHabitatModels2011; @maxwellDynamicOceanManagement2015; @hazenDynamicOceanManagement2018]. Fishing activity was spatially concentrated along shelf and shelf-break corridors, and it varied strongly through the seasonal cycle. Predicted species-use surfaces were broader than realized-risk surfaces because realized risk was only expressed where predicted use overlapped observed fishing exposure. Latent risk, in contrast, retained potential-risk structure independent of whether fishing occurred in a given cell-day. This distinction is useful for management interpretation: realized risk describes modeled interaction risk under observed activity, whereas latent risk highlights areas where risk could emerge if fishing activity shifted into environmentally and biologically suitable space.
 
-The results show that the riskscape workflow can integrate environmental conditions, telemetry-derived species use, and fishing activity on a shared H3/day framework. This structure is important because it preserves the daily overlap between species-use predictions and fishing exposure rather than reducing risk to static habitat or effort summaries.
+The operator-facing products translate this distinction into planning formats. The weekly latent-risk climatology provides a seasonal planning view by averaging across 2014-2023 rather than emphasizing a single year. The fisheries-grid aggregation shows how H3-scale outputs can be summarized into management reporting units while preserving the underlying risk definition. Gear-filtered realized-risk examples and vessel-activity overlays further show that the same prediction cube can support operational questions without changing the model itself. These products are best interpreted as decision-support layers for planning, screening, and communication, not as calibrated forecasts of observed bycatch probability.
 
-The feature-only seascape experiment provides a useful contrast with the primary hybrid species-use workflow. KMeans seascapes captured broad environmental regimes across shelf, shelf-break, and offshore waters, and these regimes helped summarize which environmental states were most represented in the species observations. However, the seascape-conditioned species-use maps did not retain the strongest localized hotspots present in the full Extra Trees/Bayesian-Gaussian mixture predictions. This limitation is expected: seascapes are categorical summaries of environmental structure, whereas the full species-use model uses the continuous predictor space and species identity to estimate fine-scale variation in residence index.
+The validation results support the final modeling design while also showing why caution is needed. Extra Trees was the strongest learner in the initial row-random comparison, but row-random validation was clearly more optimistic than structured holdouts. The SOM-hierarchical k=30 grouped validation design provided a stricter environmental-transfer test and was the strongest of the tested SOM-hierarchical cuts. This does not mean that k=30 is universally optimal; it means that, within the tested designs and available telemetry data, k=30 provided the best balance between environmental resolution, grouped-validation performance, and species-support coverage.
 
-For this reason, feature-only seascapes are best interpreted as explanatory environmental classes, not as substitutes for the primary species-use or risk surfaces. They help distinguish broad environmental regimes from species-specific use patterns, but risk estimation should continue to rely on the full hybrid species-use predictions combined with observed or latent fishing exposure.
+The dominance of static and spatial predictors in the selected production model is ecologically plausible for shelf-associated species, including black-browed albatrosses using the Patagonian Shelf and South American fur seals overlapping Falkland Islands trawl-fishery habitats [@gremilletBlackbrowedAlbatrossesInternational2000; @riazSpatialOverlapSouth2023a]. However, it also reflects a key limitation of the available telemetry data. Bathymetry, slope, distance to coast, and spatial position can capture persistent habitat structure, while dynamic oceanographic predictors may require broader seasonal and interannual species observations to show their full contribution. The environmental validation design and plausibility layer therefore play an important role. They do not solve the telemetry-coverage limitation, but they help distinguish interpolation within supported environmental space from predictions made under less well-supported conditions.
 
-## Recommendations
+The Bayesian/GMM component was not retained as the primary species-use learner, but it adds value as an environmental plausibility layer. Plausibility should not be read as species presence probability or as an independent validation of biological occurrence. Instead, it is a diagnostic of whether a prediction is being made under environmental conditions similar to those associated with observed telemetry use. The current plausibility gate applies only a limited reduction to weakly supported predictions, so the gated products should be interpreted as plausibility-aware risk surfaces rather than corrected or calibrated bycatch estimates. Future sensitivity analysis of the gate parameter would strengthen this part of the workflow.
 
-Future work could use seascapes as a reporting or interpretation layer, for example by summarizing realized risk, fishing exposure, or predicted species use within each environmental regime. However, seascapes should not be used alone for hotspot detection unless the classification is explicitly redesigned and validated for that purpose.
+The SOM-hierarchical seascape analysis is also useful, but its role should be interpreted carefully. Dynamic seascape frameworks provide a way to summarize multivariate oceanographic conditions into coherent environmental regimes [@kavanaughHierarchicalDynamicSeascapes2014; @kavanaughSeascapesNewVernacular2016; @montesDynamicSatelliteSeascapes2020a]. In this project, seascapes served first as an environmental grouping framework for validation and second as an exploratory bridge between environmental regimes and species-use/risk summaries. This extends the seascape framework into a risk-estimation question without implying that broad environmental classes should replace the full continuous species-use model. The seascape-conditioned surrogate retained broad seasonal and spatial structure, but the primary risk products remain the H3 prediction surfaces because they preserve finer spatial gradients and localized hotspots.
 
-\newpage
+The external MBON seascape product was informative as a contextual comparison, but it was not suitable as the final environmental framework for this regional workflow because non-zero class coverage was insufficient during key months in the Falkland Islands domain. This should be interpreted as a regional product-coverage finding, not as a criticism of the MBON seascape framework. The final SOM-hierarchical seascape layer was therefore generated from the local H3 environmental feature matrix, which ensured complete alignment with the predictors, validation design, and prediction cube used in the riskscape workflow.
+
+Several limitations remain. First, the telemetry data represent tracked individuals over limited observation windows, especially for BBAL, and cannot be treated as complete population-level distributions. Second, the realized-risk products do not validate against independent bycatch observer records, so the risk scores remain relative indices rather than calibrated bycatch probabilities. Third, fishing exposure is currently used as a generic activity layer. Although gear type and flag information are retained in downstream products, the core risk equation does not yet include species-specific interaction coefficients by gear, vessel class, or mitigation practice. Fourth, the plausibility-gate parameter was selected as a demonstration value rather than estimated from independent validation data.
+
+These limitations point directly to future improvements. A larger and more seasonally balanced species-presence dataset would likely improve the dynamic signal in the species-use model and allow stronger tests of individual- or trip-level transferability. Independent observer bycatch data would allow the relative risk index to be evaluated against observed interaction events and, eventually, converted into calibrated bycatch probability. Gear-aware extensions could separate risk products for longlines, trawlers, jiggers, and fleet subsets, making the framework more directly useful for mitigation planning. Future work could also strengthen the role of seascapes in the system by testing how environmental regimes can support interpretation, reporting, validation design, or risk summarization without replacing the full H3 prediction products. A related extension would be to integrate external or independently fitted species distribution models as additional species-use evidence, especially if broader biological observations become available.
+
+A further operational extension would be to convert the current hindcast and climatology workflow into a forecasting framework. In that version, species-use predictions could be driven by forecasted or near-real-time environmental variables, while fishing exposure could initially be represented using persistence or seasonal climatology before moving toward a dedicated fishing-activity model. Future forecasting work could also test lagged or antecedent predictors, such as environmental and fishing conditions during previous weeks or earlier seasonal windows, to evaluate whether recent environmental history improves risk estimation beyond same-day predictors, following related forecasting work on *Illex argentinus* in the Falkland Islands region [@buringAnalysingForecastingSpatiotemporal2025]. As future work, spatiotemporal forecasting architectures such as CNN-LSTM models could be evaluated using environmental and fisheries time series together with a more populated telemetry dataset and, if available, observer bycatch records for calibration and evaluation. These products would forecast potential overlap risk, not observed bycatch events, unless independent bycatch observations became available for calibration.
+
+Finally, the pipeline is already close to fully automated across data acquisition, feature construction, prediction, and map production, so the same structure could be adapted to other regions where telemetry, environmental products, and AIS-derived fishing data are available.
+
+Taken together, these extensions would move the riskscape from a relative planning and interpretation framework toward a more operational decision-support system. The present version establishes the shared spatial and temporal structure needed for that progression, while leaving the most important biological and fishery-specific refinements clearly identified for future work.
+
+\clearpage
