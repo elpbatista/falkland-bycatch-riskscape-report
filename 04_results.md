@@ -6,17 +6,17 @@ The riskscape workflow produced a daily H3 prediction framework, model-validatio
 
 The final study grid contains 37,209 H3 resolution 6 cells covering the Falkland Islands fisheries grid plus a 50 km buffer. Across the 2014-2023 analysis period, this produces 3,652 daily time steps and 135,887,268 H3 cell-day records in the environmental feature grid. Environmental tables contain no duplicate `h3`/`date` keys and provide daily environmental values across the full study grid.
 
-The processed fishing-exposure table contains 849,818 active `h3`/`date` records spanning 17,218 H3 cells and retaining 3,086,036.2 apparent fishing hours after spatial aggregation. Fishing exposure is expanded to the full `h3`/`date` framework by assigning zero-valued exposure to non-observed cell-days.
+The processed fishing-exposure table contains 849,818 active `h3`/`date` records spanning 17,218 H3 cells and retaining 3,086,036.9 apparent fishing hours after spatial aggregation to the study H3 grid. This is slightly lower than the raw GFW extract total because the processed table retains the portion of raw effort intersecting the study grid. Fishing exposure is expanded to the full `h3`/`date` framework by assigning zero-valued exposure to non-observed cell-days.
 
-The cleaned SAERI telemetry dataset contains 59,182 valid records from 42 tracked individuals and 76 trips during 2022-2023. After aggregation to the H3 framework, the species-presence table contains 10,268 `h3`/`date`/`species` records spanning 6,763 H3 cells and 146 observed dates.
+The cleaned SAERI telemetry dataset contains 59,182 valid point records from 42 tracked individuals and 76 trips during 2022-2023. After aggregation to the H3 framework, the species-presence table contains 10,268 `h3`/`date`/`species` records spanning 6,763 H3 cells and 146 observed dates.
 
-BBAL contributes 4,552 `h3`/`date`/`species` rows across 3,270 H3 cells and 16 dates, with 21,329 aggregated presence counts. SAFS contributes 5,716 rows across 4,024 H3 cells and 146 dates, with 19,495 aggregated presence counts.
+After H3/date/species aggregation, BBAL contributes 4,552 `h3`/`date`/`species` rows across 3,270 H3 cells and 16 dates, with 21,329 aggregated presence counts. SAFS contributes 5,716 rows across 4,024 H3 cells and 146 dates, with 19,495 aggregated presence counts.
 
 \begin{figure}[htbp]
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.48\textwidth]{figures/bbal_presence_count_all_years.png} &
-\includegraphics[width=0.48\textwidth]{figures/safs_presence_count_all_years.png} \\
+\includegraphics[width=0.42\textwidth]{figures/bbal_presence_count_all_years.png} &
+\includegraphics[width=0.42\textwidth]{figures/safs_presence_count_all_years.png} \\
 \end{tabular}
 \caption{Aggregated telemetry-derived species-presence counts by H3 cell for black-browed albatross (BBAL; left) and South American fur seal (SAFS; right). Counts summarize the spatial distribution of valid tracking detections after aggregation to the study H3 grid and support the species-specific coverage totals reported in the text.}
 \label{fig:species-presence-counts}
@@ -76,7 +76,7 @@ The final feature grid includes base oceanographic variables, static spatial pre
 
 ## Fishing Exposure Patterns
 
-Fishing exposure is spatially concentrated rather than evenly distributed across the study grid. The processed exposure layer contains 3,086,036.2 apparent fishing hours from 2,011 unique vessels, aggregated from 2,297,069 Global Fishing Watch AIS fishing-vessel records between 2014 and 2023. After aggregation to the H3 framework, fishing activity spans 17,218 H3 cells and 849,818 active `h3`/`date` combinations.
+Fishing exposure is spatially concentrated rather than evenly distributed across the study grid. The processed exposure layer contains 3,086,036.9 apparent fishing hours from 2,011 unique vessels, aggregated from the raw 2,297,069 Global Fishing Watch AIS fishing-vessel records between 2014 and 2023. The raw extract contained 3,094,974.5 apparent fishing hours before spatial aggregation; the processed total is lower because it retains effort intersecting the study H3 grid. After aggregation to the H3 framework, fishing activity spans 17,218 H3 cells and 849,818 active `h3`/`date` combinations.
 
 The exposure layer is dominated by trawlers and squid jiggers, which together account for approximately 2.75 million apparent fishing hours during 2014-2023. This gear structure is retained in the processed fishing dataset for future gear-aware products, but the main risk workflow treats fishing exposure generically and does not yet assign species-specific interaction coefficients by gear type.
 
@@ -89,7 +89,7 @@ The 2022 mean exposure surface shows that fishing activity is organized along sh
 \label{fig:fishing-activity-mean-2022}
 \end{figure}
 
-Fishing exposure also redistributes seasonally across the full 2014-2023 record. Apparent fishing hours peaked in March and April, with 698,573.0 and 588,427.6 hours, respectively; together these two calendar months accounted for 41.6\% of the ten-year total. February-April accounted for 51.7\% of apparent fishing hours, while October-December accounted for only 6.6\%. The 2022 monthly matrix provides a single-year visual example of this seasonal structure, showing persistent shelf and shelf-break activity but changing intensity and offshore extent among months (Figure \ref{fig:monthly-fishing-activity-2022}). This pattern shows that the fishing-exposure layer is dynamic in both space and time rather than a static annual footprint.
+Fishing exposure also redistributes seasonally across the full 2014-2023 record. Apparent fishing hours peaked in March and April, with 697,315.7 and 587,259.9 hours, respectively; together these two calendar months accounted for 41.6\% of the ten-year total. February-April accounted for 51.7\% of apparent fishing hours, while October-December accounted for only 6.6\%. The 2022 monthly matrix provides a single-year visual example of this seasonal structure, showing persistent shelf and shelf-break activity but changing intensity and offshore extent among months (Figure \ref{fig:monthly-fishing-activity-2022}). This pattern shows that the fishing-exposure layer is dynamic in both space and time rather than a static annual footprint.
 
 \begin{figure}[htbp]
 \centering
@@ -185,7 +185,7 @@ This feature-importance pattern increased the value of the environmental validat
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/species_feature_importance_top_features.png}
+\includegraphics[width=0.65\textwidth,keepaspectratio]{figures/species_feature_importance_top_features.png}
 \caption{Feature importance for the selected Extra Trees species-use production model fitted under the SOM-hierarchical k=30 five-fold validation framing. Importance values are relative impurity-based importances from the fitted production model and are presented as model diagnostics rather than independent validation metrics.}
 \label{fig:species-feature-importance}
 \end{figure}
@@ -194,11 +194,11 @@ This feature-importance pattern increased the value of the environmental validat
 
 The SOM-hierarchical k=30 seascape classification produced a dynamic environmental-regime layer over the study grid. In 2022, dominant monthly classes changed through the seasonal cycle and showed coherent spatial structure across shelf, shelf-break, and offshore waters (Figure \ref{fig:som-k30-dominant-seascapes-2022}). This result supports the use of the SOM-hierarchical classes as an environmental grouping framework for validation, rather than as a direct replacement for the continuous environmental predictor space.
 
-The same SOM-hierarchical classes were used for grouped environmental validation, so the telemetry-supported class profiles provide a bridge between validation design and ecological interpretation. BBAL telemetry records occurred in 8 of the 30 classes, with 77.2\% of observed rows concentrated in classes 2 and 1. These two classes represented relatively shallow shelf-associated conditions, with mean depths of 0.26 and 0.37 km and mean distances to coast of 160 and 185 km, respectively. SAFS telemetry records occurred in 27 of the 30 classes, with the two most frequent classes also being classes 2 and 1 but accounting for a smaller share of the observed rows (40.0\%). SAFS therefore occupied a broader set of seascape classes, including more offshore and deeper classes. For readability, the main text reports only classes with species telemetry counts; the complete 30-class environmental profile is retained in the appendices.
+The same SOM-hierarchical classes were used for grouped environmental validation, so the telemetry-supported class profiles provide a bridge between validation design and ecological interpretation. BBAL telemetry records occurred in 8 of the 30 classes, with 77.2\% of observed rows concentrated in classes 2 and 1. These two classes represented relatively shallow shelf-associated conditions, with mean depths of 0.26 and 0.37 km and mean distances to coast of 160 and 185 km, respectively. SAFS telemetry records occurred in 27 of the 30 classes, with the two most frequent classes also being classes 2 and 1 but accounting for a smaller share of the observed rows (40.0\%). SAFS therefore occupied a broader set of seascape classes, including more offshore and deeper classes. For readability, the main text summarizes the telemetry-supported class patterns in prose; the complete 30-class environmental profile and species-use summaries by seascape class are retained in the appendices (Tables \ref{tab:appendix-som-k30-class-profile}, \ref{tab:appendix-observed-seascape-use-bbal}, and \ref{tab:appendix-observed-seascape-use-safs}).
 
 The external MBON seascape product was also evaluated as a contextual comparison, but it was not retained as the final seascape framework for the Falkland Islands workflow because regional coverage was not sufficient across the seasonal domain needed for model support. In the 2022 non-zero area-weighted table, coverage dropped sharply from April through August: 13.3\% in April, 2.3\% in May, 0.0\% in June, 1.2\% in July, and 44.3\% in August. This result is reported as a product-coverage finding for this regional application rather than as a critique of the MBON product itself; the monthly MBON matrix is retained in the appendices.
 
-As an exploratory extension, the selected SOM-hierarchical k=30 seascapes were used to test whether broad environmental regimes could support a coarse species-use and risk surrogate. Predicted species-use values from the final hybrid product were summarized by seascape class and projected back to the `h3`/`date` grid before computing latent risk. The resulting monthly matrices retained broad seasonal and spatial structure for both species, but they smoothed localized gradients relative to the primary H3 prediction products. This smoothing reduced the fine-grain high-use areas visible in the full prediction surfaces, meaning that the seascape-conditioned surrogate did not preserve localized hotspot intensity. This pattern was confirmed by comparing 2022 H3-level non-zero mean log species-use surfaces from the seascape-conditioned surrogate against the full hybrid prediction surface (Table \ref{tab:seascape-surrogate-comparison}). The seascape-conditioned surface was strongly correlated with the full BBAL surface and moderately correlated with the full SAFS surface, but the 99th-percentile values were substantially lower in the surrogate for both species. This analysis therefore supports seascapes as a promising communication and hypothesis-building layer, not as the primary risk product; the exploratory matrices are retained in the appendices.
+As an exploratory extension, the selected SOM-hierarchical k=30 seascapes were used to test whether broad environmental regimes could support a coarse species-use and risk surrogate. Predicted species-use values from the final hybrid product were summarized by seascape class and projected back to the `h3`/`date` grid before computing latent risk. The resulting monthly map matrices retained broad seasonal and spatial structure for both species, but they smoothed localized gradients relative to the primary H3 prediction products. This smoothing reduced the fine-grain high-use areas visible in the full prediction surfaces, meaning that the seascape-conditioned surrogate did not preserve localized hotspot intensity. This pattern was confirmed by comparing 2022 H3-level non-zero mean log species-use surfaces from the seascape-conditioned surrogate against the full hybrid prediction surface (Table \ref{tab:seascape-surrogate-comparison}). The seascape-conditioned surface was strongly correlated with the full BBAL surface and moderately correlated with the full SAFS surface, but the 99th-percentile values were substantially lower in the surrogate for both species. This analysis therefore supports seascapes as a promising communication and hypothesis-building layer, not as the primary risk product; the exploratory 12-month map matrices are retained in the appendices.
 
 \begin{table}[htbp]
 \centering
@@ -240,13 +240,13 @@ Components & $R^2$ & RMSE & MAE & BIC & Mean log-like. & Top-10 capture \\
 \end{tabular}
 \end{table}
 
-Plausibility support was also seasonally structured. In the 2014-2023 monthly summaries, BBAL support was concentrated mainly in late spring and summer months represented by the available telemetry-informed environmental domain, while SAFS support extended across a broader set of months. The monthly matrices show this seasonal distribution of environmentally supported cells before species-use predictions are combined with fishing exposure and are retained in the appendices.
+Plausibility support was also seasonally structured. In the 2014-2023 monthly summaries, BBAL support was concentrated mainly in late spring and summer months represented by the available telemetry-informed environmental domain, while SAFS support extended across a broader set of months. The appendix monthly map matrices show this seasonal distribution of environmentally supported cells before species-use predictions are combined with fishing exposure (Figure \ref{fig:appendix-monthly-plausibility-2014-2023}).
 
 \begin{figure}[htbp]
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.48\textwidth]{figures/bayesian_gmm_k30_joint_plausibility_non_zero_mean_BBAL_2022.png} &
-\includegraphics[width=0.48\textwidth]{figures/bayesian_gmm_k30_joint_plausibility_non_zero_mean_SAFS_2022.png} \\
+\includegraphics[width=0.42\textwidth]{figures/bayesian_gmm_k30_joint_plausibility_non_zero_mean_BBAL_2022.png} &
+\includegraphics[width=0.42\textwidth]{figures/bayesian_gmm_k30_joint_plausibility_non_zero_mean_SAFS_2022.png} \\
 \end{tabular}
 \caption{Environmental plausibility surfaces for BBAL (left) and SAFS (right) during 2022, summarized as non-zero mean plausibility by H3 cell. Plausibility indicates environmental support from the Bayesian/GMM k=30 model and should not be interpreted as species presence probability.}
 \label{fig:environmental-plausibility-2022}
@@ -257,8 +257,8 @@ The final hybrid prediction product combines the selected Extra Trees species-us
 \begin{figure}[htbp]
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_species_use_log_pred_non_zero_mean_BBAL_2022_all_months.png} &
-\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_species_use_log_pred_non_zero_mean_SAFS_2022_all_months.png} \\
+\includegraphics[width=0.42\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_species_use_log_pred_non_zero_mean_BBAL_2022_all_months.png} &
+\includegraphics[width=0.42\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_species_use_log_pred_non_zero_mean_SAFS_2022_all_months.png} \\
 \end{tabular}
 \caption{Annual predicted species-use surfaces for BBAL (left) and SAFS (right) during 2022 from the final hybrid product. Values summarize non-zero mean predicted log-scale species use by H3 cell across all 2022 dates before combining predictions with fishing exposure.}
 \label{fig:species-use-predictions-2022}
@@ -273,8 +273,8 @@ Realized risk combines predicted species use with observed fishing exposure and 
 \begin{figure}[htbp]
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_risk_log_pred_non_zero_mean_BBAL_2022_all_months.png} &
-\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_risk_log_pred_non_zero_mean_SAFS_2022_all_months.png} \\
+\includegraphics[width=0.42\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_risk_log_pred_non_zero_mean_BBAL_2022_all_months.png} &
+\includegraphics[width=0.42\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_risk_log_pred_non_zero_mean_SAFS_2022_all_months.png} \\
 \end{tabular}
 \caption{Realized relative-risk surfaces for BBAL (left) and SAFS (right) during 2022. Values summarize non-zero mean relative risk by H3 cell after combining predicted species use with observed fishing exposure.}
 \label{fig:realized-risk-2022}
@@ -287,11 +287,20 @@ Latent plausible risk applies the environmental plausibility threshold as a diag
 \begin{figure}[htbp]
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_hazard_log_pred_plausibility_threshold_non_zero_mean_non_zero_mean_BBAL_2022_all_months.png} &
-\includegraphics[width=0.48\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_hazard_log_pred_plausibility_threshold_non_zero_mean_non_zero_mean_SAFS_2022_all_months.png} \\
+\includegraphics[width=0.42\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_hazard_log_pred_plausibility_threshold_non_zero_mean_non_zero_mean_BBAL_2022_all_months.png} &
+\includegraphics[width=0.42\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_hazard_log_pred_plausibility_threshold_non_zero_mean_non_zero_mean_SAFS_2022_all_months.png} \\
 \end{tabular}
 \caption{Latent plausible-risk surfaces for BBAL (left) and SAFS (right) during 2022. This scientific support product plots latent risk and marks cells whose environmental plausibility falls below the threshold, indicating areas where potential risk is less strongly supported by the modeled environmental domain.}
 \label{fig:latent-plausible-risk-2022}
+\end{figure}
+
+The sensitivity of the latent-risk surface to the plausibility-gate strength was evaluated by recomputing latent risk across alternative maximum plausibility-gate reductions (Figure \ref{fig:plausibility-gate-sensitivity-2022}). The production workflow used $c_s = 0.10$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_plausibility_gate_sensitivity_2022_small_multiples.png}
+\caption{Sensitivity of 2022 latent-risk surfaces to the plausibility-gate strength. Rows show BBAL and SAFS, and columns show alternative maximum plausibility-gate reductions ($c_s = 0.00$, $0.10$, $0.25$, and $0.50$). The production workflow used $c_s = 0.10$. Outlined cells mark H3 cells whose aggregated environmental plausibility fell below the 0.10 threshold.}
+\label{fig:plausibility-gate-sensitivity-2022}
 \end{figure}
 
 The operator-facing products translate the daily H3 prediction cube into planning summaries. The final product set includes a 2014-2023 weekly latent-risk climatology, a 2022 weekly animation sequence for each species, a Falklands Fisheries grid application example, gear-filtered weekly realized-risk examples, and weekly latent-risk maps with observed vessel-activity cells overlaid. The weekly climatology summarizes expected seasonal risk at a planning horizon, while the fisheries-grid example shows how H3-scale risk can be aggregated to management reporting units (Figures \ref{fig:weekly-latent-risk-climatology} and \ref{fig:fisheries-grid-risk-example}). The 2022 weekly animation files are stored in the repository alongside the plotted frames.
@@ -300,7 +309,7 @@ The weekly climatology is the clearest planning product because it averages acro
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_small_multiples.png}
+\includegraphics[width=0.85\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_small_multiples.png}
 \caption{Weekly latent-risk climatology for 2014-2023 shown as representative ISO weeks for each species. The weekly product summarizes expected seasonal potential risk using the same H3 grid and risk-color convention as the prediction maps.}
 \label{fig:weekly-latent-risk-climatology}
 \end{figure}
@@ -309,7 +318,7 @@ Aggregating the weekly climatology to the Falklands Fisheries grid changes the r
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_fisheries_grid_example.png}
+\includegraphics[width=0.85\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_fisheries_grid_example.png}
 \caption{Falklands Fisheries grid application example based on the 2014-2023 weekly latent-risk climatology. H3-scale latent risk was aggregated to fisheries-grid cells and plotted with conservation-zone and grid overlays to show how the product can be translated to management units.}
 \label{fig:fisheries-grid-risk-example}
 \end{figure}
@@ -318,7 +327,7 @@ The gear-aware realized-risk example adds one operational filter to the same fis
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/gear_aware_weekly_realized_risk_fisheries_grid_example_non_zero_mean_2022.png}
+\includegraphics[width=0.85\textwidth]{figures/gear_aware_weekly_realized_risk_fisheries_grid_example_non_zero_mean_2022.png}
 \caption{Gear-filtered weekly realized-risk example for 2022 on the Falklands Fisheries grid. The example pairs BBAL with set longlines and SAFS with trawlers, illustrating how realized risk can be filtered by species and gear type while preserving the same fisheries-grid layout.}
 \label{fig:gear-aware-weekly-realized-risk}
 \end{figure}
@@ -327,14 +336,14 @@ The vessel-overlay products answer a different question. Instead of recomputing 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_all_vessel_cells_2022.png}
+\includegraphics[width=0.85\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_all_vessel_cells_2022.png}
 \caption{Weekly latent-risk climatology with 2022 all-vessel fishing-activity cells overlaid. The overlay marks fisheries-grid cells with observed vessel activity during the representative ISO weeks, allowing potential risk to be compared with observed fishing presence without converting the product into realized risk.}
 \label{fig:weekly-latent-risk-all-vessel-cells}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_flk_vessel_cells_2022.png}
+\includegraphics[width=0.85\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_flk_vessel_cells_2022.png}
 \caption{Weekly latent-risk climatology with 2022 Falkland Islands flagged vessel-activity cells overlaid. This flag-filtered example shows how the same weekly latent-risk product can be combined with fleet-subset activity overlays while keeping latent risk separate from realized risk.}
 \label{fig:weekly-latent-risk-flk-vessel-cells}
 \end{figure}

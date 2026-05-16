@@ -48,7 +48,7 @@ Spearman rank correlations among dynamic environmental predictors across the ful
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.76\textwidth]{figures/environmental_predictors_spearman_correlation_all.png}
+\includegraphics[width=0.65\textwidth]{figures/environmental_predictors_spearman_correlation_all.png}
 \caption{Spearman correlation matrix for environmental predictors across the 2014-2023 analysis period.}
 \label{fig:environmental-correlation}
 \end{figure}
@@ -141,5 +141,11 @@ Spatial-gradient predictors also showed largely distinct behavior relative to th
 \end{figure}
 
 \input{tables/som_k30_class_environment_profiles.tex}
+
+## SOM-Hierarchical Species-Use Summaries
+
+The following appendix tables provide observed telemetry-derived species-use summaries and predicted species-use summaries by SOM-hierarchical k=30 seascape class. These tables support the seascape interpretation reported in the Results.
+
+\input{tables/som_k30_species_use_by_seascape.tex}
 
 \newpage
