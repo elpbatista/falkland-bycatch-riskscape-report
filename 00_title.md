@@ -14,6 +14,7 @@ link-citations: true
 header-includes:
   - \usepackage{graphicx}
   - \usepackage{float}
+  - \usepackage{placeins}
   - \usepackage{pdflscape}
   - \usepackage[font=small,labelfont=bf]{caption}
   - \usepackage[most]{tcolorbox}

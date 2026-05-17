@@ -142,10 +142,4 @@ Spatial-gradient predictors also showed largely distinct behavior relative to th
 
 \input{tables/som_k30_class_environment_profiles.tex}
 
-## SOM-Hierarchical Species-Use Summaries
-
-The following appendix tables provide observed telemetry-derived species-use summaries and predicted species-use summaries by SOM-hierarchical k=30 seascape class. These tables support the seascape interpretation reported in the Results.
-
-\input{tables/som_k30_species_use_by_seascape.tex}
-
 \newpage

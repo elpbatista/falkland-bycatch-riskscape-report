@@ -6,7 +6,7 @@ The methods are organized around the study area and spatial framework, input dat
 
 ## Study Area and Spatial Framework
 
-The study focused on the Falkland Islands fisheries region, where fishing activity is managed through licence areas and conservation zones described by the Falkland Islands Government Fisheries Department [@FIG-FD_statistics_2024]. The spatial domain was defined from the Falkland Islands fisheries grid, which covers the region between 47°-57° latitude and 64°-52° longitude, with an additional 50 km buffer to reduce edge effects and support spatial alignment across environmental, fisheries, and biological datasets.
+The study focused on the Falkland Islands fisheries region, where fishing activity is managed through licence areas and conservation zones described by the Falkland Islands Government Fisheries Department [@FIG-FD_statistics_2024]. The spatial domain was defined from the Falkland Islands fisheries grid, which covers the region between 47°-57° latitude and 64°-52° longitude, with an additional 50 km buffer to reduce edge effects and support spatial alignment across environmental, fisheries, and biological datasets (Figure \ref{fig:study-area}).
 
 \begin{figure}[htbp]
 \centering
