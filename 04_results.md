@@ -57,22 +57,25 @@ Distance to coast (km) & 100.0\% & 308.61 & 296.25 & 598.69 & 0.01--789.50 \\
 
 The final feature grid includes base oceanographic variables, static spatial predictors, seasonal encodings, local spatial gradients, and temporal anomaly fields. Spatial-gradient predictors capture local environmental heterogeneity across neighboring H3 cells, while anomaly predictors summarize departures from local seasonal climatologies. Mean anomalies show interannual variability after seasonal adjustment, and anomaly distributions remain centered near zero as expected from their definition. A single-day example illustrates how base fields, gradients, and anomaly layers are represented on the common H3 grid (Figure \ref{fig:environmental-layers-20221210}).
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tabular}{ccc}
-\includegraphics[width=0.31\textwidth]{figures/sst_20221210.png} &
-\includegraphics[width=0.31\textwidth]{figures/chl_log_grad_20221210.png} &
-\includegraphics[width=0.31\textwidth]{figures/ssh_grad_20221210.png} \\
-\includegraphics[width=0.31\textwidth]{figures/sst_anom_20221210.png} &
-\includegraphics[width=0.31\textwidth]{figures/ssh_anom_20221210.png} &
-\includegraphics[width=0.31\textwidth]{figures/sst_grad_20221210.png} \\
-\includegraphics[width=0.31\textwidth]{figures/chl_log_20221210.png} &
-\includegraphics[width=0.31\textwidth]{figures/wind_speed_20221210.png} &
-\includegraphics[width=0.31\textwidth]{figures/chl_log_anom_20221210.png}
+\includegraphics[width=0.33\textwidth]{figures/sst_20221210.png} &
+\includegraphics[width=0.33\textwidth]{figures/chl_log_grad_20221210.png} &
+\includegraphics[width=0.33\textwidth]{figures/ssh_grad_20221210.png} \\
+\includegraphics[width=0.33\textwidth]{figures/sst_anom_20221210.png} &
+\includegraphics[width=0.33\textwidth]{figures/ssh_anom_20221210.png} &
+\includegraphics[width=0.33\textwidth]{figures/sst_grad_20221210.png} \\
+\includegraphics[width=0.33\textwidth]{figures/chl_log_20221210.png} &
+\includegraphics[width=0.33\textwidth]{figures/wind_speed_20221210.png} &
+\includegraphics[width=0.33\textwidth]{figures/chl_log_anom_20221210.png}
 \end{tabular}
 \caption{Example environmental feature layers aggregated to the H3 grid for 10 December 2022. The panels show base environmental conditions, anomaly fields, and local gradient structure used by the feature-generation workflow.}
 \label{fig:environmental-layers-20221210}
 \end{figure}
+
+\FloatBarrier
+\clearpage
 
 ## Fishing Exposure Patterns
 
@@ -84,7 +87,7 @@ The 2022 mean exposure surface shows that fishing activity is organized along sh
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[height=0.48\textheight,keepaspectratio]{figures/fishing_activity_mean_2022.png}
+\includegraphics[width=0.48\textwidth,keepaspectratio]{figures/fishing_activity_mean_2022.png}
 \caption{Mean apparent fishing activity across the Falkland Islands study grid during 2022. The map shows the spatial footprint of fishing exposure, including shelf and shelf-break corridors and a recognizable boundary-following pattern around the Falkland Islands Outer Conservation Zone.}
 \label{fig:fishing-activity-mean-2022}
 \end{figure}
@@ -185,7 +188,7 @@ This feature-importance pattern increased the value of the environmental validat
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.60\textwidth,keepaspectratio]{figures/species_feature_importance_top_features.png}
+\includegraphics[width=0.63\textwidth,keepaspectratio]{figures/species_feature_importance_top_features.png}
 \caption{Feature importance for the selected Extra Trees species-use production model fitted under the SOM-hierarchical k=30 five-fold validation framing. Importance values are relative impurity-based importances from the fitted production model and are presented as model diagnostics rather than independent validation metrics.}
 \label{fig:species-feature-importance}
 \end{figure}
@@ -193,6 +196,13 @@ This feature-importance pattern increased the value of the environmental validat
 ## Seascape Classification and Exploratory Risk Surrogate
 
 The SOM-hierarchical k=30 seascape classification produced a dynamic environmental-regime layer over the study grid. In 2022, dominant monthly classes changed through the seasonal cycle and showed coherent spatial structure across shelf, shelf-break, and offshore waters (Figure \ref{fig:som-k30-dominant-seascapes-2022}). This result supports the use of the SOM-hierarchical classes as an environmental grouping framework for validation, rather than as a direct replacement for the continuous environmental predictor space.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth,keepaspectratio]{figures/monthly_dominant_som_hierarchical_seascapes_som_15x15_hierarchical_k30_2022.png}
+\caption{Monthly dominant SOM-hierarchical k=30 seascape classes during 2022. The matrix shows the dominant environmental-regime class by H3 cell and month, illustrating the seasonal and spatial structure of the feature-derived seascape layer used for grouped validation and exploratory seascape summaries.}
+\label{fig:som-k30-dominant-seascapes-2022}
+\end{figure}
 
 The same SOM-hierarchical classes were used for grouped environmental validation, so the telemetry-supported class profiles provide a bridge between validation design and ecological interpretation. BBAL telemetry records occurred in 8 of the 30 classes, with 77.2\% of observed rows concentrated in classes 2 and 1. These two classes represented relatively shallow shelf-associated conditions, with mean depths of 0.26 and 0.37 km and mean distances to coast of 160 and 185 km, respectively. SAFS telemetry records occurred in 27 of the 30 classes, with the two most frequent classes also being classes 2 and 1 but accounting for a smaller share of the observed rows (40.0\%). SAFS therefore occupied a broader set of seascape classes, including more offshore and deeper classes. For readability, the main text summarizes the telemetry-supported class patterns in prose; the complete 30-class environmental profile is retained in the appendices (Table \ref{tab:appendix-som-k30-class-profile}).
 
@@ -280,7 +290,7 @@ Realized risk combines predicted species use with observed fishing exposure and 
 \label{fig:realized-risk-2022}
 \end{figure}
 
-Latent risk combines predicted species use with a standardized minimum fishing-exposure unit, allowing potential bycatch-interaction risk to be mapped across the full study grid independent of observed fishing activity. The 2022 monthly latent-risk matrices show the expected seasonal structure of potential risk for each species before conditioning on where fishing occurred and are retained in the appendices. Plausibility-aware latent-risk products should be interpreted together with the environmental-support layer so weakly supported predictions can be distinguished from well-supported risk surfaces.
+Latent risk combines predicted species use with a standardized minimum fishing-exposure unit, allowing potential bycatch-interaction risk to be mapped across the full study grid independent of observed fishing activity. The 2022 monthly latent-risk matrices show the expected seasonal structure of potential risk for each species before conditioning on where fishing occurred and are retained in the appendices.
 
 Latent plausible risk applies the environmental plausibility threshold as a diagnostic overlay on the latent-risk surface. This product is not the primary operator-facing layer because the threshold marks cells with weak environmental support, but it provides a scientific support layer for distinguishing broadly predicted potential risk from predictions made outside the best-supported environmental domain (Figure \ref{fig:latent-plausible-risk-2022}).
 
@@ -298,18 +308,18 @@ The sensitivity of the latent-risk surface to the plausibility-gate strength was
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_plausibility_gate_sensitivity_2022_small_multiples.png}
+\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_plausibility_gate_sensitivity_2022_small_multiples.png}
 \caption{Sensitivity of 2022 latent-risk surfaces to the plausibility-gate strength. Rows show BBAL and SAFS, and columns show alternative maximum plausibility-gate reductions ($c_s = 0.00$, $0.10$, $0.25$, and $0.50$). The production workflow used $c_s = 0.10$. Outlined cells mark H3 cells whose aggregated environmental plausibility fell below the 0.10 threshold.}
 \label{fig:plausibility-gate-sensitivity-2022}
 \end{figure}
 
-The operator-facing products translate the daily H3 prediction cube into planning summaries. The final product set includes a 2014-2023 weekly latent-risk climatology, a 2022 weekly animation sequence for each species, a Falklands Fisheries grid application example, gear-filtered weekly realized-risk examples, and weekly latent-risk maps with observed vessel-activity cells overlaid. The weekly climatology summarizes expected seasonal risk at a planning horizon, while the fisheries-grid example shows how H3-scale risk can be aggregated to management reporting units (Figures \ref{fig:weekly-latent-risk-climatology} and \ref{fig:fisheries-grid-risk-example}). The 2022 weekly animation files are stored in the repository alongside the plotted frames.
+The operator-facing products translate the daily H3 prediction cube into planning summaries. Four examples are shown here: a weekly latent-risk climatology, a Falklands Fisheries grid application, a gear-filtered realized-risk product, and weekly latent-risk maps with observed vessel-activity cells overlaid. The 2022 weekly animation files are stored in the repository alongside the plotted frames.
 
 The weekly climatology is the clearest planning product because it averages across years rather than showing a single annual realization. The representative weeks preserve the seasonal structure of latent risk while using the same spatial extent, coast and bathymetry context, and binned risk colors as the prediction maps (Figure \ref{fig:weekly-latent-risk-climatology}).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_small_multiples.png}
+\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_small_multiples.png}
 \caption{Weekly latent-risk climatology for 2014-2023 shown as representative ISO weeks for each species. The weekly product summarizes expected seasonal potential risk using the same H3 grid and risk-color convention as the prediction maps.}
 \label{fig:weekly-latent-risk-climatology}
 \end{figure}
@@ -318,7 +328,7 @@ Aggregating the weekly climatology to the Falklands Fisheries grid changes the r
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_fisheries_grid_example.png}
+\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_fisheries_grid_example.png}
 \caption{Falklands Fisheries grid application example based on the 2014-2023 weekly latent-risk climatology. H3-scale latent risk was aggregated to fisheries-grid cells and plotted with conservation-zone and grid overlays to show how the product can be translated to management units.}
 \label{fig:fisheries-grid-risk-example}
 \end{figure}
@@ -327,7 +337,7 @@ The gear-aware realized-risk example adds one operational filter to the same fis
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/gear_aware_weekly_realized_risk_fisheries_grid_example_non_zero_mean_2022.png}
+\includegraphics[width=0.90\textwidth]{figures/gear_aware_weekly_realized_risk_fisheries_grid_example_non_zero_mean_2022.png}
 \caption{Gear-filtered weekly realized-risk example for 2022 on the Falklands Fisheries grid. The example pairs BBAL with set longlines and SAFS with trawlers, illustrating how realized risk can be filtered by species and gear type while preserving the same fisheries-grid layout.}
 \label{fig:gear-aware-weekly-realized-risk}
 \end{figure}
@@ -336,14 +346,14 @@ The vessel-overlay products answer a different question. Instead of recomputing 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_all_vessel_cells_2022.png}
+\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_all_vessel_cells_2022.png}
 \caption{Weekly latent-risk climatology with 2022 all-vessel fishing-activity cells overlaid. The overlay marks fisheries-grid cells with observed vessel activity during the representative ISO weeks, allowing potential risk to be compared with observed fishing presence without converting the product into realized risk.}
 \label{fig:weekly-latent-risk-all-vessel-cells}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.84\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_flk_vessel_cells_2022.png}
+\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_flk_vessel_cells_2022.png}
 \caption{Weekly latent-risk climatology with 2022 Falkland Islands flagged vessel-activity cells overlaid. This flag-filtered example shows how the same weekly latent-risk product can be combined with fleet-subset activity overlays while keeping latent risk separate from realized risk.}
 \label{fig:weekly-latent-risk-flk-vessel-cells}
 \end{figure}

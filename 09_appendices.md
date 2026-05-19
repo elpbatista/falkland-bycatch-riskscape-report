@@ -133,13 +133,6 @@ Spatial-gradient predictors also showed largely distinct behavior relative to th
 
 ## SOM-Hierarchical Seascape Class Profiles
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.76\textwidth,keepaspectratio]{figures/monthly_dominant_som_hierarchical_seascapes_som_15x15_hierarchical_k30_2022.png}
-\caption{Monthly dominant SOM-hierarchical k=30 seascape classes during 2022. The figure shows the environmental-regime layer used to define grouped environmental validation folds and to support the exploratory seascape-risk surrogate.}
-\label{fig:som-k30-dominant-seascapes-2022}
-\end{figure}
-
 \input{tables/som_k30_class_environment_profiles.tex}
 
 \newpage
