@@ -8,11 +8,11 @@ The analytical workflow is released as a reusable code repository and the derive
 
 **Software repository.** The workflow code is archived as:
 
-Batista Echevarría, J. L. (2026). *Falkland Bycatch Riskscape Workflow* [Software]. Zenodo. https://doi.org/10.5281/zenodo.20348906
+Batista Echevarría, J. L. (2026). *Falkland Bycatch Riskscape Workflow* [Software]. Zenodo. <https://doi.org/10.5281/zenodo.20348906>
 
 **Data bundle.** The derived data and plot bundle used by the public workflow is archived as:
 
-Batista Echevarría, J. L. (2026). *Falkland Bycatch Riskscape Data Bundle* [Data set]. Zenodo. https://doi.org/10.5281/zenodo.20337229
+Batista Echevarría, J. L. (2026). *Falkland Bycatch Riskscape Data Bundle* [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.20337229>
 
 The workflow uses a common H3 spatial framework and daily temporal resolution. The key table fields are `h3`, `date`, and, for species-expanded products, `species`. H3 refers to the spatial indexing system; `h3` refers to the stored table column. The public repository contains notebooks that document the study area, input datasets, feature engineering, model design, prediction products, operational outputs, and quality checks. These notebooks are presentation and inspection material rather than the canonical pipeline orchestrator.
 
