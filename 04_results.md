@@ -353,7 +353,7 @@ The vessel-overlay products answer a different question. Instead of recomputing 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_flk_vessel_cells_2022.png}
+\includegraphics[width=0.90\textwidth]{figures/hybrid_presence_gate_extra_trees_som_hierarchical_k30_5fold_blockcv_bayesian_gmm_k30_joint_latent_risk_iso_week_climatology_2014-2023_flk_cells_2022.png}
 \caption{Weekly latent-risk climatology with 2022 Falkland Islands flagged vessel-activity cells overlaid. This flag-filtered example shows how the same weekly latent-risk product can be combined with fleet-subset activity overlays while keeping latent risk separate from realized risk.}
 \label{fig:weekly-latent-risk-flk-vessel-cells}
 \end{figure}
