@@ -6,7 +6,7 @@ The methods are organized around the study area and spatial framework, input dat
 
 ## Study Area and Spatial Framework
 
-The study focused on the Falkland Islands fisheries region, where fishing activity is managed through licence areas and conservation zones described by the Falkland Islands Government Fisheries Department [@FIG-FD_statistics_2024]. The spatial domain was defined from the Falkland Islands fisheries grid, which covers the region between 47°-57° latitude and 64°-52° longitude, with an additional 50 km buffer to reduce edge effects and support spatial alignment across environmental, fisheries, and biological datasets (Figure \ref{fig:study-area}).
+The study focused on the Falkland Islands fisheries region, where fishing activity is managed through licence areas and conservation zones described by the Falkland Islands Government Fisheries Department [@FIG-FD_statistics_2024]. The spatial domain was defined from the Falkland Islands fisheries grid and configured to span approximately 47°S-57°S and 64°W-51°W, with an additional 50 km buffer to reduce edge effects and support spatial alignment across environmental, fisheries, and biological datasets (Figure \ref{fig:study-area}).
 
 \begin{figure}[htbp]
 \centering
@@ -51,7 +51,7 @@ Telemetry observations were aggregated by H3 cell, date, and species, resulting 
 
 ### Reference Data
 
-The Falkland Islands fisheries grid system [@fisheries_grid_squares] covers the region between 47°–57° latitude and 64°–52° longitude. Grid cells measure 0.25° latitude by 0.50° longitude and are associated with fisheries licensing zones. The fisheries grid extent was used to define the study area, and an additional 50 km buffer was applied to reduce edge effects and ensure complete spatial coverage across datasets with different spatial resolutions.
+The Falkland Islands fisheries grid system [@fisheries_grid_squares] covers the waters around the Falkland Islands with grid cells measuring 0.25° latitude by 0.50° longitude and associated with fisheries licensing zones. The configured study extent spans approximately 47°S-57°S and 64°W-51°W, and an additional 50 km buffer was applied to reduce edge effects and ensure complete spatial coverage across datasets with different spatial resolutions.
 
 Falkland Islands Conservation Zones [@ukho_ficz_focz_limits] defined for fisheries activities were also incorporated. Two zones were identified and classified as inner (FICZ) and outer (FOCZ) conservation zones.
 
