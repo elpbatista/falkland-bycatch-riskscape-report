@@ -180,7 +180,7 @@ SOM k=30, five-fold & $0.518 \pm 0.046$ & $0.538 \pm 0.047$ & $0.365 \pm 0.048$ 
 \end{tabular}
 \end{table}
 
-The selected SOM-hierarchical k=30 five-fold grouped validation design had a mean original-scale $R^2$ of $0.769 \pm 0.220$ across folds, with log-scale RMSE of $0.538 \pm 0.047$ and log-scale MAE of $0.365 \pm 0.048$. The final production species-use model was then refit on all 20,370 balanced training rows. Production-fit diagnostics were retained for reproducibility and model inspection, but they were not treated as independent validation because no rows were withheld from the production fit.
+The selected SOM-hierarchical k=30 five-fold grouped validation design had a mean log-scale $R^2$ of $0.518 \pm 0.046$, log-scale RMSE of $0.538 \pm 0.047$, and log-scale MAE of $0.365 \pm 0.048$. On the original residence-index scale, the same grouped validation produced a mean $R^2$ of $0.769 \pm 0.220$. The final production species-use model was then refit on all 20,370 balanced training rows. Production-fit diagnostics were retained for reproducibility and model inspection, but were not treated as independent validation because no rows were withheld from the production fit.
 
 The selected production model relied most strongly on static and spatial predictors. Distance to coast, seafloor slope, and bathymetric depth had the highest feature-importance values, followed by encoded spatial position and seasonality terms (Figure \ref{fig:species-feature-importance}). Dynamic oceanographic predictors, including SST, SSH, anomalies, and gradients, contributed lower individual importance values in the fitted model.
 
